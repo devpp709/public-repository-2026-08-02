@@ -1,0 +1,42 @@
+Создание записи истории аренды
+
+POST /api/v1/history
+Content-Type: application/json
+
+{
+    "carId": 6,
+    "bookingId": 1,
+    "startMileage": 22000,
+    "startDate": "2026-08-01 10:00:00",
+    "endDate": "2026-08-04 10:00:00",
+    "conditionBefore": "Excellent",
+    "notes": "Автомобиль в отличном состоянии"
+}
+Завершение аренды (обновление)
+
+PATCH /api/v1/history/1/complete
+Content-Type: application/json
+
+{
+    "endMileage": 22280,
+    "conditionAfter": "Good",
+    "notes": "Автомобиль вернули чистым, без повреждений"
+}
+Получение истории автомобиля
+
+GET /api/v1/cars/6/history
+Получение статистики по автомобилю
+
+GET /api/v1/cars/6/history/statistics
+Проверка доступности автомобиля
+
+GET /api/v1/cars/6/history/check-availability?start_date=2026-08-01&end_date=2026-08-04
+Получение глобальной статистики
+
+GET /api/v1/history/statistics
+Получение топ-10 автомобилей по пробегу
+
+GET /api/v1/history/top-by-distance?limit=10
+Получение статистики повреждений по месяцам
+
+GET /api/v1/history/damages/2026

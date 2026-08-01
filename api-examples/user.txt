@@ -1,0 +1,44 @@
+Создание пользователя:
+
+POST /api/v1/users
+Content-Type: application/json
+
+{
+    "email": "user@example.com",
+    "name": "Иван Петров",
+    "password": "password123",
+    "phone": "+7 (916) 111-22-33",
+    "role": "customer",
+    "status": "active"
+}
+Получение списка пользователей:
+
+GET /api/v1/users?with_stats=true
+Получение пользователей по роли:
+
+GET /api/v1/users?role=customer
+Получение пользователей по статусу:
+
+GET /api/v1/users?status=active
+Получение пользователей с активными бронированиями:
+
+GET /api/v1/users/with-active-bookings
+Получение статистики по пользователям:
+
+GET /api/v1/users/statistics
+Обновление статуса пользователя:
+
+PATCH /api/v1/users/1/status
+Content-Type: application/json
+
+{
+    "status": "blocked"
+}
+Обновление роли пользователя:
+
+PATCH /api/v1/users/1/role
+Content-Type: application/json
+
+{
+    "role": "manager"
+}

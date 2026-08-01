@@ -1,0 +1,28 @@
+Создание характеристики:
+
+POST /api/v1/features
+Content-Type: application/json
+
+{
+    "name": "Панорамная крыша",
+    "icon": "panoramic_roof",
+    "category": "Exterior"
+}
+Получение списка характеристик:
+
+GET /api/v1/features?with_stats=true
+Получение характеристик по категории:
+
+GET /api/v1/features?category=Comfort
+Получение характеристик автомобиля:
+
+GET /api/v1/features?car_id=1
+Получение популярных характеристик:
+
+GET /api/v1/features/popular?limit=5
+Получение статистики по категориям:
+
+GET /api/v1/features/statistics
+Получение всех категорий:
+
+GET /api/v1/features/categories

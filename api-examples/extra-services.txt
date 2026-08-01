@@ -1,0 +1,28 @@
+Создание услуги:
+
+POST /api/v1/extra-services
+Content-Type: application/json
+
+{
+    "name": "Дополнительный водитель",
+    "description": "Возможность добавить второго водителя в страховку",
+    "icon": "driver",
+    "category": "Additional",
+    "defaultPrice": 500.00,
+    "isActive": true
+}
+Получение списка услуг:
+
+GET /api/v1/extra-services?with_stats=true&only_active=true
+Получение услуг для автомобиля:
+
+GET /api/v1/extra-services?car_id=1
+Получение обязательных услуг для автомобиля:
+
+GET /api/v1/extra-services/required/1
+Получение популярных услуг:
+
+GET /api/v1/extra-services/popular?limit=5
+Получение статистики по категориям:
+
+GET /api/v1/extra-services/statistics

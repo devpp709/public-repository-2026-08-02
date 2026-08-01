@@ -1,0 +1,42 @@
+Создание платежа для бронирования
+
+POST /api/v1/bookings/1/payments
+Content-Type: application/json
+
+{
+    "amount": 9500.00,
+    "paymentMethod": "credit_card",
+    "status": "pending",
+    "transactionId": "TXN-2026-001-001"
+}
+Получение всех платежей
+
+GET /api/v1/payments
+Получение платежей по бронированию
+
+GET /api/v1/bookings/1/payments
+Проверка оплаты бронирования
+
+GET /api/v1/bookings/1/payments/check
+Обновление статуса платежа (подтверждение оплаты)
+
+PATCH /api/v1/payments/1/status
+Content-Type: application/json
+
+{
+    "status": "paid"
+}
+Отмена платежа
+PATCH
+Возврат платежа
+
+PATCH /api/v1/payments/1/refund
+Получение статистики по платежам
+
+GET /api/v1/payments/statistics
+Получение статистики по месяцам
+
+GET /api/v1/payments/statistics/monthly/2026
+Получение платежей за период
+
+GET /api/v1/payments/by-period?start_date=2026-08-01&end_date=2026-08-31

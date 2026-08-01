@@ -1,0 +1,249 @@
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { carService } from '../../../services/carService';
+
+export default function CarListingSection() {
+    const { t } = useTranslation('common');
+    const [cars, setCars] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const loadCars = async () => {
+            try {
+                setLoading(true);
+                const data = await carService.getAllCars();
+                setCars(data);
+            } catch (err) {
+                console.error('Error loading cars:', err);
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadCars();
+    }, []);
+
+    const getSpecIcon = (index) => {
+        const icons = [
+            <svg key="distance" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clipPath="url(#clip0_distance)">
+                    <path d="M9.375 12.5L16.875 5" stroke="#566676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M4.40937 12.5C4.38648 12.2925 4.37501 12.0838 4.375 11.875C4.37576 10.9823 4.58879 10.1026 4.99652 9.30849C5.40425 8.51435 5.99499 7.82856 6.71999 7.3077C7.44498 6.78685 8.28345 6.44588 9.16618 6.31292C10.0489 6.17996 10.9506 6.25882 11.7969 6.54301" stroke="#566676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M17.236 8.17496C17.7371 9.15824 18.0335 10.233 18.1071 11.3342C18.1807 12.4353 18.03 13.54 17.6641 14.5812C17.6214 14.7039 17.5415 14.8103 17.4355 14.8855C17.3295 14.9607 17.2027 15.001 17.0727 15.0007H2.92661C2.79641 15.0002 2.66959 14.9592 2.56366 14.8835C2.45773 14.8078 2.37791 14.7011 2.33521 14.5781C2.02273 13.6896 1.86703 12.7535 1.87505 11.8117C1.90943 7.34371 5.60396 3.71011 10.0782 3.74996C11.3392 3.76008 12.5805 4.06452 13.7032 4.63902" stroke="#566676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </g>
+                <defs>
+                    <clipPath id="clip0_distance">
+                        <rect width="20" height="20" fill="white" />
+                    </clipPath>
+                </defs>
+            </svg>,
+            <svg key="fuel" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clipPath="url(#clip0_fuel)">
+                    <path d="M11.6667 9.16667H12.5001C12.9421 9.16667 13.366 9.34226 13.6786 9.65482C13.9912 9.96738 14.1667 10.3913 14.1667 10.8333V13.3333C14.1667 13.6649 14.2984 13.9828 14.5329 14.2172C14.7673 14.4516 15.0852 14.5833 15.4167 14.5833C15.7483 14.5833 16.0662 14.4516 16.3006 14.2172C16.5351 13.9828 16.6667 13.6649 16.6667 13.3333V7.5L14.1667 5" stroke="#566676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M3.33325 16.6667V5.00004C3.33325 4.55801 3.50885 4.13409 3.82141 3.82153C4.13397 3.50897 4.55789 3.33337 4.99992 3.33337H9.99992C10.4419 3.33337 10.8659 3.50897 11.1784 3.82153C11.491 4.13409 11.6666 4.55801 11.6666 5.00004V16.6667" stroke="#566676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M2.5 16.6666H12.5" stroke="#566676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M15 5.83337V6.66671C15 6.88772 15.0878 7.09968 15.2441 7.25596C15.4004 7.41224 15.6123 7.50004 15.8333 7.50004H16.6667" stroke="#566676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M3.33325 9.16663H11.6666" stroke="#566676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </g>
+                <defs>
+                    <clipPath id="clip0_fuel">
+                        <rect width="20" height="20" fill="white" />
+                    </clipPath>
+                </defs>
+            </svg>,
+            <svg key="year" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 16.5C12 16.697 12.0388 16.8921 12.1142 17.074C12.1895 17.256 12.3001 17.4214 12.4393 17.5607C12.5786 17.6999 12.744 17.8105 12.926 17.8858C13.1079 17.9612 13.303 18 13.5 18C13.697 18 13.8921 17.9612 14.074 17.8858C14.256 17.8105 14.4214 17.6999 14.5607 17.5607C14.6999 17.4214 14.8105 17.256 14.8858 17.074C14.9612 16.8921 15 16.697 15 16.5C15 16.303 14.9612 16.1079 14.8858 15.926C14.8105 15.744 14.6999 15.5786 14.5607 15.4393C14.4214 15.3001 14.256 15.1895 14.074 15.1142C13.8921 15.0388 13.697 15 13.5 15C13.303 15 13.1079 15.0388 12.926 15.1142C12.744 15.1895 12.5786 15.3001 12.4393 15.4393C12.3001 15.5786 12.1895 15.744 12.1142 15.926C12.0388 16.1079 12 16.303 12 16.5Z" stroke="#566676" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M4 16.5C4 16.8978 4.15803 17.2793 4.43934 17.5607C4.72065 17.8419 5.10217 18 5.5 18C5.89783 18 6.27935 17.8419 6.56066 17.5607C6.84197 17.2793 7 16.8978 7 16.5C7 16.1022 6.84197 15.7207 6.56066 15.4393C6.27935 15.1581 5.89783 15 5.5 15C5.10217 15 4.72065 15.1581 4.43934 15.4393C4.15803 15.7207 4 16.1022 4 16.5Z" stroke="#566676" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M12 17H7" stroke="#566676" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M3.5048 17H2.2C1.88174 17 1.57651 16.8796 1.35147 16.6653C1.12643 16.451 1 16.1602 1 15.8571V14.7143C1 14.1081 1.25286 13.5267 1.70294 13.0981C2.15303 12.6694 2.76348 12.4286 3.4 12.4286L4.868 9.63162C4.9677 9.44175 5.12096 9.28213 5.31058 9.17059C5.50021 9.05897 5.71871 8.99992 5.9416 9H9.8616C10.0845 8.99992 10.303 9.05897 10.4926 9.17059C10.6822 9.28213 10.8355 9.44175 10.9352 9.63162L12.4 12.4286H16.6C17.2365 12.4286 17.847 12.6694 18.297 13.0981C18.7471 13.5267 19 14.1081 19 14.7143V15.8571C19 16.1602 18.8736 16.451 18.6486 16.6653C18.4235 16.8796 18.1182 17 17.8 17H15.296" stroke="#566676" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M12 12H4" stroke="#566676" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M12 12L15.6 9H18" stroke="#566676" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M18.5 6C18.3357 5.82421 18.2063 5.61201 18.1204 5.3771C18.0344 5.1422 17.9936 4.88982 18.0008 4.6363C18.0008 3.72741 18.9992 3.27259 18.9992 2.3637C19.0063 2.11018 18.9657 1.8578 18.8797 1.6229C18.7937 1.38799 18.6643 1.17578 18.5 1" stroke="#566676" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M14.5 7C14.3357 6.82421 14.2063 6.61201 14.1204 6.3771C14.0344 6.1422 13.9936 5.88982 14.0008 5.6363C14.0008 4.72741 14.9992 4.27259 14.9992 3.3637C15.0063 3.11018 14.9657 2.8578 14.8797 2.6229C14.7937 2.38799 14.6643 2.17579 14.5 2" stroke="#566676" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>,
+            <svg key="transmission" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clipPath="url(#clip0_transmission)">
+                    <path d="M2.5 5.00004C2.5 5.44207 2.67559 5.86599 2.98816 6.17855C3.30072 6.49111 3.72464 6.66671 4.16667 6.66671C4.60869 6.66671 5.03262 6.49111 5.34518 6.17855C5.65774 5.86599 5.83333 5.44207 5.83333 5.00004C5.83333 4.55801 5.65774 4.13409 5.34518 3.82153C5.03262 3.50897 4.60869 3.33337 4.16667 3.33337C3.72464 3.33337 3.30072 3.50897 2.98816 3.82153C2.67559 4.13409 2.5 4.55801 2.5 5.00004Z" stroke="#566676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M8.33325 5.00004C8.33325 5.44207 8.50885 5.86599 8.82141 6.17855C9.13397 6.49111 9.55789 6.66671 9.99992 6.66671C10.4419 6.66671 10.8659 6.49111 11.1784 6.17855C11.491 5.86599 11.6666 5.44207 11.6666 5.00004C11.6666 4.55801 11.491 4.13409 11.1784 3.82153C10.8659 3.50897 10.4419 3.33337 9.99992 3.33337C9.55789 3.33337 9.13397 3.50897 8.82141 3.82153C8.50885 4.13409 8.33325 4.55801 8.33325 5.00004Z" stroke="#566676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M14.1667 5.00004C14.1667 5.44207 14.3423 5.86599 14.6549 6.17855C14.9675 6.49111 15.3914 6.66671 15.8334 6.66671C16.2754 6.66671 16.6994 6.49111 17.0119 6.17855C17.3245 5.86599 17.5001 5.44207 17.5001 5.00004C17.5001 4.55801 17.3245 4.13409 17.0119 3.82153C16.6994 3.50897 16.2754 3.33337 15.8334 3.33337C15.3914 3.33337 14.9675 3.50897 14.6549 3.82153C14.3423 4.13409 14.1667 4.55801 14.1667 5.00004Z" stroke="#566676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M2.5 15C2.5 15.4421 2.67559 15.866 2.98816 16.1786C3.30072 16.4911 3.72464 16.6667 4.16667 16.6667C4.60869 16.6667 5.03262 16.4911 5.34518 16.1786C5.65774 15.866 5.83333 15.4421 5.83333 15C5.83333 14.558 5.65774 14.1341 5.34518 13.8215C5.03262 13.509 4.60869 13.3334 4.16667 13.3334C3.72464 13.3334 3.30072 13.509 2.98816 13.8215C2.67559 14.1341 2.5 14.558 2.5 15Z" stroke="#566676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M8.33325 15C8.33325 15.4421 8.50885 15.866 8.82141 16.1786C9.13397 16.4911 9.55789 16.6667 9.99992 16.6667C10.4419 16.6667 10.8659 16.4911 11.1784 16.1786C11.491 15.866 11.6666 15.4421 11.6666 15C11.6666 14.558 11.491 14.1341 11.1784 13.8215C10.8659 13.509 10.4419 13.3334 9.99992 13.3334C9.55789 13.3334 9.13397 13.509 8.82141 13.8215C8.50885 14.1341 8.33325 14.558 8.33325 15Z" stroke="#566676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M4.16675 6.66663V13.3333" stroke="#566676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M10 6.66663V13.3333" stroke="#566676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M15.8334 6.66663V8.33329C15.8334 8.77532 15.6578 9.19924 15.3453 9.5118C15.0327 9.82436 14.6088 9.99996 14.1667 9.99996H4.16675" stroke="#566676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </g>
+                <defs>
+                    <clipPath id="clip0_transmission">
+                        <rect width="20" height="20" fill="white" />
+                    </clipPath>
+                </defs>
+            </svg>,
+            <svg key="person" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clipPath="url(#clip0_person)">
+                    <path d="M6.66675 5.83333C6.66675 6.71739 7.01794 7.56523 7.64306 8.19036C8.26818 8.81548 9.11603 9.16667 10.0001 9.16667C10.8841 9.16667 11.732 8.81548 12.3571 8.19036C12.9822 7.56523 13.3334 6.71739 13.3334 5.83333C13.3334 4.94928 12.9822 4.10143 12.3571 3.47631C11.732 2.85119 10.8841 2.5 10.0001 2.5C9.11603 2.5 8.26818 2.85119 7.64306 3.47631C7.01794 4.10143 6.66675 4.94928 6.66675 5.83333Z" stroke="#566676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M5 17.5V15.8333C5 14.9493 5.35119 14.1014 5.97631 13.4763C6.60143 12.8512 7.44928 12.5 8.33333 12.5H11.6667C12.5507 12.5 13.3986 12.8512 14.0237 13.4763C14.6488 14.1014 15 14.9493 15 15.8333V17.5" stroke="#566676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </g>
+                <defs>
+                    <clipPath id="clip0_person">
+                        <rect width="20" height="20" fill="white" />
+                    </clipPath>
+                </defs>
+            </svg>,
+            <svg key="bags" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10.0003 5.19983C7.893 5.19983 5.69021 5.19983 3.84363 5.52986C2.9585 5.68804 2.26121 6.36397 2.07119 7.24281C1.77173 8.62763 1.77173 9.91936 1.77173 11.8855C1.77173 13.8517 1.77173 15.1434 2.07119 16.5283C2.26121 17.4071 2.9585 18.083 3.84363 18.2413C5.69021 18.5713 7.893 18.5713 10.0003 18.5713C12.1076 18.5713 14.3104 18.5713 16.157 18.2413C17.0421 18.083 17.7394 17.4071 17.9294 16.5283C18.2288 15.1434 18.2288 13.8517 18.2288 11.8855C18.2288 9.91936 18.2288 8.62763 17.9294 7.24281C17.7394 6.36397 17.0421 5.68804 16.157 5.52986C14.3104 5.19983 12.1076 5.19983 10.0003 5.19983Z" stroke="#566676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M6.5708 5.20002V4.28573C6.5708 2.70777 7.84999 1.42859 9.42794 1.42859H10.5708C12.1488 1.42859 13.4279 2.70777 13.4279 4.28573V5.20002" stroke="#566676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M1.78149 10L9.10039 12.4432C9.68761 12.6393 10.3226 12.6393 10.9098 12.4432L18.2287 10" stroke="#566676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+        ];
+        return icons[index] || null;
+    };
+
+    // Функция для форматирования цены
+    const formatPrice = (price) => {
+        if (typeof price === 'number') {
+            return `$${price.toFixed(2)}`;
+        }
+        if (typeof price === 'string') {
+            return price;
+        }
+        return '$0.00';
+    };
+
+    if (loading) {
+        return (
+            <section className="elementor-section car-listing-section">
+                <div className="elementor-container">
+                    <div className="elementor-column">
+                        <div className="elementor-widget-wrap" style={{ textAlign: 'center', padding: '50px 0' }}>
+                            <h2>{t('your_ride_your_rules')}</h2>
+                            <p>Loading cars...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
+    if (error) {
+        return (
+            <section className="elementor-section car-listing-section">
+                <div className="elementor-container">
+                    <div className="elementor-column">
+                        <div className="elementor-widget-wrap" style={{ textAlign: 'center', padding: '50px 0' }}>
+                            <h2>{t('your_ride_your_rules')}</h2>
+                            <p style={{ color: 'red' }}>Error loading cars: {error}</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
+    return (
+        <section className="elementor-section car-listing-section">
+            <div className="elementor-container">
+                <div className="elementor-column">
+                    <div className="elementor-widget-wrap">
+                        <h2 className="section-title">{t('your_ride_your_rules')}</h2>
+                        <p className="section-subtitle">{t('your_ride_your_rules_desc')}</p>
+                        <div className="tf-car-archive-result">
+                            <div className="tf-car-result archive_ajax_result tf-flex tf-flex-gap-32 grid-view">
+                                {cars.map((car, index) => (
+                                    <div key={car.id || index} className="tf-single-car-view">
+                                        <div className="tf-car-image">
+                                            <img
+                                                decoding="async"
+                                                width="800"
+                                                height="533"
+                                                src={car.image || car.mainImage || car.img || 'https://zitademo.wpzita.com/car-rental/wp-content/uploads/sites/92/2025/08/05-1-1.jpg'}
+                                                className="attachment-full size-full wp-post-image"
+                                                alt={car.name || car.brand}
+                                                loading="lazy"
+                                            />
+                                            <div className="tf-other-infos tf-flex">
+                                                <div className="tf-reviews-box">
+                                                    <span>{car.rating || 0.0} <i className="fa-solid fa-star"></i> ({car.totalTrips || 0} {t('home')})</span>
+                                                </div>
+                                                {car.tag && car.tag.length > 0 && (
+                                                    <div className="tf-tags-box">
+                                                        <ul>
+                                                            {car.tag.map((tag, i) => (
+                                                                <li key={i}>{tag}</li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="tf-car-details">
+                                            <div className="tf-car-content">
+                                                <h3 className="tf-mb-24">
+                                                    <a href={`/cars/${car.id || index}`}>{car.name || car.brand || 'Unknown Car'}</a>
+                                                </h3>
+                                                <ul className="list-items tf-mb-24">
+                                                    {car.mileage !== undefined && (
+                                                        <li className="list">
+                                                            {getSpecIcon(0)}
+                                                            <p>{car.mileage || 0} {t('km')}</p>
+                                                        </li>
+                                                    )}
+                                                    {car.fuelType && (
+                                                        <li className="list">
+                                                            {getSpecIcon(1)}
+                                                            <p>{car.fuelType}</p>
+                                                        </li>
+                                                    )}
+                                                    {car.year && (
+                                                        <li className="list">
+                                                            {getSpecIcon(2)}
+                                                            <p>{car.year}</p>
+                                                        </li>
+                                                    )}
+                                                    {car.transmission && (
+                                                        <li className="list">
+                                                            {getSpecIcon(3)}
+                                                            <p>{car.transmission}</p>
+                                                        </li>
+                                                    )}
+                                                    {car.seats && (
+                                                        <li className="list">
+                                                            {getSpecIcon(4)}
+                                                            <p>{car.seats} {t('person')}</p>
+                                                        </li>
+                                                    )}
+                                                    {car.bags !== undefined && (
+                                                        <li className="list">
+                                                            {getSpecIcon(5)}
+                                                            <p>{car.bags} {t('bags')}</p>
+                                                        </li>
+                                                    )}
+                                                </ul>
+                                            </div>
+                                            <div className="tf-booking-btn tf-flex tf-flex-space-bttn">
+                                                <div className="tf-price-info">
+                                                    <h3>
+                                                        <span className="woocommerce-Price-amount amount">
+                                                            <bdi>
+                                                                <span className="woocommerce-Price-currencySymbol" translate="no">$</span>
+                                                                {typeof car.price === 'number' ? car.price.toFixed(2) : car.price || 0}
+                                                            </bdi>
+                                                        </span>
+                                                        <small> {car.priceUnit || t('per_day')}</small>
+                                                    </h3>
+                                                </div>
+                                                <a className="view-more" href={`/cars/${car.id || index}`}>{t('details')}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+}
