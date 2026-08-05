@@ -1,0 +1,17 @@
+Создание класса через API:
+POST /api/v1/car-classes
+Content-Type: application/json
+
+{
+    "name": "SUV",
+    "description": "Внедорожники для активного отдыха",
+    "icon": "suv",
+    "dailyRate": 4000.00,
+    "hourlyRate": 500.00
+}
+
+Получение списка классов:
+GET /api/v1/car-classes?with_cars_count=true
+
+Получение статистики:
+GET /api/v1/car-classes/statistics

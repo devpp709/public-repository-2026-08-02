@@ -1,0 +1,62 @@
+Создание бронирования:
+
+POST /api/v1/bookings
+Content-Type: application/json
+
+{
+    "userId": 1,
+    "pickupLocationId": 1,
+    "dropoffLocationId": 1,
+    "pickupDate": "2026-08-01",
+    "pickupTime": "10:00:00",
+    "dropoffDate": "2026-08-04",
+    "dropoffTime": "10:00:00",
+    "items": [
+        {
+            "carId": 6,
+            "dailyRate": 3000.00,
+            "totalPrice": 9000.00
+        }
+    ],
+    "extras": [
+        {
+            "extraServiceId": 7,
+            "quantity": 1,
+            "pricePerUnit": 500.00,
+            "totalPrice": 500.00
+        }
+    ],
+    "notes": "Первый опыт аренды"
+}
+Получение списка бронирований:
+
+GET /api/v1/bookings?with_details=true
+Получение бронирований пользователя:
+
+GET /api/v1/bookings?user_id=1&with_details=true
+Получение бронирований по статусу:
+
+GET /api/v1/bookings?status=confirmed
+Получение активных бронирований:
+
+GET /api/v1/bookings/active
+Проверка доступности автомобиля:
+
+GET /api/v1/bookings/check-availability?car_id=6&pickup_date=2026-08-01&dropoff_date=2026-08-04
+Получение доступных автомобилей на даты:
+
+GET /api/v1/bookings/available-cars?pickup_date=2026-08-01&dropoff_date=2026-08-04
+Обновление статуса бронирования:
+
+PATCH /api/v1/bookings/1/status
+Content-Type: application/json
+
+{
+    "status": "confirmed"
+}
+Отмена бронирования:
+
+PATCH /api/v1/bookings/1/cancel
+Получение статистики:
+
+GET /api/v1/bookings/statistics

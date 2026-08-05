@@ -1,0 +1,29 @@
+Создание локации:
+
+POST /api/v1/locations
+Content-Type: application/json
+
+{
+    "name": "Центральный офис",
+    "address": "ул. Тверская, д. 15",
+    "city": "Москва",
+    "state": "Московская область",
+    "country": "Россия",
+    "zipCode": "101000",
+    "phone": "+7 (495) 123-45-67",
+    "email": "moscow@carrental.ru",
+    "latitude": 55.7558,
+    "longitude": 37.6173
+}
+
+Получение списка локаций:
+GET /api/v1/locations?with_stats=true
+
+Поиск локаций рядом:
+GET /api/v1/locations/nearby?latitude=55.7558&longitude=37.6173&radius=5
+
+Получение популярных локаций:
+GET /api/v1/locations/popular?limit=5
+
+Получение статистики:
+GET /api/v1/locations/statistics

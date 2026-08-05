@@ -1,0 +1,11 @@
+flysystem:
+    storages:
+        default.storage:
+            adapter: 'aws'
+            options:
+                client: 'aws.s3.client'
+                bucket: '%env(S3_BUCKET)%'
+                prefix: ''
+                options:
+                    region: 'us-east-1'
+                    version: 'latest'

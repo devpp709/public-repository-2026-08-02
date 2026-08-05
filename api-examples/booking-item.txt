@@ -1,0 +1,126 @@
+Создание бронирования с автомобилем
+
+POST /api/v1/bookings
+Content-Type: application/json
+
+{
+    "userId": 1,
+    "pickupLocationId": 1,
+    "dropoffLocationId": 1,
+    "pickupDate": "2026-08-01",
+    "pickupTime": "10:00:00",
+    "dropoffDate": "2026-08-04",
+    "dropoffTime": "10:00:00",
+    "items": [
+        {
+            "carId": 6,
+            "dailyRate": 3000.00,
+            "hourlyRate": null,
+            "totalPrice": 9000.00
+        }
+    ],
+    "extras": [],
+    "notes": "Бронирование на 3 дня"
+}
+Создание бронирования с несколькими автомобилями
+
+POST /api/v1/bookings
+Content-Type: application/json
+
+{
+    "userId": 1,
+    "pickupLocationId": 1,
+    "dropoffLocationId": 4,
+    "pickupDate": "2026-08-10",
+    "pickupTime": "09:00:00",
+    "dropoffDate": "2026-08-15",
+    "dropoffTime": "18:00:00",
+    "items": [
+        {
+            "carId": 6,
+            "dailyRate": 3000.00,
+            "hourlyRate": null,
+            "totalPrice": 15000.00
+        },
+        {
+            "carId": 8,
+            "dailyRate": 4200.00,
+            "hourlyRate": null,
+            "totalPrice": 21000.00
+        }
+    ],
+    "extras": [
+        {
+            "extraServiceId": 7,
+            "quantity": 2,
+            "pricePerUnit": 500.00,
+            "totalPrice": 1000.00
+        }
+    ],
+    "notes": "Корпоративная аренда для делегации"
+}
+Почасовая аренда
+
+POST /api/v1/bookings
+Content-Type: application/json
+
+{
+    "userId": 2,
+    "pickupLocationId": 2,
+    "dropoffLocationId": 2,
+    "pickupDate": "2026-08-02",
+    "pickupTime": "09:00:00",
+    "dropoffDate": "2026-08-02",
+    "dropoffTime": "18:00:00",
+    "items": [
+        {
+            "carId": 2,
+            "dailyRate": 1700.00,
+            "hourlyRate": 220.00,
+            "totalPrice": 1980.00
+        }
+    ],
+    "extras": [],
+    "notes": "Аренда на 9 часов для поездки в аэропорт"
+}
+2. Работа с BookingItem через API
+Получение всех автомобилей в бронировании
+
+GET /api/v1/bookings/1/items
+Добавление автомобиля в существующее бронирование
+
+POST /api/v1/bookings/1/items
+Content-Type: application/json
+
+{
+    "carId": 8,
+    "dailyRate": 4200.00,
+    "hourlyRate": null,
+    "totalPrice": 8400.00
+}
+Обновление автомобиля в бронировании (изменение цены)
+
+PATCH /api/v1/bookings/1/items/1
+Content-Type: application/json
+
+{
+    "dailyRate": 3200.00,
+    "totalPrice": 9600.00
+}
+Удаление автомобиля из бронирования
+
+DELETE /api/v1/bookings/1/items/2
+Удаление всех автомобилей из бронирования
+
+DELETE /api/v1/bookings/1/items
+3. Поиск и фильтрация
+Поиск бронирований по автомобилю
+
+GET /api/v1/bookings/search?car_id=6
+Получение истории аренды автомобиля
+
+GET /api/v1/cars/6/bookings
+
+Статистика по BookingItem
+bash
+GET /api/v1/bookings/items/popular?limit=5

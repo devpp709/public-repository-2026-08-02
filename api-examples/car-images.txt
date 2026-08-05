@@ -1,0 +1,33 @@
+Добавление изображения:
+
+POST /api/v1/cars/1/images
+Content-Type: application/json
+
+{
+    "imageUrl": "https://example.com/images/car1.jpg",
+    "isMain": true,
+    "sortOrder": 1
+}
+Получение всех изображений автомобиля:
+
+GET /api/v1/cars/1/images
+Получение главного изображения:
+
+GET /api/v1/cars/1/images/main
+Установка главного изображения:
+
+PATCH /api/v1/cars/1/images/5/set-main
+Переупорядочивание изображений:
+
+PATCH /api/v1/cars/1/images/reorder
+Content-Type: application/json
+
+{
+    "image_ids": [5, 3, 7, 1]
+}
+Удаление изображения:
+
+DELETE /api/v1/cars/1/images/5
+Удаление всех изображений автомобиля:
+
+DELETE /api/v1/cars/1/images

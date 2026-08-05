@@ -1,0 +1,48 @@
+Добавление характеристики:
+
+POST /api/v1/cars/1/features
+Content-Type: application/json
+
+{
+    "featureId": 5,
+    "value": "Есть"
+}
+Массовое добавление характеристик:
+
+POST /api/v1/cars/1/features/bulk
+Content-Type: application/json
+
+{
+    "features": [
+        {"featureId": 1, "value": "Есть"},
+        {"featureId": 2, "value": "Есть"},
+        {"featureId": 3, "value": "Premium"},
+        {"featureId": 4, "value": "Есть"}
+    ]
+}
+Получение всех характеристик автомобиля:
+
+GET /api/v1/cars/1/features
+Получение характеристик по категории:
+
+GET /api/v1/cars/1/features?category=Comfort
+Получение статистики по характеристикам:
+
+GET /api/v1/cars/1/features/statistics
+Проверка наличия характеристики:
+
+GET /api/v1/cars/1/features/check/5
+Обновление значения характеристики:
+
+PATCH /api/v1/cars/1/features/5
+Content-Type: application/json
+
+{
+    "value": "Нет"
+}
+Удаление характеристики:
+
+DELETE /api/v1/cars/1/features/5
+Удаление всех характеристик:
+
+DELETE /api/v1/cars/1/features

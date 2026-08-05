@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="1a1d507a-e4c3-44d8-b6ff-ccd77600b229" name="1">
+        <fileTransfer rootFolder="/var/www/html/rentcar" accessType="SFTP" host="31.31.201.163" port="22" sshConfigId="8365228d-31e1-4f24-845c-0105a768d873" sshConfig="root@31.31.201.163:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

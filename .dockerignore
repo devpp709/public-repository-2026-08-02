@@ -1,0 +1,15 @@
+# .dockerignore
+.git
+node_modules
+vendor
+var/cache
+var/log
+var/sessions
+.env
+.env.local
+.DS_Store
+*.log
+*.sqlite
+.next
+.idea
+.vscode

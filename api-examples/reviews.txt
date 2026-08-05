@@ -1,0 +1,40 @@
+Создание отзыва
+
+POST /api/v1/reviews
+Content-Type: application/json
+
+{
+    "bookingId": 1,
+    "carId": 6,
+    "userId": 1,
+    "rating": 5,
+    "title": "Отличный автомобиль!",
+    "comment": "Toyota Camry превзошла все ожидания. Автомобиль в идеальном состоянии, чистый, с полным баком. Очень комфортно ездить, отличная шумоизоляция.",
+    "pros": "Комфортный салон, отличная управляемость, экономичный расход топлива.",
+    "cons": "Немного жестковата подвеска на плохих дорогах.",
+    "isVerified": true
+}
+Получение отзывов по автомобилю
+
+GET /api/v1/cars/6/reviews
+Получение статистики по отзывам автомобиля
+
+GET /api/v1/cars/6/reviews/statistics
+Получение последних отзывов
+
+GET /api/v1/reviews?type=latest&limit=5
+Получение лучших отзывов
+
+GET /api/v1/reviews?type=top&limit=5
+Получение самых полезных отзывов
+
+GET /api/v1/reviews?type=helpful&limit=5
+Отметить отзыв как полезный
+
+POST /api/v1/reviews/1/helpful
+Проверить, оставлял ли пользователь отзыв
+
+GET /api/v1/bookings/1/reviews/check/1
+Удалить отзыв
+
+DELETE /api/v1/reviews/1

@@ -1,0 +1,2700 @@
+/* Общие стили и сброс */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    background: #f8f9fa;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1301px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Цвета */
+:root {
+    --primary-color: #0866c4;
+    --text-dark: #1C2130;
+    --text-light: #494D59;
+    --border-light: #D1D7EE;
+    --bg-light: #F5F7FF;
+}
+
+/* --- Header --- */
+.zita-site-header {
+    background: #fff;
+    border-bottom: 1px solid #eee;
+}
+
+.main-header-bar {
+    padding: 4px 0 2px;
+}
+
+.main-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.zita-logo img {
+    max-width: 217px;
+}
+
+#zita-menu {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    list-style: none;
+}
+
+#zita-menu li a {
+    font-family: Poppins;
+    font-weight: 500;
+    color: #000;
+    padding: 8px 12px;
+    transition: color 0.3s;
+}
+
+#zita-menu li a:hover {
+    color: var(--primary-color);
+}
+
+#zita-menu .current-menu-item a {
+    color: var(--primary-color);
+}
+
+.main-header-btn {
+    background: var(--primary-color);
+    color: #fff !important;
+    padding: 8px 24px;
+    border-radius: 9px;
+    border: 1px solid var(--primary-color);
+    transition: all 0.3s;
+}
+
+.main-header-btn:hover {
+    background: transparent;
+    color: var(--primary-color) !important;
+}
+
+/* --- Hero Section --- */
+.hero-section {
+    position: relative;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    color: #fff;
+    padding: 80px 0;
+}
+
+.hero-section .elementor-background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.hero-section .elementor-container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+}
+
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 1;
+}
+
+.highlighted-text {
+    color: var(--primary-color);
+    background: rgba(8, 102, 196, 0.15);
+    padding: 0 8px;
+    border-radius: 4px;
+}
+
+.compact-search {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.compact-search form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 16px 24px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+}
+
+.tf_destination-wrap {
+    flex: 1 0 auto;
+    width: 350px;
+}
+
+.tf_label-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+}
+
+.tf_form-inner {
+    display: flex;
+    align-items: center;
+    background: #f5f7fa;
+    border-radius: 6px;
+    padding: 0 8px;
+}
+
+.tf_form-inner input {
+    border: none;
+    background: transparent;
+    padding: 8px 10px;
+    font-size: 14px;
+    width: 100%;
+    outline: none;
+}
+
+.tf_submit-wrap {
+    flex: 0 0 auto;
+}
+
+.tf-submit {
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 10px 32px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.tf-submit:hover {
+    background: #0550a0;
+}
+
+
+
+/* --- Services Section --- */
+.services-section {
+    padding: 80px 0;
+    background: var(--bg-light);
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.4rem;
+    margin-bottom: 20px;
+}
+
+.section-subtitle {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 40px;
+    color: var(--text-light);
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.service-item {
+    text-align: center;
+    padding: 40px 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s;
+}
+
+.service-item:hover {
+    transform: translateY(-6px);
+}
+
+.service-item .elementor-icon {
+    font-size: 48px;
+    color: var(--primary-color);
+    margin-bottom: 16px;
+}
+
+.service-item .elementor-divider-separator {
+    display: block;
+    width: 40px;
+    height: 3px;
+    background: var(--primary-color);
+    margin: 12px auto;
+}
+
+.service-item p {
+    color: var(--text-light);
+}
+
+/* --- Car Listing Section --- */
+.car-listing-section {
+    padding: 80px 0;
+}
+
+.car-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.tf-single-car-view {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s;
+}
+
+.tf-single-car-view:hover {
+    transform: translateY(-4px);
+}
+
+.tf-car-image {
+    position: relative;
+}
+
+.tf-car-image img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.tf-other-infos {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.tf-reviews-box span {
+    font-size: 13px;
+}
+
+.tf-tags-box ul {
+    list-style: none;
+    display: flex;
+    gap: 6px;
+}
+
+.tf-tags-box ul li {
+    background: var(--primary-color);
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.tf-car-details {
+    padding: 16px;
+}
+
+.tf-car-details h3 {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+}
+
+.list-items {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 12px;
+    margin-bottom: 16px;
+}
+
+.list {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--text-light);
+}
+
+.tf-booking-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+}
+
+.tf-price-info h3 {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
+.view-more {
+    background: var(--primary-color);
+    color: #fff;
+    padding: 6px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+.view-more:hover {
+    background: #0550a0;
+}
+
+/* --- Brand Section --- */
+.brand-section {
+    padding: 60px 0;
+    background: var(--bg-light);
+}
+
+.brand-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.brand-item {
+    position: relative;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    overflow: hidden;
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.brand-item .elementor-background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.brand-item h2 {
+    position: relative;
+    z-index: 1;
+}
+
+.brand-item:nth-child(1) { background: linear-gradient(135deg, #2d3436, #636e72); }
+.brand-item:nth-child(2) { background: linear-gradient(135deg, #0c2461, #4a69bd); }
+.brand-item:nth-child(3) { background: linear-gradient(135deg, #b71540, #e77f67); }
+.brand-item:nth-child(4) { background: linear-gradient(135deg, #1e272e, #485460); }
+
+/* --- Feature Section --- */
+.feature-section {
+    padding: 60px 0;
+}
+
+.feature-section .elementor-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.elementor-icon-box-wrapper {
+    text-align: center;
+    padding: 24px;
+}
+
+.elementor-icon {
+    font-size: 40px;
+    color: var(--primary-color);
+    display: inline-block;
+    padding: 16px;
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
+    margin-bottom: 16px;
+}
+
+.elementor-icon-box-content h3 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.elementor-icon-box-content p {
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+/* --- Promo Section --- */
+.promo-section {
+    padding: 60px 0;
+}
+
+.promo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.promo-item {
+    position: relative;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    padding: 40px;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.promo-item .elementor-background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.promo-item h2 {
+    position: relative;
+    z-index: 1;
+    font-size: 1.8rem;
+}
+
+.promo-item .price-tag {
+    color: #ffd700;
+}
+
+.promo-convertible {
+    background: linear-gradient(135deg, #1a1a2e, #2d3436);
+}
+
+.promo-premium {
+    background: linear-gradient(135deg, #0c2461, #4a69bd);
+}
+
+.promo-item .elementor-button {
+    position: relative;
+    z-index: 1;
+    background: #fff;
+    color: #333;
+    padding: 10px 32px;
+    border-radius: 30px;
+    font-weight: 600;
+    margin-top: 16px;
+    transition: all 0.3s;
+}
+
+.promo-item .elementor-button:hover {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+/* --- Testimonial Section --- */
+.testimonial-section {
+    padding: 80px 0;
+    background: var(--bg-light);
+}
+
+.testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.testimonial-item {
+    background: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.testimonial-item .image_ img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 12px;
+}
+
+.testimonial-item .name_ {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.testimonial-item .content_ {
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+/* --- CTA Section --- */
+.cta-section {
+    padding: 60px 0;
+    background: linear-gradient(135deg, #0c2461, #1a1a2e);
+    color: #fff;
+    text-align: center;
+    position: relative;
+}
+
+.cta-section .elementor-background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.cta-text {
+    font-size: 2rem;
+    font-weight: 700;
+    position: relative;
+    z-index: 1;
+}
+
+.cta-section .elementor-button {
+    position: relative;
+    z-index: 1;
+    background: #fff;
+    color: #0c2461;
+    padding: 16px 48px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-top: 20px;
+    display: inline-block;
+    transition: all 0.3s;
+}
+
+.cta-section .elementor-button:hover {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+/* --- About Section --- */
+.about-section {
+    padding: 80px 0;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+}
+
+.about-content .section-title {
+    text-align: left;
+}
+
+.about-tagline {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--primary-color);
+}
+
+.about-content p {
+    color: var(--text-light);
+    margin-bottom: 16px;
+}
+
+.about-content .elementor-button {
+    background: var(--primary-color);
+    color: #fff;
+    padding: 12px 36px;
+    border-radius: 30px;
+    display: inline-block;
+    transition: background 0.3s;
+}
+
+.about-content .elementor-button:hover {
+    background: #0550a0;
+}
+
+.about-image img {
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* --- App Download Section --- */
+.app-download-section {
+    padding: 80px 0;
+    background: var(--bg-light);
+}
+
+.app-download-section .elementor-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+}
+
+.app-image {
+    max-width: 100%;
+    border-radius: 16px;
+}
+
+.download-tagline {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 12px;
+}
+
+.app-buttons {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.app-buttons img {
+    height: 50px;
+    transition: transform 0.3s;
+}
+
+.app-buttons img:hover {
+    transform: scale(1.05);
+}
+
+/* --- Why Choose Us Section --- */
+.why-choose-section {
+    padding: 80px 0;
+}
+
+.why-choose-section .elementor-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+}
+
+.why-choose-section .image-column img {
+    width: 100%;
+    border-radius: 16px;
+}
+
+.tagline {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 24px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.feature-item h3 {
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+}
+
+.feature-item p {
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+/* --- Footer --- */
+#zita-footer {
+    background: #1a1a2e;
+    color: #fff;
+}
+
+.widget-footer-bar {
+    padding: 50px 0 30px;
+}
+
+.widget-footer-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.5fr;
+    gap: 40px;
+}
+
+.widget-footer-container h2 {
+    font-size: 1.3rem;
+    margin-bottom: 16px;
+    color: #fff;
+}
+
+.widget-footer-container p {
+    color: #b0b0b0;
+    font-size: 0.95rem;
+    line-height: 1.8;
+}
+
+.widget-footer-container ul {
+    list-style: none;
+}
+
+.widget-footer-container ul li {
+    margin-bottom: 8px;
+}
+
+.widget-footer-container ul li a {
+    color: #b0b0b0;
+    transition: color 0.3s;
+}
+
+.widget-footer-container ul li a:hover {
+    color: var(--primary-color);
+}
+
+.bottom-footer-bar {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 15px 0;
+}
+
+.bottom-footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-copyright {
+    color: #b0b0b0;
+    font-size: 0.9rem;
+}
+
+.footer-copyright a {
+    color: #fff;
+}
+
+.powered-by-wordpress {
+    margin-left: 8px;
+}
+
+.powered-by-wordpress a {
+    color: var(--primary-color);
+}
+
+.social-icon {
+    display: flex;
+    gap: 12px;
+    list-style: none;
+}
+
+.social-icon li a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    transition: all 0.3s;
+}
+
+.social-icon li a:hover {
+    background: var(--primary-color);
+    transform: translateY(-3px);
+}
+
+/* --- Адаптивность --- */
+@media (max-width: 1024px) {
+    .services-grid,
+    .car-grid,
+    .brand-grid,
+    .testimonial-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .feature-section .elementor-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .promo-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-grid,
+    .app-download-section .elementor-container,
+    .why-choose-section .elementor-container {
+        grid-template-columns: 1fr;
+    }
+
+    .widget-footer-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-header-container {
+        flex-wrap: wrap;
+    }
+
+    #zita-menu {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .compact-search form {
+        flex-direction: column;
+        padding: 16px;
+    }
+
+    .tf_destination-wrap {
+        width: 100%;
+    }
+
+    .services-grid,
+    .car-grid,
+    .brand-grid,
+    .testimonial-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .feature-section .elementor-container {
+        grid-template-columns: 1fr;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bottom-footer-container {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+}
+
+/* Стили для формы поиска Tourfic */
+.elementor-widget-container.widget-area {
+    width: 100%;
+}
+
+.tf_tf_booking-widget-wrap {
+    width: 100%;
+}
+
+.tf_custom-container {
+    width: 100%;
+}
+
+.tf_custom-inner {
+    width: 100%;
+}
+
+.tf-booking-forms-wrapper {
+    width: 100%;
+}
+
+.tf-tabcontent {
+    display: block;
+}
+
+.tf_booking-widget.default-form {
+    padding: 0;
+    background: none;
+    border: none;
+}
+
+.tf_homepage-booking {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    margin: 24px 0 16px;
+    height: 55px;
+}
+
+.tf_destination-wrap {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 0 15px;
+    height: 55px;
+}
+
+.tf_destination-wrap:not(:last-child) {
+    border-right: 1px solid #D1D7EE;
+}
+
+.tf_input-inner {
+    padding: 0;
+}
+
+.tf_form-row {
+    display: block;
+}
+
+.tf_label-row {
+    display: block;
+    margin: 0;
+    width: 100%;
+}
+
+.tf_label-row .tf-label {
+    display: none;
+}
+
+.tf_form-inner {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 0;
+}
+
+.tf-search-form-field-icon {
+    display: flex;
+    align-items: center;
+    margin-right: 8px;
+}
+
+.tf-search-form-field-icon i {
+    font-size: 15px;
+    color: #566676;
+}
+
+.tf_form-inner input[type="text"] {
+    border: 0px solid;
+    width: 100%;
+    background: transparent;
+    box-shadow: none;
+    height: 45px;
+    margin: 0px;
+    padding: 6px 5px;
+    font-size: 14px;
+    border-radius: 6px;
+    outline: none;
+}
+
+.tf_form-inner input[type="text"]:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.selected-pickup-time,
+.selected-dropoff-time {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    cursor: pointer;
+}
+
+.selected-pickup-time .text,
+.selected-dropoff-time .text {
+    font-size: 14px;
+    color: #333;
+}
+
+.selected-pickup-time .icon,
+.selected-dropoff-time .icon {
+    display: flex;
+    align-items: center;
+}
+
+.tf-select-time {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    margin-top: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.time-options-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.time-options-list li {
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.time-options-list li:hover {
+    background: #f0f0f0;
+}
+
+.tf_submit-wrap {
+    text-align: center;
+    margin-top: 0;
+}
+
+.tf_btn.tf-submit {
+    background: #0866c4;
+    color: #fff;
+    border: none;
+    padding: 12px 48px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    height: 48px;
+}
+
+.tf_btn.tf-submit:hover {
+    background: #0550a0;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 1024px) {
+    .tf_homepage-booking {
+        display: block;
+        height: auto;
+        padding: 10px;
+    }
+
+    .tf_destination-wrap {
+        display: block;
+        width: 100% !important;
+        border-right: none !important;
+        border-bottom: 1px solid #D1D7EE;
+        padding: 5px 10px;
+        height: auto;
+    }
+
+    .tf_destination-wrap:last-child {
+        border-bottom: none;
+    }
+
+    .tf_submit-wrap {
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2rem !important;
+    }
+
+    .tf_homepage-booking {
+        margin: 16px 0;
+    }
+
+    .tf_btn.tf-submit {
+        width: 100%;
+        padding: 12px 20px;
+    }
+}
+
+/* Car Listing Section Styles */
+.tf-car-archive-result .tf-car-result .tf-single-car-view .tf-car-details ul {
+    list-style: none;
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0;
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 16px 40px;
+}
+
+.tf-car-archive-result .tf-car-result .tf-single-car-view .tf-car-details ul li {
+    color: var(--tf-text-paragraph, #494D59);
+    font-size: 0.938rem;
+    font-weight: 400;
+    display: flex;
+    width: calc(33.3333% - 8px);
+}
+
+.tf-car-archive-result .tf-car-result .tf-single-car-view .tf-car-details ul li svg {
+    height: 20px;
+    width: 20px;
+    flex-shrink: 0;
+}
+
+.tf-car-archive-result .tf-car-result .tf-single-car-view .tf-car-details ul li p {
+    width: 100%;
+    margin: 0;
+    padding-left: 4px;
+}
+
+/* Grid layout */
+.tf-flex.tf-flex-gap-32 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+}
+
+.tf-flex-space-bttn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tf-mb-24 {
+    margin-bottom: 24px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .tf-flex.tf-flex-gap-32 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .tf-flex.tf-flex-gap-32 {
+        grid-template-columns: 1fr;
+    }
+
+    .tf-car-archive-result .tf-car-result .tf-single-car-view .tf-car-details ul li {
+        width: calc(50% - 8px);
+    }
+}
+
+@media (max-width: 480px) {
+    .tf-car-archive-result .tf-car-result .tf-single-car-view .tf-car-details ul li {
+        width: 100%;
+    }
+}
+
+.language-switcher {
+    position: relative;
+    display: inline-block;
+}
+
+.language-loader {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border: 2px solid #e0e0e0;
+    border-top-color: #0866c4;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+    .language-switcher button span.hidden {
+        display: none;
+    }
+}
+.tf_datetime_picker {
+    width:100%;
+    border:none;
+    outline:none;
+    font-size:14px;
+    cursor:pointer;
+    background:transparent;
+}
+
+
+.react-datepicker-wrapper {
+    width:100%;
+}
+
+
+.react-datepicker {
+    font-family:inherit;
+    border-radius:8px;
+    box-shadow:0 5px 20px rgba(0,0,0,.15);
+}
+
+
+.react-datepicker__header {
+    background:#0866c4;
+}
+
+.booking-date-range {
+    width: 280px;
+}
+
+.booking-date-range .rs-picker-toggle {
+    height: 42px;
+    display: flex;
+    align-items: center;
+}
+
+/* src/styles/catalog.css */
+
+/* Container */
+.tf-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.tf-container-inner {
+    padding: 40px 0;
+}
+
+/* Flex Utilities */
+.tf-flex {
+    display: flex;
+}
+
+.tf-flex-gap-8 {
+    gap: 8px;
+}
+
+.tf-flex-gap-16 {
+    gap: 16px;
+}
+
+.tf-flex-gap-32 {
+    gap: 32px;
+}
+
+.tf-flex-space-bttn {
+    justify-content: space-between;
+}
+
+.tf-flex-align-center {
+    align-items: center;
+}
+
+.tf-mb-24 {
+    margin-bottom: 24px;
+}
+
+.tf-mb-30 {
+    margin-bottom: 30px;
+}
+
+/* Search Box */
+.tf-archive-search-box {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px 25px;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 40px;
+}
+
+.tf-archive-search-box-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.tf-date-select-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.tf-date-single-select {
+    display: flex;
+    flex: 1;
+    min-width: 200px;
+    background: #f8f9fc;
+    border-radius: 8px;
+    padding: 10px 16px;
+    border: 1px solid #e8ecf1;
+    transition: all 0.3s ease;
+}
+
+.tf-date-single-select.active {
+    border-color: #0866c4;
+    background: #f0f7ff;
+}
+
+.tf-date-single-select .tf-select-date {
+    flex: 1;
+}
+
+.tf-flex-gap-4 {
+    gap: 4px;
+}
+
+.tf-select-date .icon {
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.tf-select-date .info-select {
+    flex: 1;
+}
+
+.tf-select-date .info-select h5 {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b7a8f;
+    margin: 0 0 2px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tf-select-date .info-select input[type="text"] {
+    border: none;
+    background: transparent;
+    padding: 4px 0;
+    font-size: 14px;
+    color: #1a2332;
+    width: 100%;
+    outline: none;
+}
+
+.tf-select-date .info-select input[type="text"]::placeholder {
+    color: #a0aec0;
+}
+
+.selected-pickup-time,
+.selected-dropoff-time {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 4px 0;
+}
+
+.selected-pickup-time .text,
+.selected-dropoff-time .text {
+    font-size: 14px;
+    color: #1a2332;
+}
+
+/* Driver Location Box */
+.tf-driver-location-box {
+    padding-top: 16px;
+    border-top: 1px solid #e8ecf1;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.tf-driver-location ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.tf-driver-location ul li label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #4a5a6e;
+    cursor: pointer;
+}
+
+.tf-driver-location ul li input[type="checkbox"] {
+    display: none;
+}
+
+.tf-checkmark {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #cbd5e0;
+    border-radius: 4px;
+    display: inline-block;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.tf-driver-location ul li input[type="checkbox"]:checked + .tf-checkmark {
+    background: #0866c4;
+    border-color: #0866c4;
+}
+
+.tf-driver-location ul li input[type="checkbox"]:checked + .tf-checkmark::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.tf-submit-button .tf-filter-cars {
+    background: #0866c4;
+    color: #fff;
+    border: none;
+    padding: 10px 32px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.3s ease;
+}
+
+.tf-submit-button .tf-filter-cars:hover {
+    background: #0550a0;
+}
+
+/* Archive Header */
+.tf-archive-header {
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.tf-archive-view ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 8px;
+}
+
+.tf-archive-view ul li {
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #6b7a8f;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    border: 1px solid #e8ecf1;
+}
+
+.tf-archive-view ul li:hover {
+    background: #f0f7ff;
+}
+
+.tf-archive-view ul li.active {
+    background: #0866c4;
+    color: #fff;
+    border-color: #0866c4;
+}
+
+.tf-total-result-bar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    color: #4a5a6e;
+}
+
+.tf-total-results span {
+    font-weight: 700;
+    color: #1a2332;
+    font-size: 16px;
+}
+
+/* Car Details Column */
+.tf-car-details-column {
+    display: flex;
+    gap: 32px;
+}
+
+/* Sidebar */
+.tf-car-archive-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+}
+
+.tf-sidebar-header {
+    padding: 16px 0;
+    border-bottom: 1px solid #e8ecf1;
+    margin-bottom: 20px;
+}
+
+.tf-sidebar-header h4 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a2332;
+    margin: 0;
+}
+
+.filter-reset-btn {
+    background: none;
+    border: none;
+    color: #0866c4;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+/* Car Results */
+.tf-car-archive-result {
+    flex: 1;
+}
+
+.tf-car-result {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 32px;
+}
+
+/* Single Car View */
+.tf-single-car-view {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+    border: 1px solid #eef1f5;
+}
+
+.tf-single-car-view:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
+}
+
+.tf-car-image {
+    position: relative;
+    overflow: hidden;
+}
+
+.tf-car-image img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.tf-single-car-view:hover .tf-car-image img {
+    transform: scale(1.05);
+}
+
+.tf-other-infos {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+}
+
+.tf-reviews-box span {
+    color: #fff;
+    font-size: 13px;
+}
+
+.tf-reviews-box span i {
+    color: #fbbf24;
+}
+
+.tf-tags-box ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.tf-tags-box ul li {
+    background: #ff6b35;
+    color: #fff;
+    padding: 2px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.tf-car-details {
+    padding: 20px 24px 24px;
+}
+
+.tf-car-content h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a2332;
+    margin: 0 0 16px 0;
+}
+
+.tf-car-content h3 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.tf-car-content h3 a:hover {
+    color: #0866c4;
+}
+
+.list-items {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 12px 20px;
+}
+
+.list-items .list {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #4a5a6e;
+}
+
+.list-items .list svg {
+    flex-shrink: 0;
+}
+
+.list-items .list p {
+    margin: 0;
+}
+
+.tf-booking-btn {
+    padding-top: 16px;
+    border-top: 1px solid #eef1f5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.tf-price-info h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a2332;
+    margin: 0;
+}
+
+.tf-price-info h3 small {
+    font-size: 14px;
+    font-weight: 400;
+    color: #6b7a8f;
+}
+
+.view-more {
+    background: #0866c4;
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.3s ease;
+}
+
+.view-more:hover {
+    background: #0550a0;
+    color: #fff;
+}
+
+/* Loading & No Results */
+.loading-spinner {
+    text-align: center;
+    padding: 60px 0;
+    font-size: 18px;
+    color: #6b7a8f;
+    grid-column: 1 / -1;
+}
+
+.no-cars {
+    text-align: center;
+    padding: 60px 0;
+    font-size: 18px;
+    color: #6b7a8f;
+    grid-column: 1 / -1;
+}
+
+/* List View */
+.list-view {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.list-view .tf-single-car-view {
+    display: flex;
+    flex-direction: row;
+}
+
+.list-view .tf-car-image {
+    width: 280px;
+    flex-shrink: 0;
+}
+
+.list-view .tf-car-image img {
+    height: 100%;
+    min-height: 200px;
+}
+
+.list-view .tf-car-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .tf-car-details-column {
+        flex-direction: column;
+    }
+
+    .tf-car-archive-sidebar {
+        width: 100%;
+    }
+
+    .tf-car-result {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
+    .list-view .tf-single-car-view {
+        flex-direction: column;
+    }
+
+    .list-view .tf-car-image {
+        width: 100%;
+    }
+
+    .list-view .tf-car-image img {
+        height: 220px;
+    }
+}
+
+@media (max-width: 768px) {
+    .tf-date-select-box {
+        flex-direction: column;
+    }
+
+    .tf-date-single-select {
+        flex-direction: column;
+    }
+
+    .tf-driver-location-box {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .tf-driver-location ul {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .tf-car-result {
+        grid-template-columns: 1fr;
+    }
+
+    .tf-archive-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .tf-booking-btn {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .view-more {
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .tf-archive-search-box {
+        padding: 16px;
+    }
+
+    .tf-date-single-select {
+        padding: 8px 12px;
+    }
+
+    .tf-car-details {
+        padding: 16px;
+    }
+}
+/* Стили для LocationDropdown */
+.tf-location-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.tf-location-input {
+    height: 45px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.tf-location-list {
+    position: absolute;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    z-index: 9999;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.tf-location-city {
+    font-weight: 600;
+    padding: 10px;
+    background: #f7f7f7;
+}
+
+.tf-location-address {
+    padding: 8px 10px 8px 30px;
+    cursor: pointer;
+}
+
+.tf-location-address:hover {
+    background: #f1f1f1;
+}
+
+.tf-location-label {
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Три блока в одну строку */
+.tf-search-row {
+    display: flex;
+    gap: 0;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e8ecf1;
+    overflow: visible;
+}
+
+.tf-search-block {
+    flex: 1;
+    padding: 12px 16px;
+    border-right: 1px solid #e8ecf1;
+    min-width: 0;
+    position: relative;
+}
+
+.tf-search-block:last-child {
+    border-right: none;
+}
+
+/* Блоки с выпадающими списками поверх других */
+.tf-search-block-location {
+    overflow: visible;
+}
+
+.tf-search-block-date {
+    overflow: visible;
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+    .tf-search-row {
+        flex-wrap: wrap;
+        overflow: visible;
+    }
+
+    .tf-search-block {
+        flex: 1 1 33.33%;
+        border-right: none;
+        border-bottom: 1px solid #e8ecf1;
+    }
+
+    .tf-search-block:last-child {
+        border-bottom: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .tf-search-row {
+        flex-direction: column;
+        overflow: visible;
+    }
+
+    .tf-search-block {
+        flex: 1 1 auto;
+        border-bottom: 1px solid #e8ecf1;
+        padding: 10px 12px;
+    }
+
+    .tf-search-block:last-child {
+        border-bottom: none;
+    }
+}
+.tf-location-input-disabled {
+    cursor: not-allowed !important;
+    opacity: 0.6;
+    background: #f5f5f5;
+}
+
+.tf-location-input-disabled:hover {
+    background: #f5f5f5;
+}
+
+/* Фильтры */
+.tf-filter-section {
+    padding: 16px 0;
+    border-bottom: 1px solid #e8ecf1;
+}
+
+.tf-filter-section:last-child {
+    border-bottom: none;
+}
+
+.tf-filter-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a2332;
+    margin: 0 0 12px 0;
+}
+
+.tf-filter-group {
+    margin-bottom: 12px;
+}
+
+.tf-filter-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #4a5a6e;
+    margin-bottom: 4px;
+}
+
+.tf-filter-select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #e8ecf1;
+    border-radius: 6px;
+    background: #fff;
+    font-size: 13px;
+    color: #1a2332;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.tf-filter-select:focus {
+    border-color: #0866c4;
+}
+
+.tf-filter-input {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid #e8ecf1;
+    border-radius: 6px;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.tf-filter-input:focus {
+    border-color: #0866c4;
+}
+
+.tf-range-group .tf-range-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tf-range-group .tf-range-inputs input {
+    flex: 1;
+}
+
+.tf-range-group .tf-range-inputs span {
+    color: #6b7a8f;
+}
+/* Общие стили для чекбоксов (экстра услуги и комплектация) */
+.tf-extras-section .tf-extra-item,
+.tf-features-section .tf-feature-item {
+    margin-bottom: 8px;
+}
+
+.tf-extras-section .tf-checkbox-label,
+.tf-features-section .tf-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #4a5a6e;
+    cursor: pointer;
+}
+
+.tf-extras-section .tf-checkbox-label input[type="checkbox"],
+.tf-features-section .tf-checkbox-label input[type="checkbox"] {
+    display: none;
+}
+
+.tf-extras-section .tf-checkbox-custom,
+.tf-features-section .tf-checkbox-custom {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #cbd5e0;
+    border-radius: 4px;
+    display: inline-block;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.tf-extras-section .tf-checkbox-label input[type="checkbox"]:checked + .tf-checkbox-custom,
+.tf-features-section .tf-checkbox-label input[type="checkbox"]:checked + .tf-checkbox-custom {
+    background: #0866c4;
+    border-color: #0866c4;
+}
+
+.tf-extras-section .tf-checkbox-label input[type="checkbox"]:checked + .tf-checkbox-custom::after,
+.tf-features-section .tf-checkbox-label input[type="checkbox"]:checked + .tf-checkbox-custom::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 5px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Иконки и названия */
+.tf-extras-section .tf-extra-icon,
+.tf-features-section .tf-feature-icon {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+.tf-extras-section .tf-extra-description,
+.tf-features-section .tf-feature-name {
+    flex: 1;
+}
+
+/* Цена для экстра услуг */
+.tf-extra-price {
+    font-size: 12px;
+    color: #0866c4;
+    font-weight: 600;
+    margin-left: auto;
+}
+
+/* Загрузка и пустые состояния */
+.tf-loading-features,
+.tf-loading-extras,
+.tf-no-features,
+.tf-no-extras {
+    padding: 12px;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+/* src/components/cars/CarCard.module.css или ваш глобальный файл */
+
+/* Адаптивность для CarCard */
+.tf-single-car-view {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.tf-car-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.tf-car-content {
+    flex: 1;
+}
+
+@media (max-width: 768px) {
+    .tf-car-content h3 {
+        font-size: 16px;
+        margin-bottom: 12px !important;
+    }
+
+    .tf-booking-btn {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .tf-price-info h3 {
+        font-size: 18px;
+    }
+
+    .view-more {
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .tf-car-content h3 {
+        font-size: 14px;
+    }
+
+    .tf-price-info h3 {
+        font-size: 16px;
+    }
+
+    .tf-price-info h3 small {
+        font-size: 12px;
+    }
+}
+
+.tf-car-spec-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+
+.tf-spec-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: #4a5a6e;
+}
+
+.tf-spec-label {
+    font-size: 12px;
+    color: #566676;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* src/styles/car-detail.css */
+/* ===== КОНТЕЙНЕРЫ ===== */
+.tf-container {
+    margin: 0 auto;
+    padding: 0 16px;
+    max-width: var(--tf-container-width, 1300px);
+}
+
+@media only screen and (max-width: 768px) {
+    .tf-container {
+        width: 100%;
+        padding: 0 10px;
+    }
+}
+
+/* ===== ОСНОВНАЯ ОБЕРТКА ===== */
+.tf-single-car-details-warper {
+    padding: 32px 0;
+    display: flex;
+    gap: 32px;
+}
+
+@media only screen and (max-width: 768px) {
+    .tf-single-car-details-warper {
+        flex-wrap: wrap;
+        padding: 16px 0;
+    }
+}
+
+/* ===== КОЛОНКА С ДЕТАЛЯМИ ===== */
+.tf-single-car-details-warper .tf-car-details-column {
+    width: calc(100% - 472px);
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+}
+
+@media only screen and (max-width: 768px) {
+    .tf-single-car-details-warper .tf-car-details-column {
+        width: 100%;
+    }
+}
+
+/* ===== ЗАГОЛОВОК ===== */
+.tf-single-car-details-warper .tf-car-details-column .tf-car-title .breadcrumb ul {
+    margin: 0;
+    padding: 0;
+}
+
+.tf-single-car-details-warper .tf-car-details-column .tf-car-title .breadcrumb ul li {
+    color: var(--tf-text-paragraph, #494D59);
+    font-size: 1rem;
+    font-weight: 400;
+    display: inline-block;
+}
+
+.tf-single-car-details-warper .tf-car-details-column .tf-car-title .breadcrumb ul li a {
+    color: var(--tf-text-paragraph, #494D59);
+    text-decoration: none;
+}
+
+.tf-single-car-details-warper .tf-car-details-column .tf-car-title .breadcrumb ul li a:hover {
+    color: var(--tf-primary, #0866c4);
+}
+
+/* ===== ГАЛЕРЕЯ ===== */
+.tf-car-hero-gallery {
+    width: 100%;
+}
+
+.tf-car-hero-gallery .tf-featured-car {
+    position: relative;
+    border-radius: 16px;
+}
+
+.tf-car-hero-gallery .tf-featured-car img {
+    border-radius: 16px;
+    height: 338px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.tf-car-hero-gallery .tf-gallery {
+    margin-top: 15px;
+}
+
+/* ===== ОТЗЫВЫ НА КАРТИНКЕ ===== */
+.tf-car-hero-gallery .tf-featured-car .tf-featured-reviews {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+}
+
+.tf-car-hero-gallery .tf-featured-car .tf-featured-reviews a {
+    text-decoration: none;
+    border-radius: 8px;
+    color: var(--tf-text-paragraph, #494D59);
+    font-size: 1rem;
+    font-weight: 400;
+    background: rgba(255, 255, 255, 0.24);
+    backdrop-filter: blur(32px);
+    padding: 8px 12px;
+    display: inline-block;
+}
+
+.tf-car-hero-gallery .tf-featured-car .tf-featured-reviews a span {
+    color: var(--tf-text-paragraph, #494D59);
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.tf-car-hero-gallery .tf-featured-car .tf-featured-reviews a span i {
+    color: #ffc107;
+    font-size: 1.125rem;
+}
+
+/* ===== ИКОНКИ ИЗБРАННОЕ/ПОДЕЛИТЬСЯ ===== */
+.tf-car-hero-gallery .tf-featured-car .tf-wish-and-share {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 16px;
+    position: absolute;
+    right: 16px;
+    top: 16px;
+}
+
+.tf-car-hero-gallery .tf-featured-car .tf-wish-and-share a.tf-share-toggle,
+.tf-car-hero-gallery .tf-featured-car .tf-wish-and-share a.tf-wishlist {
+    margin: 0;
+    padding: 0;
+    height: 32px;
+    width: 32px;
+    border-radius: 100px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--tf-brand-dark, #0866c4);
+    cursor: pointer;
+    font-size: 1.5rem;
+    text-decoration: none;
+    background: rgba(255,255,255,0.9);
+    border: none;
+}
+
+/* ===== МЕНЮ ===== */
+.tf-details-menu {
+    position: relative;
+    overflow: hidden;
+}
+
+.tf-details-menu::before {
+    background: linear-gradient(90deg, rgba(217, 217, 217, 0) 0%, #F1F3F4 100%);
+    position: absolute;
+    content: "";
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 92px;
+    z-index: -1;
+}
+
+.tf-details-menu ul {
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    width: 100%;
+    scrollbar-width: thin;
+    scrollbar-color: #aaa #eee;
+    display: flex;
+    white-space: nowrap;
+}
+
+.tf-details-menu ul li {
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.tf-details-menu ul li a {
+    text-decoration: none;
+    color: var(--tf-text-paragraph, #494D59);
+    font-size: 1rem;
+    font-weight: 400;
+    padding: 8px;
+    display: inline-block;
+}
+
+.tf-details-menu ul li a:hover {
+    color: var(--tf-primary, #0866c4);
+}
+
+.tf-details-menu ul li.active a {
+    color: var(--tf-primary, #0866c4);
+    border-bottom: 2px solid var(--tf-primary, #0866c4);
+}
+
+/* ===== КОНТЕНТ ===== */
+.tf-single-car-details-warper .tf-car-details-column .tf-template-part {
+    width: 100%;
+}
+
+.tf-single-car-details-warper .tf-car-details-column h3 {
+    color: var(--tf-text-heading, #1C2130);
+    font-size: 1.313rem;
+    font-weight: 400;
+    margin-bottom: 16px;
+    margin-top: 0px;
+}
+
+/* ===== CAR INFO ===== */
+.tf-car-info ul {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    gap: 16px 8px;
+}
+
+.tf-car-info ul li {
+    color: var(--tf-text-paragraph, #494D59);
+    font-size: 1rem;
+    font-weight: 400;
+    width: calc(25% - 8px);
+    border-radius: 8px;
+    border: 1px solid var(--tf-brand-lite, #C9D4F7);
+    padding: 8px;
+    position: relative;
+}
+
+@media only screen and (max-width: 768px) {
+    .tf-car-info ul li {
+        width: calc(50% - 8px);
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .tf-car-info ul li {
+        width: 100%;
+    }
+}
+
+.tf-car-info ul li .tf-car-info-tooltip {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    background-color: var(--tf-filling-foreground, #F5F7FF);
+    border-radius: .5rem;
+    padding: 8px 12px;
+    width: 260px;
+    z-index: 1;
+    bottom: 40px;
+    left: 50%;
+    margin-left: -130px;
+    transition: .3s all ease;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.tf-car-info ul li .tf-car-info-tooltip span {
+    color: var(--tf-text-paragraph, #494D59);
+    font-size: 0.875rem;
+}
+
+.tf-car-info ul li:hover .tf-car-info-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* ===== ЛОКАЦИЯ ===== */
+.tf-car-location {
+    width: 100%;
+}
+
+.tf-car-location .tf-car-location-map {
+    border-radius: 8px;
+    background: var(--tf-brand-lite, #C9D4F7);
+    height: 260px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.tf-car-location .tf-car-location-map iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+/* ===== ФОРМА БРОНИРОВАНИЯ ===== */
+.tf-car-booking-form {
+    width: 440px;
+}
+
+@media only screen and (max-width: 768px) {
+    .tf-car-booking-form {
+        width: 100%;
+    }
+}
+
+.tf-car-booking-form .tf-price-header {
+    margin-bottom: 38px;
+}
+
+.tf-car-booking-form .tf-price-header h2 {
+    color: var(--tf-text-heading, #1C2130);
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.tf-car-booking-form .tf-price-header h2 small.pricing-type {
+    color: var(--tf-text-paragraph, #494D59);
+    font-size: 1rem;
+    font-weight: 400;
+    text-transform: capitalize;
+}
+
+.tf-car-booking-form .tf-price-header p {
+    color: var(--tf-text-paragraph, #494D59);
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* ===== ДАТА СЕЛЕКТ ===== */
+.tf-date-select-box {
+    border-radius: 16px;
+    background: var(--tf-filling-foreground, #F5F7FF);
+    padding: 8px 8px 16px 8px;
+    margin-bottom: 32px;
+}
+
+.tf-date-select-box .tf-date-single-select {
+    border-radius: 8px;
+    background: var(--tf-filling-background, #ffffff);
+    padding: 16px;
+    margin-bottom: 8px;
+}
+
+.tf-date-select-box .tf-date-single-select .tf-select-date {
+    width: calc(50% - 8px);
+}
+
+.tf-date-select-box .tf-date-single-select .tf-select-date:first-child {
+    border-right: 1px solid var(--tf-border-lite, #D1D7EE);
+}
+
+.tf-date-select-box .tf-date-single-select .tf-select-date .tf-flex {
+    flex-wrap: nowrap;
+}
+
+.tf-date-select-box .tf-date-single-select .tf-select-date .info-select {
+    width: 100%;
+    position: relative;
+}
+
+.tf-date-select-box .tf-date-single-select .tf-select-date .info-select h5 {
+    color: var(--tf-text-heading, #1C2130);
+    font-size: 0.75rem;
+    font-weight: 400;
+    margin-top: 0px;
+    margin-bottom: 8px;
+}
+
+.tf-date-select-box .tf-date-single-select .tf-select-date .info-select input {
+    min-width: auto;
+    width: 100%;
+    color: var(--tf-text-paragraph, #494D59);
+    font-size: 1rem;
+    font-weight: 400;
+    border: 0px solid;
+    padding-left: 0px;
+    padding: 0;
+    box-shadow: none;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+    outline: none;
+}
+
+/* ===== КНОПКА ОТПРАВКИ ===== */
+.tf-date-select-box .tf-form-submit-btn {
+    padding-top: 8px;
+}
+
+.tf-date-select-box .tf-form-submit-btn button {
+    padding: 16px 32px;
+    border-radius: 8px;
+    background: var(--tf-primary, #0866c4);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    border: 0px solid;
+    transition: .3s all ease;
+}
+
+.tf-date-select-box .tf-form-submit-btn button:hover {
+    background: #0553a0;
+}
+
+/* ===== МОБИЛЬНАЯ КНОПКА БРОНИРОВАНИЯ ===== */
+.tf-mobile-booking-btn {
+    display: none;
+    background: var(--tf-brand-lite, #C9D4F7);
+    padding: 8px;
+}
+
+@media only screen and (max-width: 768px) {
+    .tf-mobile-booking-btn {
+        display: block;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 999;
+        background: #fff;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
+    }
+}
+
+.tf-mobile-booking-btn button {
+    width: 100%;
+    padding: 14px;
+    background: var(--tf-primary, #0866c4);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* ===== ОТЗЫВЫ ===== */
+.tf-review-section {
+    margin-bottom: 32px;
+}
+
+/* ===== УТИЛИТЫ ===== */
+.tf-flex {
+    display: flex;
+}
+
+.tf-flex-align-center {
+    align-items: center;
+}
+
+.tf-flex-justify-center {
+    justify-content: center;
+}
+
+.tf-flex-space-bttn {
+    justify-content: space-between;
+}
+
+.tf-flex-gap-4 {
+    gap: 4px;
+}
+
+.tf-flex-gap-6 {
+    gap: 6px;
+}
+
+.tf-flex-gap-8 {
+    gap: 8px;
+}
+
+.tf-flex-gap-16 {
+    gap: 16px;
+}
+
+.tf-flex-gap-32 {
+    gap: 32px;
+}
+
+.tf-flex-direction-column {
+    flex-direction: column;
+}
+
+.tf-mb-30 {
+    margin-bottom: 30px;
+}

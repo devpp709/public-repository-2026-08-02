@@ -1,0 +1,52 @@
+Добавление услуги:
+
+POST /api/v1/cars/1/extra-services
+Content-Type: application/json
+
+{
+    "extraServiceId": 7,
+    "price": 1500.00,
+    "isRequired": true
+}
+Массовое добавление услуг:
+
+POST /api/v1/cars/1/extra-services/bulk
+Content-Type: application/json
+
+{
+    "services": [
+        {"extraServiceId": 7, "price": 1500.00, "isRequired": true},
+        {"extraServiceId": 8, "price": null, "isRequired": false},
+        {"extraServiceId": 10, "price": 2500.00, "isRequired": false}
+    ]
+}
+Получение всех услуг автомобиля:
+
+GET /api/v1/cars/1/extra-services
+Получение только обязательных услуг:
+
+GET /api/v1/cars/1/extra-services?only_required=true
+Получение услуг с индивидуальной ценой:
+
+GET /api/v1/cars/1/extra-services?with_custom_price=true
+Получение общей суммы обязательных услуг:
+
+GET /api/v1/cars/1/extra-services/required-total
+Получение статистики по услугам:
+
+GET /api/v1/cars/1/extra-services/statistics
+Проверка наличия услуги:
+
+GET /api/v1/cars/1/extra-services/check/7
+Обновление услуги:
+
+PATCH /api/v1/cars/1/extra-services/7
+Content-Type: application/json
+
+{
+    "price": 1800.00,
+    "isRequired": false
+}
+Копирование услуг с другого автомобиля:
+
+POST /api/v1/cars/2/extra-services/copy/1
