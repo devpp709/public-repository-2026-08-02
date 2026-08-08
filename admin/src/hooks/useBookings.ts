@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import {
     BookingsStatisticsResponse,
     bookingsService,
-    DailyBookingStat,
+    DailyBookingStat, MonthlyBookingStatsResponse,
 } from '../services/BookingsService';
 
 export interface UseBookingsStatisticsParams {
@@ -159,5 +159,62 @@ export const useBookingsDailyStats = (
                     ) / stats.length
                 )
                 : 0,
+    };
+};
+
+export const useBookingsMonthlyStatistics = (
+    year: number = new Date().getFullYear(),
+    autoFetch: boolean = true
+) => {
+    const [data, setData] =
+        useState<MonthlyBookingStatsResponse | null>(null);
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] =
+        useState<string | null>(null);
+
+    const fetchData = useCallback(async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const token =
+                localStorage.getItem('auth_token') || undefined;
+
+            const response =
+                await bookingsService.getMonthlyStatistics(
+                    year,
+                    token
+                );
+
+            setData(response);
+        } catch (err) {
+            const errorMessage =
+                err instanceof Error
+                    ? err.message
+                    : 'Не удалось загрузить статистику заказов';
+
+            setError(errorMessage);
+
+            console.error(
+                'Error fetching monthly booking statistics:',
+                err
+            );
+        } finally {
+            setLoading(false);
+        }
+    }, [year]);
+
+    useEffect(() => {
+        if (autoFetch) {
+            fetchData();
+        }
+    }, [fetchData, autoFetch]);
+
+    return {
+        data,
+        loading,
+        error,
+        refetch: fetchData,
     };
 };

@@ -5,9 +5,14 @@ import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { MoreDotIcon } from "../../icons";
 import { useState } from "react";
 import { useLanguage } from "../../i18n/LanguageProvider";
+import { useBookingsMonthlyStatistics } from "../../hooks/useBookings";
 
 export default function MonthlySalesChart() {
   const { t } = useLanguage();
+  const currentYear = new Date().getFullYear();
+  const years = [currentYear, currentYear - 1, currentYear - 2];
+  const [selectedYear, setSelectedYear] = useState(currentYear);
+
 
   const options: ApexOptions = {
     colors: ["#465fff"],
@@ -88,14 +93,21 @@ export default function MonthlySalesChart() {
     },
   };
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const {
+    data: monthlyData,
+    loading,
+    error,
+  } = useBookingsMonthlyStatistics(selectedYear);
+
   const series = [
     {
-      name: t('sales'),
-      data: [168, 385, 201, 298, 187, 195, 291, 110, 215, 390, 280, 112],
+      name: t('orders'),
+      data: monthlyData?.data ?? Array(12).fill(0),
     },
   ];
 
-  const [isOpen, setIsOpen] = useState(false);
 
   function toggleDropdown() {
     setIsOpen(!isOpen);
@@ -109,7 +121,7 @@ export default function MonthlySalesChart() {
       <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            {t('monthly_sales')}
+            {t('bookings_per_month')}
           </h3>
           <div className="relative inline-block">
             <button className="dropdown-toggle" onClick={toggleDropdown}>
@@ -120,18 +132,22 @@ export default function MonthlySalesChart() {
                 onClose={closeDropdown}
                 className="w-40 p-2"
             >
-              <DropdownItem
-                  onItemClick={closeDropdown}
-                  className="flex w-full font-normal text-left text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-              >
-                {t('view_more')}
-              </DropdownItem>
-              <DropdownItem
-                  onItemClick={closeDropdown}
-                  className="flex w-full font-normal text-left text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-              >
-                {t('delete')}
-              </DropdownItem>
+              {years.map((year) => (
+                  <DropdownItem
+                      key={year}
+                      onItemClick={() => {
+                        setSelectedYear(year);
+                        closeDropdown();
+                      }}
+                      className={`flex w-full font-normal text-left rounded-lg ${
+                          selectedYear === year
+                              ? 'bg-gray-100 text-gray-700 dark:bg-white/5 dark:text-gray-300'
+                              : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300'
+                      }`}
+                  >
+                    {year}
+                  </DropdownItem>
+              ))}
             </Dropdown>
           </div>
         </div>

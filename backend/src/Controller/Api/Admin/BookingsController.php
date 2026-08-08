@@ -54,4 +54,20 @@ class BookingsController extends AbstractController
             ],
         ]);
     }
+
+    #[Route('/statistics/monthly', methods: ['GET'])]
+    public function monthlyStatistics(
+        Request $request,
+        BookingRepository $bookingRepository
+    ): JsonResponse {
+        $year = $request->query->getInt(
+            'year',
+            (int) date('Y')
+        );
+
+        return $this->json([
+            'data' => $bookingRepository->getMonthlyBookingStats($year),
+            'year' => $year,
+        ]);
+    }
 }

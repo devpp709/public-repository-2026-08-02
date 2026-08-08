@@ -1,7 +1,7 @@
 {
     "customers": "Клиенты",
     "orders": "Заказы",
-    "monthly_sales": "Продажи за месяц",
+    "bookings_per_month": "Бронирование по месяцам",
     "sales": "Продажи",
     "jan": "Янв",
     "feb": "Фев",

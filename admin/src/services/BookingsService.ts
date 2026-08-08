@@ -29,6 +29,15 @@ export interface GetBookingsStatisticsParams {
     days?: number;
 }
 
+export interface MonthlyBookingStatsResponse {
+    data: {
+        series: {
+            name: string;
+            data: number[];
+        }[];
+    };
+}
+
 class BookingsService {
     private readonly baseEndpoint = '/api/admin/bookings';
 
@@ -88,6 +97,16 @@ class BookingsService {
         };
 
         return colors[trend];
+    }
+
+    async getMonthlyStatistics(
+        year: number,
+        token?: string
+    ): Promise<MonthlyBookingStatsResponse> {
+        return api.get<MonthlyBookingStatsResponse>(
+            `${this.baseEndpoint}/statistics/monthly?year=${year}`,
+            token
+        );
     }
 }
 

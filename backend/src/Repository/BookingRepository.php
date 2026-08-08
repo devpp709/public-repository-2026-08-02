@@ -402,4 +402,35 @@ class BookingRepository extends ServiceEntityRepository
 
         return $dailyStats;
     }
+
+    public function getMonthlyBookingStats(int $year): array
+    {
+        $connection = $this->getEntityManager()->getConnection();
+
+        $sql = <<<SQL
+        SELECT
+            EXTRACT(MONTH FROM created_at)::integer AS month,
+            COUNT(id) AS count
+        FROM bookings
+        WHERE created_at >= :start
+          AND created_at < :end
+          AND status != :cancelled
+        GROUP BY EXTRACT(MONTH FROM created_at)
+        ORDER BY month
+    SQL;
+
+        $result = $connection->executeQuery($sql, [
+            'start' => "$year-01-01 00:00:00",
+            'end' => ($year + 1) . '-01-01 00:00:00',
+            'cancelled' => 'cancelled',
+        ])->fetchAllAssociative();
+
+        $stats = array_fill(1, 12, 0);
+
+        foreach ($result as $row) {
+            $stats[(int) $row['month']] = (int) $row['count'];
+        }
+
+        return array_values($stats);
+    }
 }
