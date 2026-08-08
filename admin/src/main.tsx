@@ -9,17 +9,23 @@ import App from "./App";
 import { AppWrapper } from "./components/common/PageMeta";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./context/AuthContext";
+import { LanguageProvider } from "./i18n/LanguageProvider";
+
+// Импорт конфигурации i18n
+import "./i18n/config";
 
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <BrowserRouter>
-            <ThemeProvider>
-                <AuthProvider>
-                    <AppWrapper>
-                        <App />
-                    </AppWrapper>
-                </AuthProvider>
-            </ThemeProvider>
+            <LanguageProvider>
+                <ThemeProvider>
+                    <AuthProvider>
+                        <AppWrapper>
+                            <App />
+                        </AppWrapper>
+                    </AuthProvider>
+                </ThemeProvider>
+            </LanguageProvider>
         </BrowserRouter>
     </StrictMode>,
 );

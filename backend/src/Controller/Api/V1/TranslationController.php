@@ -5,18 +5,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
-
-#[Route('/api/v1')]
+#[Route('/api/v1/translations')]
 class TranslationController extends AbstractController
 {
     // 1. Для /api/translations/ru/common
-    #[Route('/translations/language/{locale}/{namespace}', name: 'api_translations_locale_namespace', methods: ['GET'])]
+    #[Route('/language/{locale}/{namespace}', name: 'api_translations_locale_namespace', methods: ['GET'])]
     public function getTranslationsWithNamespace(string $locale, string $namespace = 'common'): JsonResponse
     {
         return $this->getTranslations($locale, $namespace);
     }
 
-    #[Route('/translations/languages', name: 'api_translations_languages', methods: ['GET'])]
+    #[Route('/languages', name: 'api_translations_languages', methods: ['GET'])]
     public function getLanguages(): JsonResponse
     {
         // Проверяем какие папки существуют
@@ -41,7 +40,7 @@ class TranslationController extends AbstractController
         return $this->json($languages);
     }
 
-    #[Route('/translations/language/{locale}', name: 'api_translations_language_locale', methods: ['GET'])]
+    #[Route('/language/{locale}', name: 'api_translations_language_locale', methods: ['GET'])]
     public function getTranslationsWithoutNamespace(string $locale): JsonResponse
     {
         return $this->getTranslations($locale, 'common');
