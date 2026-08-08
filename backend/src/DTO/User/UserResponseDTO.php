@@ -82,11 +82,11 @@ class UserResponseDTO
         $dto->driverLicense = $user->getDriverLicense();
         $dto->passportNumber = $user->getPassportNumber();
         $dto->avatar = $user->getAvatar();
-        $dto->role = $user->getRole();
-        $dto->roleLabel = $user->getRoleLabel();
+        $dto->role = $user->getRole()?->getCode();
         $dto->status = $user->getStatus();
         $dto->statusLabel = $user->getStatusLabel();
         $dto->isActive = $user->isActive();
+        $dto->roleLabel = $user->getRoleLabel();
         $dto->isAdmin = $user->isAdmin();
         $dto->isManager = $user->isManager();
         $dto->isCustomer = $user->isCustomer();

@@ -1,10 +1,12 @@
 // src/components/auth/RequireAuth.tsx
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../i18n/LanguageProvider';
 
 export function RequireAuth() {
     const { loading, isAuthenticated } = useAuth();
     const location = useLocation();
+    const { t } = useLanguage();
 
     if (loading) {
         return (
@@ -15,7 +17,6 @@ export function RequireAuth() {
     }
 
     if (!isAuthenticated) {
-        // Сохраняем путь, с которого пришли, для редиректа после логина
         return <Navigate to="/signin" state={{ from: location }} replace />;
     }
 

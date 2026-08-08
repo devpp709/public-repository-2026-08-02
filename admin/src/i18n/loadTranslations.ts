@@ -51,12 +51,12 @@ export const loadTranslations = async (locale: string): Promise<boolean> => {
         if (translations && typeof translations === 'object') {
 
             const namespaces =
-                translations.common ||
+                translations.admin ||
                 translations.validation ||
                 translations.car
                     ? translations
                     : {
-                        common: translations
+                        admin: translations
                     };
 
 

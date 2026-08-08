@@ -58,10 +58,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read', 'user:write'])]
     private ?string $avatar = null;
 
-    #[ORM\Column(length: 20, options: ['default' => 'customer'])]
-    #[Assert\Choice(choices: ['customer', 'manager', 'admin'])]
-    #[Groups(['user:read', 'user:write'])]
-    private ?string $role = 'customer';
+    #[ORM\ManyToOne(targetEntity: Roles::class)]
+    #[ORM\JoinColumn(name: 'role_id', referencedColumnName: 'id', nullable: false)]
+    private ?Roles $role = null;
 
     #[ORM\Column(length: 20, options: ['default' => 'active'])]
     #[Assert\Choice(choices: ['active', 'blocked', 'pending', 'deleted'])]
@@ -92,7 +91,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->passwordResets = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
-        $this->role = 'customer';
         $this->status = 'active';
     }
 
@@ -184,15 +182,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getRole(): ?string
+    public function getRole(): ?Roles
     {
         return $this->role;
     }
 
-    public function setRole(string $role): static
+    public function setRole(?Roles $role): static
     {
         $this->role = $role;
+
         return $this;
+    }
+
+    public function getRoles(): array
+    {
+        $roles = ['ROLE_USER'];
+
+        if ($this->role) {
+            $roles[] = 'ROLE_' . strtoupper($this->role->getCode());
+        }
+
+        return array_unique($roles);
     }
 
     public function getStatus(): ?string
@@ -234,6 +244,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getBookings(): Collection
     {
         return $this->bookings;
+    }
+
+    public function getRoleLabel(): string
+    {
+        return match($this->role?->getCode()) {
+            'admin' => 'Администратор',
+            'manager' => 'Менеджер',
+            'customer' => 'Клиент',
+            default => 'Неизвестно',
+        };
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role?->getCode() === 'admin';
+    }
+
+    public function isManager(): bool
+    {
+        return in_array($this->role?->getCode(), ['manager', 'admin'], true);
+    }
+
+    public function isCustomer(): bool
+    {
+        return $this->role?->getCode() === 'customer';
     }
 
     public function addBooking(Booking $booking): static
@@ -328,33 +363,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        return $this->email ?? $this->phone ?? '';
-    }
-
-    public function getRoles(): array
-    {
-        $roles = ['ROLE_USER'];
-
-        if ($this->role === 'admin') {
-            $roles[] = 'ROLE_ADMIN';
-        } elseif ($this->role === 'manager') {
-            $roles[] = 'ROLE_MANAGER';
-        }
-
-        return $roles;
+        return $this->phone ?? $this->email ?? '';
     }
 
     // === Дополнительные методы ===
-
-    public function getRoleLabel(): string
-    {
-        return match($this->role) {
-            'admin' => 'Администратор',
-            'manager' => 'Менеджер',
-            'customer' => 'Клиент',
-            default => $this->role ?? 'Неизвестно'
-        };
-    }
 
     public function getStatusLabel(): string
     {
@@ -370,21 +382,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function isActive(): bool
     {
         return $this->status === 'active';
-    }
-
-    public function isAdmin(): bool
-    {
-        return $this->role === 'admin';
-    }
-
-    public function isManager(): bool
-    {
-        return $this->role === 'manager' || $this->role === 'admin';
-    }
-
-    public function isCustomer(): bool
-    {
-        return $this->role === 'customer';
     }
 
     public function getFullName(): string

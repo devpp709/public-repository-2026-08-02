@@ -8,7 +8,7 @@ const options: InitOptions = {
     debug: process.env.NODE_ENV === 'development',
 
     ns: [],
-    defaultNS: 'common',
+    defaultNS: 'admin',
 
     detection: {
         order: ['querystring', 'cookie', 'localStorage', 'navigator'],

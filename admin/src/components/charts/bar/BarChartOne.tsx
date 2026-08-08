@@ -1,7 +1,10 @@
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
+import { useLanguage } from "../../../i18n/LanguageProvider";
 
 export default function BarChartOne() {
+  const { t } = useLanguage();
+
   const options: ApexOptions = {
     colors: ["#465fff"],
     chart: {
@@ -30,18 +33,18 @@ export default function BarChartOne() {
     },
     xaxis: {
       categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
+        t('jan'),
+        t('feb'),
+        t('mar'),
+        t('apr'),
+        t('may'),
+        t('jun'),
+        t('jul'),
+        t('aug'),
+        t('sep'),
+        t('oct'),
+        t('nov'),
+        t('dec'),
       ],
       axisBorder: {
         show: false,
@@ -83,15 +86,15 @@ export default function BarChartOne() {
   };
   const series = [
     {
-      name: "Sales",
+      name: t('sales'),
       data: [168, 385, 201, 298, 187, 195, 291, 110, 215, 390, 280, 112],
     },
   ];
   return (
-    <div className="max-w-full overflow-x-auto custom-scrollbar">
-      <div id="chartOne" className="min-w-[1000px]">
-        <Chart options={options} series={series} type="bar" height={180} />
+      <div className="max-w-full overflow-x-auto custom-scrollbar">
+        <div id="chartOne" className="min-w-[1000px]">
+          <Chart options={options} series={series} type="bar" height={180} />
+        </div>
       </div>
-    </div>
   );
 }

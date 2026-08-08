@@ -72,7 +72,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function findByRole(string $role): array
     {
         return $this->createQueryBuilder('u')
-            ->where('u.role = :role')
+            ->innerJoin('u.role', 'r')
+            ->where('r.code = :role')
             ->setParameter('role', $role)
             ->orderBy('u.name', 'ASC')
             ->getQuery()
@@ -176,14 +177,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function getStatistics(): array
     {
         return $this->createQueryBuilder('u')
+            ->innerJoin('u.role', 'r')
             ->select(
                 'COUNT(u.id) as total',
                 'SUM(CASE WHEN u.status = :active THEN 1 ELSE 0 END) as active',
                 'SUM(CASE WHEN u.status = :blocked THEN 1 ELSE 0 END) as blocked',
                 'SUM(CASE WHEN u.status = :pending THEN 1 ELSE 0 END) as pending',
-                'SUM(CASE WHEN u.role = :admin THEN 1 ELSE 0 END) as admins',
-                'SUM(CASE WHEN u.role = :manager THEN 1 ELSE 0 END) as managers',
-                'SUM(CASE WHEN u.role = :customer THEN 1 ELSE 0 END) as customers'
+                'SUM(CASE WHEN r.code = :admin THEN 1 ELSE 0 END) as admins',
+                'SUM(CASE WHEN r.code = :manager THEN 1 ELSE 0 END) as managers',
+                'SUM(CASE WHEN r.code = :customer THEN 1 ELSE 0 END) as customers'
             )
             ->setParameter('active', 'active')
             ->setParameter('blocked', 'blocked')
@@ -265,5 +267,157 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Получает общее количество клиентов (пользователей с ролью customer)
+     */
+    public function countCustomers(): int
+    {
+        return (int) $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->innerJoin('u.role', 'r')
+            ->where('r.code = :role')
+            ->setParameter('role', 'customer')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Получает количество новых клиентов за указанный период
+     */
+    public function countNewCustomers(\DateTimeInterface $startDate): int
+    {
+        return (int) $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->innerJoin('u.role', 'r')
+            ->where('r.code = :role')
+            ->andWhere('u.createdAt >= :startDate')
+            ->setParameter('role', 'customer')
+            ->setParameter('startDate', $startDate)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Получает статистику по дням для клиентов (только роль customer)
+     */
+    public function getCustomersDailyStats(int $days = 7): array
+    {
+        $startDate = new \DateTimeImmutable("-$days days");
+        $startDate = $startDate->setTime(0, 0, 0);
+
+        $users = $this->createQueryBuilder('u')
+            ->innerJoin('u.role', 'r')
+            ->where('r.code = :role')
+            ->andWhere('u.createdAt >= :startDate')
+            ->setParameter('role', 'customer')
+            ->setParameter('startDate', $startDate)
+            ->getQuery()
+            ->getResult();
+
+        $statsMap = [];
+
+        foreach ($users as $user) {
+            $date = $user->getCreatedAt()->format('Y-m-d');
+            $statsMap[$date] = ($statsMap[$date] ?? 0) + 1;
+        }
+
+        $result = [];
+        $endDate = new \DateTimeImmutable('today');
+
+        $current = $startDate;
+
+        while ($current <= $endDate) {
+            $date = $current->format('Y-m-d');
+
+            $result[] = [
+                'date' => $date,
+                'count' => $statsMap[$date] ?? 0,
+            ];
+
+            $current = $current->modify('+1 day');
+        }
+
+        return $result;
+    }
+
+    /**
+     * Получает полную статистику по клиентам
+     */
+    public function getCustomersStatistics(int $days = 7): array
+    {
+        $endDate = new \DateTimeImmutable('today');
+        $startDate = $endDate->modify("-$days days");
+
+        // Текущее количество клиентов
+        $total = $this->countCustomers();
+
+        // Новые клиенты за текущий период
+        $newCustomers = $this->countCustomersBetween(
+            $startDate,
+            $endDate
+        );
+
+        // Предыдущий аналогичный период
+        $previousEnd = $startDate;
+        $previousStart = $previousEnd->modify("-$days days");
+
+        $previousCustomers = $this->countCustomersBetween(
+            $previousStart,
+            $previousEnd
+        );
+
+        // Расчёт изменения
+        $growthPercentage = null;
+
+        if ($previousCustomers > 0) {
+            $growthPercentage = (($newCustomers - $previousCustomers) / $previousCustomers) * 100;
+        }
+
+        // Тренд
+        if ($growthPercentage === null) {
+            $trend = $newCustomers > 0 ? 'up' : 'stable';
+        } elseif ($growthPercentage > 5) {
+            $trend = 'up';
+        } elseif ($growthPercentage < -5) {
+            $trend = 'down';
+        } else {
+            $trend = 'stable';
+        }
+
+        // Ежедневная статистика
+        $dailyStats = $this->getCustomersDailyStats($days);
+
+        return [
+            'total_customers' => $total,
+            'new_customers' => $newCustomers,
+            'previous_new_customers' => $previousCustomers,
+            'growth_percentage' => $growthPercentage !== null
+                ? round($growthPercentage, 2)
+                : 0.0,
+            'trend' => $trend,
+            'daily_stats' => $dailyStats,
+            'period_days' => $days,
+            'period_start' => $startDate->format('Y-m-d'),
+            'period_end' => $endDate->format('Y-m-d'),
+        ];
+    }
+
+    public function countCustomersBetween(
+        \DateTimeInterface $startDate,
+        \DateTimeInterface $endDate
+    ): int {
+        return (int) $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->innerJoin('u.role', 'r')
+            ->where('r.code = :role')
+            ->andWhere('u.createdAt >= :start')
+            ->andWhere('u.createdAt < :end')
+            ->setParameter('role', 'customer')
+            ->setParameter('start', $startDate)
+            ->setParameter('end', $endDate)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

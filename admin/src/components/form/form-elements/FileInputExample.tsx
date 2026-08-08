@@ -1,8 +1,11 @@
 import ComponentCard from "../../common/ComponentCard";
 import FileInput from "../input/FileInput";
 import Label from "../Label";
+import { useLanguage } from "../../../i18n/LanguageProvider";
 
 export default function FileInputExample() {
+  const { t } = useLanguage();
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -11,11 +14,11 @@ export default function FileInputExample() {
   };
 
   return (
-    <ComponentCard title="File Input">
-      <div>
-        <Label>Upload file</Label>
-        <FileInput onChange={handleFileChange} className="custom-class" />
-      </div>
-    </ComponentCard>
+      <ComponentCard title="file_input">
+        <div>
+          <Label>{t('upload_file')}</Label>
+          <FileInput onChange={handleFileChange} className="custom-class" />
+        </div>
+      </ComponentCard>
   );
 }
