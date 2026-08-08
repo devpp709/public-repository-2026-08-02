@@ -7,7 +7,7 @@ const options: InitOptions = {
     fallbackLng: 'ru',
     debug: process.env.NODE_ENV === 'development',
 
-    ns: ['common'],
+    ns: [],
     defaultNS: 'common',
 
     detection: {

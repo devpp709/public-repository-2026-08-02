@@ -34,6 +34,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
+     * Сохранение пользователя
+     */
+    public function save(User $user): void
+    {
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
      * Находит пользователя по email
      */
     public function findByEmail(string $email): ?User
@@ -41,6 +50,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $this->createQueryBuilder('u')
             ->where('LOWER(u.email) = LOWER(:email)')
             ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * Находит пользователя по телефону
+     */
+    public function findByPhone(string $phone): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.phone = :phone')
+            ->setParameter('phone', $phone)
             ->getQuery()
             ->getOneOrNullResult();
     }
@@ -122,6 +143,24 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->select('COUNT(u.id)')
             ->where('LOWER(u.email) = LOWER(:email)')
             ->setParameter('email', $email);
+
+        if ($excludeId !== null) {
+            $qb->andWhere('u.id != :excludeId')
+                ->setParameter('excludeId', $excludeId);
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult() > 0;
+    }
+
+    /**
+     * Проверяет существование пользователя с таким телефоном
+     */
+    public function existsByPhone(string $phone, ?int $excludeId = null): bool
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->where('u.phone = :phone')
+            ->setParameter('phone', $phone);
 
         if ($excludeId !== null) {
             $qb->andWhere('u.id != :excludeId')
@@ -224,18 +263,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $this->createQueryBuilder('u')
             ->orderBy('u.createdAt', 'DESC')
             ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * Находит пользователей с определенным телефоном
-     */
-    public function findByPhone(string $phone): array
-    {
-        return $this->createQueryBuilder('u')
-            ->where('u.phone = :phone')
-            ->setParameter('phone', $phone)
             ->getQuery()
             ->getResult();
     }

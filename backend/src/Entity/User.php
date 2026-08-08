@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -78,13 +77,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'user')]
-    private ArrayCollection $bookings;
+    private Collection $bookings;
 
     #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'user')]
-    private ArrayCollection $reviews;
+    private Collection $reviews;
 
     #[ORM\OneToMany(targetEntity: PasswordReset::class, mappedBy: 'user')]
-    private ArrayCollection $passwordResets;
+    private Collection $passwordResets;
 
     public function __construct()
     {
@@ -116,7 +115,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
@@ -128,7 +126,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPasswordHash(string $passwordHash): static
     {
         $this->passwordHash = $passwordHash;
-
         return $this;
     }
 
@@ -140,7 +137,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -152,7 +148,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhone(?string $phone): static
     {
         $this->phone = $phone;
-
         return $this;
     }
 
@@ -164,7 +159,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDriverLicense(?string $driverLicense): static
     {
         $this->driverLicense = $driverLicense;
-
         return $this;
     }
 
@@ -176,7 +170,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassportNumber(?string $passportNumber): static
     {
         $this->passportNumber = $passportNumber;
-
         return $this;
     }
 
@@ -188,7 +181,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAvatar(?string $avatar): static
     {
         $this->avatar = $avatar;
-
         return $this;
     }
 
@@ -200,7 +192,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRole(string $role): static
     {
         $this->role = $role;
-
         return $this;
     }
 
@@ -212,7 +203,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setStatus(string $status): static
     {
         $this->status = $status;
-
         return $this;
     }
 
@@ -221,9 +211,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->createdAt;
     }
 
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+        return $this;
     }
 
     /**
@@ -240,7 +242,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->bookings->add($booking);
             $booking->setUser($this);
         }
-
         return $this;
     }
 
@@ -251,7 +252,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $booking->setUser(null);
             }
         }
-
         return $this;
     }
 
@@ -269,7 +269,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->reviews->add($review);
             $review->setUser($this);
         }
-
         return $this;
     }
 
@@ -280,7 +279,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $review->setUser(null);
             }
         }
-
         return $this;
     }
 
@@ -298,7 +296,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->passwordResets->add($passwordReset);
             $passwordReset->setUser($this);
         }
-
         return $this;
     }
 
@@ -309,47 +306,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $passwordReset->setUser(null);
             }
         }
-
         return $this;
     }
 
     // === UserInterface implementation ===
 
-    /**
-     * @see UserInterface
-     */
     public function getPassword(): ?string
     {
         return $this->passwordHash;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getSalt(): ?string
     {
         return null;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function eraseCredentials(): void
     {
         // Если есть временные данные, очистить их здесь
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
-        return $this->email ?? '';
+        return $this->email ?? $this->phone ?? '';
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
         $roles = ['ROLE_USER'];

@@ -148,7 +148,23 @@ services:
     command: [ "npm", "run", "dev" ]
     environment:
       NEXT_PUBLIC_API_URL: /api
-      API_INTERNAL_URL: http://nginx/api
+      #API_INTERNAL_URL: http://nginx/api
+      HOSTNAME: 0.0.0.0
+    depends_on:
+      - nginx
+
+  admin:
+    build:
+      context: ./admin
+      dockerfile: Dockerfile
+    container_name: rentcar-admin
+    ports:
+      - "3004:5173"
+    environment:
+      NEXT_PUBLIC_API_URL: /api
+    volumes:
+      - ./admin:/app
+      - /app/node_modules
     depends_on:
       - nginx
 

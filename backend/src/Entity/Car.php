@@ -57,9 +57,9 @@ class Car
     #[Groups(['car:read', 'car:write'])]
     private ?string $licensePlate = null;
 
-    #[ORM\Column(length: 17, unique: true)]
+    #[ORM\Column(length: 20, unique: true)]
     #[Assert\NotBlank(message: 'VIN-код обязателен')]
-    #[Assert\Length(exactly: 17, exactMessage: 'VIN-код должен содержать ровно 17 символов')]
+    #[Assert\Length(exactly: 20, exactMessage: 'VIN-код должен содержать ровно 20 символов')]
     #[Groups(['car:read', 'car:write'])]
     private ?string $vin = null;
 
