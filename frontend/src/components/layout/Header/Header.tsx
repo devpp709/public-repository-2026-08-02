@@ -2,6 +2,8 @@
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'react-i18next';
 import React, { ReactElement } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 // Динамический импорт с отключенным SSR
 const LanguageSwitcher = dynamic(
@@ -9,7 +11,7 @@ const LanguageSwitcher = dynamic(
     {
         ssr: false,
         loading: () => (
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div className="header-language-options" aria-hidden="true">
                 <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '2px solid #e5e7eb' }}></div>
                 <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '2px solid #e5e7eb' }}></div>
                 <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '2px solid #e5e7eb' }}></div>
@@ -20,21 +22,23 @@ const LanguageSwitcher = dynamic(
 
 export default function Header(): ReactElement {
     const { t } = useTranslation('common');
+    const router = useRouter();
+    const currentPath = router.asPath.split(/[?#]/)[0].replace(/\/+$/, '') || '/';
+
+    const isCurrentPath = (path: string): boolean => currentPath === path;
+    const isCarsPath = currentPath === '/cars' || currentPath.startsWith('/cars/');
+    const menuItemClass = (modifier: string, isActive: boolean): string =>
+        `menu-item menu-item--${modifier}${isActive ? ' current-menu-item' : ''}`;
 
     return (
         <header className="zita-site-header mhdrleft zta-fade">
             <div className="main-header mhdrleft inline right-menu linkeffect-1">
                 <div className="main-header-bar two">
                     <div className="container">
-                        <div className="main-header-container" style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            width: '100%'
-                        }}>
-                            <div className="main-header-col1" style={{ flexShrink: 0 }}>
+                        <div className="main-header-container">
+                            <div className="main-header-col1">
                                 <div className="zita-logo">
-                                    <a href="/" className="custom-logo-link">
+                                    <Link href="/" className="custom-logo-link">
                                         <img
                                             fetchPriority="high"
                                             width="471"
@@ -43,55 +47,47 @@ export default function Header(): ReactElement {
                                             className="custom-logo"
                                             alt={t('car_rental')}
                                         />
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
 
-                            <div style={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                flex: 1,
-                                margin: '0 20px'
-                            }}>
+                            <div className="main-header-language">
                                 <LanguageSwitcher />
                             </div>
 
-                            <div className="main-header-col2" style={{ flexShrink: 0 }}>
-                                <nav>
+                            <div className="main-header-col2">
+                                <nav aria-label={t('main_navigation', { defaultValue: 'Main navigation' })}>
                                     <div className="sider main zita-menu-hide right">
                                         <div className="sider-inner">
-                                            <ul id="zita-menu" className="zita-menu" style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '20px',
-                                                listStyle: 'none',
-                                                margin: 0,
-                                                padding: 0
-                                            }}>
-                                                <li className="menu-item current-menu-item">
-                                                    <a href="/"><span className="zita-menu-link">{t('home')}</span></a>
+                                            <ul id="zita-menu" className="zita-menu">
+                                                <li className={menuItemClass('home', isCurrentPath('/'))}>
+                                                    <Link href="/" aria-current={isCurrentPath('/') ? 'page' : undefined}>
+                                                        <span className="zita-menu-link">{t('home')}</span>
+                                                    </Link>
                                                 </li>
-                                                <li className="menu-item">
-                                                    <a href="/about"><span className="zita-menu-link">{t('about_us')}</span></a>
+                                                <li className={menuItemClass('about', isCurrentPath('/about'))}>
+                                                    <Link href="/about" aria-current={isCurrentPath('/about') ? 'page' : undefined}>
+                                                        <span className="zita-menu-link">{t('about_us')}</span>
+                                                    </Link>
                                                 </li>
-                                                <li className="menu-item">
-                                                    <a href="/faq"><span className="zita-menu-link">{t('faq')}</span></a>
+                                                <li className={menuItemClass('faq', isCurrentPath('/faq'))}>
+                                                    <Link href="/faq" aria-current={isCurrentPath('/faq') ? 'page' : undefined}>
+                                                        <span className="zita-menu-link">{t('faq')}</span>
+                                                    </Link>
                                                 </li>
-                                                <li className="menu-item">
-                                                    <a href="/contact"><span className="zita-menu-link">{t('contact_us')}</span></a>
+                                                <li className={menuItemClass('contact', isCurrentPath('/contact'))}>
+                                                    <Link href="/contact" aria-current={isCurrentPath('/contact') ? 'page' : undefined}>
+                                                        <span className="zita-menu-link">{t('contact_us')}</span>
+                                                    </Link>
                                                 </li>
-                                                <li>
-                                                    <a className="main-header-btn" href="/booking" style={{
-                                                        display: 'inline-block',
-                                                        padding: '10px 24px',
-                                                        background: '#0866c4',
-                                                        color: '#fff',
-                                                        borderRadius: '6px',
-                                                        textDecoration: 'none',
-                                                        fontWeight: '600'
-                                                    }}>
+                                                <li className={menuItemClass('cta', isCarsPath)}>
+                                                    <Link
+                                                        className="main-header-btn"
+                                                        href="/cars/catalog"
+                                                        aria-current={isCarsPath ? 'page' : undefined}
+                                                    >
                                                         {t('book_a_car')}
-                                                    </a>
+                                                    </Link>
                                                 </li>
                                             </ul>
                                         </div>

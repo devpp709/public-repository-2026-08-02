@@ -2,8 +2,6 @@
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Header from '../../components/layout/Header/Header';
-import Footer from '../../components/layout/Footer/Footer';
 import { useCarClasses } from '../../hooks/useCarClasses';
 import { carService, Car } from '../../services/carService';
 import SearchBox from "../../components/layout/Catalog/SearchBox";
@@ -88,30 +86,26 @@ export default function Catalog() {
     }, [router.isReady, router.query, loadCars]);
 
     return (
-        <div className="zita-site">
-            <Header />
-            <main id="content" className="site-content">
-                <div className="tf-container">
-                    <div className="tf-container-inner">
-                        <div className="tf-archive-car-details-warper">
-                            <SearchBox />
-                            <ArchiveHeader
-                                totalResults={totalResults}
-                                viewMode={viewMode}
-                                setViewMode={setViewMode}
-                            />
-                            <CarListings
-                                totalResults={totalResults}
-                                cars={cars}
-                                viewMode={viewMode}
-                                loading={loading}
-                                onCarsUpdate={setCars}
-                            />
-                        </div>
+        <main id="content" className="site-content">
+            <div className="tf-container">
+                <div className="tf-container-inner">
+                    <div className="tf-archive-car-details-warper">
+                        <SearchBox />
+                        <ArchiveHeader
+                            totalResults={totalResults}
+                            viewMode={viewMode}
+                            setViewMode={setViewMode}
+                        />
+                        <CarListings
+                            totalResults={totalResults}
+                            cars={cars}
+                            viewMode={viewMode}
+                            loading={loading}
+                            onCarsUpdate={setCars}
+                        />
                     </div>
                 </div>
-            </main>
-            <Footer />
-        </div>
+            </div>
+        </main>
     );
 }

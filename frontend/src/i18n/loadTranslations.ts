@@ -1,7 +1,7 @@
 import i18n from './config';
 import { translationService } from '../services/translationService';
 
-const CACHE_KEY = 'translations_cache';
+const CACHE_KEY = 'translations_cache_v7';
 
 interface TranslationCache {
     [locale: string]: any;

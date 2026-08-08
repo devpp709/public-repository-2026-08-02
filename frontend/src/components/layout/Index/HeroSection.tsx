@@ -55,7 +55,7 @@ export default function HeroSection() {
         }
 
         // Перенаправляем на страницу каталога
-        const url = `/catalog?${params.toString()}`;
+        const url = `/cars/catalog?${params.toString()}`;
         console.log('Redirecting to:', url);
 
         router.push(url);
@@ -137,16 +137,10 @@ export default function HeroSection() {
                                                                                         className="selected-car-class"
                                                                                         onClick={() => !isLoading && setIsCarClassOpen(!isCarClassOpen)}
                                                                                         style={{
-                                                                                            display: 'flex',
-                                                                                            alignItems: 'center',
-                                                                                            justifyContent: 'space-between',
-                                                                                            width: '100%',
-                                                                                            cursor: isLoading ? 'default' : 'pointer',
-                                                                                            padding: '6px 5px'
+                                                                                            cursor: isLoading ? 'default' : 'pointer'
                                                                                         }}
                                                                                     >
                                                                                         <div className="text" style={{
-                                                                                            fontSize: '14px',
                                                                                             color: carClass ? '#333' : '#999'
                                                                                         }}>
                                                                                             {isLoading ? t('loading') : (carClass ? getCarClassLabel(carClass) : t('select_car_class'))}

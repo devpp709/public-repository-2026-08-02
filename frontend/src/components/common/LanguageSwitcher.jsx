@@ -20,11 +20,7 @@ export const LanguageSwitcher = () => {
 
     if (!isMounted || loading) {
         return (
-            <div style={{
-                display: 'flex',
-                gap: '8px',
-                alignItems: 'center'
-            }}>
+            <div className="header-language-options" aria-hidden="true">
                 <div style={{
                     width: '40px',
                     height: '40px',
@@ -51,13 +47,10 @@ export const LanguageSwitcher = () => {
     }
 
     return (
-        <div style={{
-            display: 'flex',
-            gap: '8px',
-            alignItems: 'center'
-        }}>
+        <div className="header-language-options">
             {availableLanguages.map((code) => (
                 <button
+                    type="button"
                     key={code}
                     onClick={() => changeLanguage(code)}
                     style={{
@@ -95,6 +88,8 @@ export const LanguageSwitcher = () => {
                         }
                     }}
                     title={code.toUpperCase()}
+                    aria-label={`Change language to ${code.toUpperCase()}`}
+                    aria-pressed={currentLanguage === code}
                 >
                     {getFlag(code)}
                 </button>

@@ -22,8 +22,7 @@ export default function SearchBox() {
         locations,
         isLoading: locationsLoading,
         getCities,
-        getLocationsByCityId,
-        getLocationById
+        getLocationsByCityId
     } = useLocations();
 
     // Инициализация из URL параметров
@@ -134,13 +133,15 @@ export default function SearchBox() {
         params.append('driverAge18to40', String(driverAge18to40));
 
         // Получаем информацию о городе для отображения в URL
-        const pickupLoc = getLocationById(pickupLocation);
-        if (pickupLoc) {
-            params.append('pickupCity', pickupLoc.city || '');
+        const pickupCity = locations.find(group =>
+            group.locations.some(location => location.id === pickupLocation)
+        )?.city;
+        if (pickupCity) {
+            params.append('pickupCity', pickupCity);
         }
 
         // Переход на страницу каталога с параметрами
-        router.push(`/catalog?${params.toString()}`);
+        router.push(`/cars/catalog?${params.toString()}`);
     };
 
     const handleReturnSameLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,11 +175,11 @@ export default function SearchBox() {
                         {/* Блок 1: Откуда */}
                         <div className="tf-search-block tf-search-block-location" style={{ position: 'relative', zIndex: 2 }}>
                             <LocationDropdown
-                                label="Откуда"
+                                label={t('pickup_location')}
                                 locations={locations}
                                 value={pickupLocation}
                                 onChange={setPickupLocation}
-                                placeholder="Выберите адрес"
+                                placeholder={t('select_address')}
                                 isDisabled={false}
                             />
                         </div>
@@ -186,11 +187,11 @@ export default function SearchBox() {
                         {/* Блок 2: Куда */}
                         <div className="tf-search-block tf-search-block-location" style={{ position: 'relative', zIndex: 1 }}>
                             <LocationDropdown
-                                label="Куда"
+                                label={t('dropoff_location')}
                                 locations={locations}
                                 value={dropoffLocation}
                                 onChange={setDropoffLocation}
-                                placeholder="Выберите адрес"
+                                placeholder={t('select_address')}
                                 isDisabled={returnSameLocation}
                             />
                         </div>
@@ -231,26 +232,26 @@ export default function SearchBox() {
                             <ul>
                                 <li>
                                     <label>
-                                        {t('return_same_location')}
                                         <input
                                             type="checkbox"
                                             name="same_location"
                                             checked={returnSameLocation}
                                             onChange={handleReturnSameLocationChange}
                                         />
-                                        <span className="tf-checkmark"></span>
+                                        <span className="tf-checkmark" aria-hidden="true"></span>
+                                        <span className="tf-checkbox-label">{t('return_same_location')}</span>
                                     </label>
                                 </li>
                                 <li>
                                     <label>
-                                        {t('driver_age')} 18-40?
                                         <input
                                             type="checkbox"
                                             name="driver_age"
                                             checked={driverAge18to40}
                                             onChange={(e) => setDriverAge18to40(e.target.checked)}
                                         />
-                                        <span className="tf-checkmark"></span>
+                                        <span className="tf-checkmark" aria-hidden="true"></span>
+                                        <span className="tf-checkbox-label">{t('driver_age_18_40')}</span>
                                     </label>
                                 </li>
                             </ul>

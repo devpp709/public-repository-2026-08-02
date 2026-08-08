@@ -28,8 +28,8 @@ export default function Footer(): ReactElement {
                                 <div className="widget-footer-col3">
                                     <h2>{t('contact_info')}</h2>
                                     <p>
-                                        {t('call_us')} - 1800-6558-3203<br />
-                                        04 Main Street west Peerl california 9017<br />
+                                        {t('call_us')} - {t('contact_phone')}<br />
+                                        {t('contact_address')}<br />
                                         {t('working_hours')} - 8.00 - 18.00<br />
                                         {t('sunday_closed')}
                                     </p>
@@ -45,10 +45,6 @@ export default function Footer(): ReactElement {
                                 <div className="bottom-footer-col1">
                                     <p className="footer-copyright">
                                         {t('copyright')}
-                                        <span className="powered-by-wordpress">
-                                            <span> {t('powered_by')} </span>
-                                            <a href="https://wpzita.com/">wpzita WordPress Theme</a>
-                                        </span>
                                     </p>
                                 </div>
                                 <div className="bottom-footer-col2">

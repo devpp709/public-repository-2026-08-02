@@ -31,7 +31,7 @@ export default function CarListingSection() {
     if (loading) {
         return (
             <section className="elementor-section car-listing-section">
-                <div className="elementor-container">
+                <div className="elementor-container container">
                     <div className="elementor-column">
                         <div className="elementor-widget-wrap" style={{ textAlign: 'center', padding: '50px 0' }}>
                             <h2>{t('your_ride_your_rules')}</h2>
@@ -46,7 +46,7 @@ export default function CarListingSection() {
     if (error) {
         return (
             <section className="elementor-section car-listing-section">
-                <div className="elementor-container">
+                <div className="elementor-container container">
                     <div className="elementor-column">
                         <div className="elementor-widget-wrap" style={{ textAlign: 'center', padding: '50px 0' }}>
                             <h2>{t('your_ride_your_rules')}</h2>
@@ -60,7 +60,7 @@ export default function CarListingSection() {
 
     return (
         <section className="elementor-section car-listing-section">
-            <div className="elementor-container">
+            <div className="elementor-container container">
                 <div className="elementor-column">
                     <div className="elementor-widget-wrap">
                         <h2 className="section-title">{t('your_ride_your_rules')}</h2>
