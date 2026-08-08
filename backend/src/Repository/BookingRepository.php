@@ -272,4 +272,134 @@ class BookingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Получает статистику по бронированиям за период.
+     */
+    public function getBookingStatistics(int $days = 7): array
+    {
+        $endDate = new \DateTimeImmutable('today');
+        $startDate = $endDate->modify("-{$days} days")->setTime(0, 0, 0);
+
+        // Всего заказов, кроме отменённых
+        $totalOrders = (int) $this->createQueryBuilder('b')
+            ->select('COUNT(b.id)')
+            ->where('b.status != :cancelled')
+            ->setParameter('cancelled', 'cancelled')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // Новые заказы за текущий период
+        $newOrders = (int) $this->createQueryBuilder('b')
+            ->select('COUNT(b.id)')
+            ->where('b.createdAt >= :start')
+            ->andWhere('b.createdAt < :end')
+            ->andWhere('b.status != :cancelled')
+            ->setParameter('start', $startDate)
+            ->setParameter('end', $endDate)
+            ->setParameter('cancelled', 'cancelled')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // Предыдущий аналогичный период
+        $previousStart = $startDate->modify("-{$days} days");
+
+        $previousOrders = (int) $this->createQueryBuilder('b')
+            ->select('COUNT(b.id)')
+            ->where('b.createdAt >= :start')
+            ->andWhere('b.createdAt < :end')
+            ->andWhere('b.status != :cancelled')
+            ->setParameter('start', $previousStart)
+            ->setParameter('end', $startDate)
+            ->setParameter('cancelled', 'cancelled')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // Рост
+        $growthPercentage = 0.0;
+
+        if ($previousOrders > 0) {
+            $growthPercentage = (
+                    ($newOrders - $previousOrders) / $previousOrders
+                ) * 100;
+        } elseif ($newOrders > 0) {
+            $growthPercentage = 100.0;
+        }
+
+        // Тренд
+        if ($growthPercentage > 5) {
+            $trend = 'up';
+        } elseif ($growthPercentage < -5) {
+            $trend = 'down';
+        } else {
+            $trend = 'stable';
+        }
+
+        // Статистика по дням
+        $dailyStats = $this->getBookingDailyStats($days);
+
+        return [
+            'total_orders' => $totalOrders,
+            'new_orders' => $newOrders,
+            'previous_new_orders' => $previousOrders,
+            'growth_percentage' => round($growthPercentage, 2),
+            'trend' => $trend,
+            'daily_stats' => $dailyStats,
+            'period_days' => $days,
+            'period_start' => $startDate->format('Y-m-d'),
+            'period_end' => $endDate->format('Y-m-d'),
+        ];
+    }
+
+    /**
+     * Получает количество заказов по дням.
+     */
+    public function getBookingDailyStats(int $days = 30): array
+    {
+        $endDate = new \DateTimeImmutable('today');
+        $startDate = $endDate
+            ->modify("-{$days} days")
+            ->setTime(0, 0, 0);
+
+        $sql = <<<SQL
+        SELECT
+            DATE(created_at) AS date,
+            COUNT(id) AS count
+        FROM bookings
+        WHERE created_at >= :start
+          AND created_at < :end
+          AND status != :cancelled
+        GROUP BY DATE(created_at)
+        ORDER BY DATE(created_at) ASC
+    SQL;
+
+        $connection = $this->getEntityManager()->getConnection();
+
+        $result = $connection->executeQuery($sql, [
+            'start' => $startDate->format('Y-m-d H:i:s'),
+            'end' => $endDate->format('Y-m-d H:i:s'),
+            'cancelled' => 'cancelled',
+        ])->fetchAllAssociative();
+
+        $stats = [];
+
+        foreach ($result as $row) {
+            $stats[$row['date']] = (int) $row['count'];
+        }
+
+        $dailyStats = [];
+
+        for ($i = 0; $i < $days; $i++) {
+            $date = $startDate
+                ->modify("+{$i} days")
+                ->format('Y-m-d');
+
+            $dailyStats[] = [
+                'date' => $date,
+                'count' => $stats[$date] ?? 0,
+            ];
+        }
+
+        return $dailyStats;
+    }
 }

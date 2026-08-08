@@ -8,6 +8,7 @@ import {
 import Badge from "../ui/badge/Badge";
 import { useLanguage } from "../../i18n/LanguageProvider";
 import { useCustomersStatistics } from "../../hooks/useCustomers";
+import { useBookingsStatistics } from "../../hooks/useBookings";
 
 export default function EcommerceMetrics() {
   const { t } = useLanguage();
@@ -24,11 +25,32 @@ export default function EcommerceMetrics() {
     autoFetch: true
   });
 
+  const {
+    data: bookingsData,
+    loading: bookingsLoading,
+    error: bookingsError,
+    refetch: refetchBookings
+  } = useBookingsStatistics({
+    days: period === 'week' ? 7 : 30,
+    autoFetch: true
+  });
+
   // Получаем данные из ответа
   const totalCustomers = customersData?.data?.totalCustomers ?? 0;
   const growthPercentage = customersData?.data?.growthPercentage ?? 0;
   const trend = customersData?.data?.trend ?? 'stable';
   const newCustomers = customersData?.data?.newCustomers ?? 0;
+
+  const customerGrowthPercentage =
+      customersData?.data?.growthPercentage ?? 0;
+
+  const customerTrend =
+      customersData?.data?.trend ?? 'stable';
+
+  const totalBookings = bookingsData?.data?.totalOrders ?? 0;
+  const newBookings = bookingsData?.data?.newOrders ?? 0;
+  const bookingGrowthPercentage = bookingsData?.data?.growthPercentage ?? 0;
+  const bookingTrend = bookingsData?.data?.trend ?? 'stable';
 
   // Форматируем число с разделителями тысяч
   const formatNumber = (num: number): string => {
@@ -56,7 +78,7 @@ export default function EcommerceMetrics() {
   };
 
   // Состояние загрузки для отображения скелетона
-  if (customersLoading) {
+  if (customersLoading || bookingsLoading) {
     return (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
           {/* Skeleton для первой карточки */}
@@ -87,20 +109,22 @@ export default function EcommerceMetrics() {
   }
 
   // Обработка ошибок
-  if (customersError) {
+  if (customersError || bookingsError) {
     return (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
-          <div className="rounded-2xl border border-red-200 bg-red-50 p-5 dark:border-red-800 dark:bg-red-900/10 md:p-6">
-            <p className="text-red-600 dark:text-red-400">
-              {t('error_loading_customers') || 'Ошибка загрузки данных клиентов'}
-            </p>
-            <button
-                onClick={() => refetchCustomers()}
-                className="mt-2 text-sm text-red-600 hover:text-red-800 dark:text-red-400"
-            >
-              {t('retry') || 'Повторить'}
-            </button>
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-5 dark:border-red-900 dark:bg-red-950/20">
+          <div className="text-sm text-red-600 dark:text-red-400">
+            {customersError || bookingsError}
           </div>
+
+          <button
+              onClick={() => {
+                refetchCustomers();
+                refetchBookings();
+              }}
+              className="mt-2 text-sm text-red-600 hover:text-red-800 dark:text-red-400"
+          >
+            {t('retry') || 'Повторить'}
+          </button>
         </div>
     );
   }
@@ -172,29 +196,53 @@ export default function EcommerceMetrics() {
         {/* <!-- Metric Item End --> */}
 
         {/* <!-- Metric Item: Orders --> */}
+        {/* Metric Item: Orders */}
         <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
           <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
             <BoxIconLine className="text-gray-800 size-6 dark:text-white/90" />
           </div>
+
           <div className="flex items-end justify-between mt-5">
             <div>
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              {t('orders')}
+                {t('orders')}
             </span>
+
               <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                5,359
+                {formatNumber(totalBookings)}
               </h4>
+
               <div className="flex items-center gap-2 mt-1">
-              <span className="text-xs text-gray-400 dark:text-gray-500">
-                {t('new')}: 124
-              </span>
+                <span className="text-xs text-gray-400 dark:text-gray-500">
+                    {t('new')}: {formatNumber(newBookings)}
+                </span>
               </div>
             </div>
 
-            <Badge color="error">
-              <ArrowDownIcon />
-              9.05%
-            </Badge>
+            {bookingTrend !== 'stable' && (
+                <Badge
+                    color={getBadgeColor(bookingTrend)}
+                >
+                  {bookingTrend === 'up' && (
+                      <ArrowUpIcon />
+                  )}
+
+                  {bookingTrend === 'down' && (
+                      <ArrowDownIcon />
+                  )}
+
+                  {formatPercentage(
+                      bookingGrowthPercentage
+                  )}
+                </Badge>
+            )}
+
+            {bookingTrend === 'stable' && (
+                <Badge color="warning">
+                  <span className="text-sm">→</span>
+                  0.00%
+                </Badge>
+            )}
           </div>
         </div>
         {/* <!-- Metric Item End --> */}
