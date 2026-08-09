@@ -49,18 +49,28 @@ class PaymentResponseDTO
     #[Groups(['payment:read'])]
     public bool $isRefunded;
 
+    #[Groups(['payment:read'])]
+    public ?string $bookingNumber = null;
+
     public static function fromEntity(Payment $payment): self
     {
         $dto = new self();
+
+        $booking = $payment->getBooking();
+
         $dto->id = $payment->getId();
-        $dto->bookingId = $payment->getBooking() ? $payment->getBooking()->getId() : 0;
+        $dto->bookingId = $booking?->getId() ?? 0;
+        $dto->bookingNumber = $booking?->getBookingNumber();
+
         $dto->amount = (float) $payment->getAmount();
         $dto->paymentMethod = $payment->getPaymentMethod();
         $dto->paymentMethodLabel = $payment->getPaymentMethodLabel();
         $dto->status = $payment->getStatus();
         $dto->statusLabel = $payment->getStatusLabel();
         $dto->transactionId = $payment->getTransactionId();
-        $dto->paymentDate = $payment->getPaymentDate() ? $payment->getPaymentDate()->format('Y-m-d H:i:s') : null;
+        $dto->paymentDate = $payment->getPaymentDate()
+            ? $payment->getPaymentDate()->format('Y-m-d H:i:s')
+            : null;
         $dto->createdAt = $payment->getCreatedAt()->format('Y-m-d H:i:s');
         $dto->updatedAt = $payment->getUpdatedAt()->format('Y-m-d H:i:s');
         $dto->isPaid = $payment->isPaid();

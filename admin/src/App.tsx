@@ -63,7 +63,6 @@ export default function App() {
               {/* Bookings */}
               <Route path="/bookings/bookings-all" element={<BookingsAll />} />
               <Route path="/bookings/planning" element={<Planning />} />
-              <Route path="/bookings/history" element={<History />} />
               <Route path="/bookings/payments" element={<Payments />} />
 
               {/* Cars */}

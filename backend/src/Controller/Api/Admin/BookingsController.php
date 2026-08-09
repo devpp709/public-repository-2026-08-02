@@ -5,6 +5,7 @@ namespace App\Controller\Api\Admin;
 use App\DTO\Api\Admin\BookingsStatisticsDto;
 use App\DTO\Booking\LatestBookingDTO;
 use App\Repository\BookingRepository;
+use App\Service\BookingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +16,7 @@ class BookingsController extends AbstractController
 {
     public function __construct(
         private readonly BookingRepository $bookingRepository,
+        private readonly BookingService $bookingService,
     ) {
     }
 
@@ -121,4 +123,13 @@ class BookingsController extends AbstractController
             'data' => LatestBookingDTO::fromEntities($bookings),
         ]);
     }
+
+    #[Route('', name: 'list', methods: ['GET'])]
+    public function list(): JsonResponse
+    {
+        return $this->json([
+            'data' => $this->bookingService->getAllBookingsWithDetails(),
+        ]);
+    }
+
 }

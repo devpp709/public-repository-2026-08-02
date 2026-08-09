@@ -22,7 +22,7 @@ class PaymentService
     /**
      * Получить все платежи
      */
-    public function getAllPayments(): array
+    public function getAllPayments1(): array
     {
         $payments = $this->paymentRepository->findBy([], ['createdAt' => 'DESC']);
         return PaymentResponseDTO::fromEntities($payments);
@@ -233,4 +233,10 @@ class PaymentService
         }
         return $booking;
     }
-}
+
+    public function getAllPayments(): array
+    {
+        return PaymentResponseDTO::fromEntities(
+            $this->paymentRepository->findAllOrdered()
+        );
+    }}

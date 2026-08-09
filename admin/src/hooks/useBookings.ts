@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import {
     BookingsStatisticsResponse,
     bookingsService,
-    DailyBookingStat, MonthlyBookingStatsResponse, RegionBookingStat, LatestBooking,
+    DailyBookingStat, MonthlyBookingStatsResponse, RegionBookingStat, LatestBooking, BookingListItem,
 } from '../services/BookingsService';
 
 export interface UseBookingsStatisticsParams {
@@ -418,5 +418,64 @@ export const useLatestBookings = (
         loading,
         error,
         refetch: fetchData,
+    };
+};
+
+
+export interface UseBookingsReturn {
+    bookings: BookingListItem[];
+    loading: boolean;
+    error: string | null;
+    refetch: () => Promise<void>;
+}
+
+
+export const useBookings = (
+    autoFetch: boolean = true
+): UseBookingsReturn => {
+    const [bookings, setBookings] = useState<BookingListItem[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const fetchBookings = useCallback(async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const token =
+                localStorage.getItem('auth_token') || undefined;
+
+            const response =
+                await bookingsService.getAllBookings(token);
+
+            setBookings(response.data);
+        } catch (err) {
+            const errorMessage =
+                err instanceof Error
+                    ? err.message
+                    : 'Не удалось загрузить заказы';
+
+            setError(errorMessage);
+
+            console.error(
+                'Error fetching bookings:',
+                err
+            );
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (autoFetch) {
+            fetchBookings();
+        }
+    }, [fetchBookings, autoFetch]);
+
+    return {
+        bookings,
+        loading,
+        error,
+        refetch: fetchBookings,
     };
 };

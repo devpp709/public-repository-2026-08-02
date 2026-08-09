@@ -79,6 +79,71 @@ export interface LatestBookingsResponse {
     data: LatestBooking[];
 }
 
+export interface BookingCar {
+    id: number;
+    brand: string;
+    model: string;
+    name: string;
+    licensePlate: string;
+    year: number;
+}
+
+export interface BookingUser {
+    id: number;
+    name: string;
+}
+
+export interface BookingLocation {
+    id: number;
+    name: string;
+    address: string | null;
+    city: string | null;
+}
+
+export interface BookingExtraService {
+    id: number;
+    name: string;
+    description: string | null;
+    icon: string | null;
+    category: string | null;
+}
+
+export interface BookingExtra {
+    id: number;
+    quantity: number;
+    pricePerUnit: string;
+    totalPrice: string;
+    service: BookingExtraService;
+}
+
+export interface BookingListItem {
+    id: number;
+    bookingNumber: string;
+    status: string;
+
+    pickupDate: string;
+    pickupTime: string;
+    dropoffDate: string;
+    dropoffTime: string;
+
+    totalDays: number;
+    totalPrice: string;
+
+    car: BookingCar;
+    user: BookingUser;
+
+    pickupLocation: BookingLocation;
+    dropoffLocation: BookingLocation;
+
+    extras: BookingExtra[];
+
+    createdAt: string;
+}
+
+export interface BookingsListResponse {
+    data: BookingListItem[];
+}
+
 
 
 class BookingsService {
@@ -195,6 +260,15 @@ class BookingsService {
     ): Promise<LatestBookingsResponse> {
         return api.get<LatestBookingsResponse>(
             `${this.baseEndpoint}/latest?limit=${limit}`,
+            token
+        );
+    }
+
+    async getAllBookings(
+        token?: string
+    ): Promise<BookingsListResponse> {
+        return api.get<BookingsListResponse>(
+            this.baseEndpoint,
             token
         );
     }

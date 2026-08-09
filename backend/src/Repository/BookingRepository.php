@@ -775,4 +775,35 @@ class BookingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Получить все бронирования со связанными данными
+     *
+     * @return Booking[]
+     */
+    public function findAllWithDetails(): array
+    {
+        return $this->createQueryBuilder('b')
+            ->leftJoin('b.car', 'car')
+            ->addSelect('car')
+
+            ->leftJoin('b.user', 'u')
+            ->addSelect('u')
+
+            ->leftJoin('b.pickupLocation', 'pickup')
+            ->addSelect('pickup')
+
+            ->leftJoin('b.dropoffLocation', 'dropoff')
+            ->addSelect('dropoff')
+
+            ->leftJoin('b.bookingExtras', 'be')
+            ->addSelect('be')
+
+            ->leftJoin('be.extraService', 'extra')
+            ->addSelect('extra')
+
+            ->orderBy('b.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

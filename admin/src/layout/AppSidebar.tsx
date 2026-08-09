@@ -34,7 +34,7 @@ const getNavItems = (t: (key: string) => string): NavItem[] => [
     subItems: [
       { name: t("all_orders"), path: "/bookings/bookings-all", pro: false },
       { name: t("planning"), path: "/bookings/planning", pro: false },
-      { name: t("history"), path: "/bookings/history", pro: false },
+      // { name: t("history"), path: "/bookings/history", pro: false },
       { name: t("payments"), path: "/bookings/payments", pro: false },
     ],
   },

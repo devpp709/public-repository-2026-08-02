@@ -192,4 +192,14 @@ class PaymentRepository extends ServiceEntityRepository
 
         return $result ? (float) $result : 0.0;
     }
+
+    public function findAllOrdered(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.booking', 'b')
+            ->addSelect('b')
+            ->orderBy('p.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

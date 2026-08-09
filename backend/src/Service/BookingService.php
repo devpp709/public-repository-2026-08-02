@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\DTO\Booking\BookingListItemDTO;
 use App\DTO\Booking\BookingRequestDTO;
 use App\DTO\Booking\BookingResponseDTO;
 use App\DTO\Booking\BookingStatisticsDTO;
@@ -411,5 +412,15 @@ class BookingService
         }
 
         return $service;
+    }
+
+    /**
+     * Получить все бронирования со связанными данными
+     */
+    public function getAllBookingsWithDetails(): array
+    {
+        $bookings = $this->bookingRepository->findAllWithDetails();
+
+        return BookingListItemDTO::fromEntities($bookings);
     }
 }
