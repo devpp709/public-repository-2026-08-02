@@ -3,7 +3,9 @@
 namespace App\Controller\Api\Admin;
 
 use App\DTO\CarClass\CarClassRequestDTO;
+use App\DTO\ExtraService\ExtraServiceResponseDTO;
 use App\Repository\FeatureRepository;
+use App\Repository\ExtraServiceRepository;
 use App\Service\CarsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,6 +18,7 @@ class CarsController extends AbstractController
     public function __construct(
         private readonly CarsService $carsService,
         private readonly FeatureRepository $featureRepository,
+        private readonly ExtraServiceRepository $extraServiceRepository,
     ) {
     }
 
@@ -45,6 +48,19 @@ class CarsController extends AbstractController
                     'categoryCode' => $feature->getCategoryCode(),
                 ],
                 $features
+            ),
+        ]);
+    }
+
+    #[Route('/extraService', methods: ['GET'])]
+    public function extraService(): JsonResponse
+    {
+        $extraServices = $this->extraServiceRepository->findAllOrdered();
+
+        return $this->json([
+            'data' => ExtraServiceResponseDTO::fromEntities(
+                $extraServices,
+                true
             ),
         ]);
     }
