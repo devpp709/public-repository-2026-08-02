@@ -173,7 +173,7 @@ class CarRentalHistoryRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
 
-        return (int) $result > 0;
+        return (int)$result > 0;
     }
 
     /**
@@ -187,30 +187,132 @@ class CarRentalHistoryRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
 
-        return $result ? (float) $result : 0.0;
+        return $result ? (float)$result : 0.0;
     }
 
-    public function findAvailableForPeriod(\DateTimeInterface $startDate, \DateTimeInterface $endDate): array
-    {
+
+    /**
+     * Находит автомобили, доступные в указанный период
+     */
+    public function findAvailableForPeriod(
+        \DateTimeInterface $startDate,
+        \DateTimeInterface $endDate,
+        array $filters = []
+    ): array {
         $subquery = $this->getEntityManager()->createQueryBuilder()
-            ->select('IDENTITY(bi.car)')
-            ->from('App\Entity\BookingItem', 'bi')
-            ->innerJoin('bi.booking', 'b')
+            ->select('IDENTITY(b.car)')
+            ->from('App\Entity\Booking', 'b')
             ->where('b.status IN (:statuses)')
             ->andWhere('b.pickupDate <= :endDate')
             ->andWhere('b.dropoffDate >= :startDate')
-            ->setParameter('statuses', ['confirmed', 'in_progress', 'pending'])
+            ->setParameter('statuses', [
+                'confirmed',
+                'in_progress',
+                'pending',
+            ])
             ->setParameter('startDate', $startDate)
             ->setParameter('endDate', $endDate);
 
-        return $this->createQueryBuilder('c')
+        $qb = $this->createQueryBuilder('c')
             ->where('c.isAvailable = :available')
             ->andWhere('c.status = :status')
-            ->andWhere($this->getEntityManager()->createQueryBuilder()->expr()->notIn('c.id', $subquery->getDQL()))
+            ->andWhere('c.id NOT IN (' . $subquery->getDQL() . ')')
             ->setParameter('available', true)
-            ->setParameter('status', 'available')
+            ->setParameter('status', 'available');
+
+        foreach ($subquery->getParameters() as $parameter) {
+            $qb->setParameter(
+                $parameter->getName(),
+                $parameter->getValue()
+            );
+        }
+
+        return $this->applyFilters($qb, $filters)
             ->orderBy('c.dailyPrice', 'ASC')
             ->getQuery()
             ->getResult();
     }
+
+    private function applyFilters($qb, array $filters): object
+    {
+        // Локация
+        if (!empty($filters['pickup_location'])) {
+            $qb->andWhere('c.location = :pickupLocation')
+                ->setParameter(
+                    'pickupLocation',
+                    (int) $filters['pickup_location']
+                );
+        }
+
+        // dropoff_location здесь больше не нужен:
+        // у Car нет dropoffLocation.
+        // Если pickup/dropoff должны быть разными локациями,
+        // это нужно реализовывать через Booking.
+
+        // Класс автомобиля
+        if (!empty($filters['class_id'])) {
+            $qb->andWhere('c.carClass = :classId')
+                ->setParameter(
+                    'classId',
+                    (int) $filters['class_id']
+                );
+        }
+
+        // Минимальная цена
+        if (
+            isset($filters['min_price'])
+            && is_numeric($filters['min_price'])
+        ) {
+            $qb->andWhere('c.dailyPrice >= :minPrice')
+                ->setParameter(
+                    'minPrice',
+                    (float) $filters['min_price']
+                );
+        }
+
+        // Максимальная цена
+        if (
+            isset($filters['max_price'])
+            && is_numeric($filters['max_price'])
+        ) {
+            $qb->andWhere('c.dailyPrice <= :maxPrice')
+                ->setParameter(
+                    'maxPrice',
+                    (float) $filters['max_price']
+                );
+        }
+
+        // Топливо
+        if (!empty($filters['fuel_type'])) {
+            $qb->andWhere('c.fuelType = :fuelType')
+                ->setParameter(
+                    'fuelType',
+                    $filters['fuel_type']
+                );
+        }
+
+        // Трансмиссия
+        if (!empty($filters['transmission'])) {
+            $qb->andWhere('c.transmission = :transmission')
+                ->setParameter(
+                    'transmission',
+                    $filters['transmission']
+                );
+        }
+
+        // Количество мест
+        if (
+            isset($filters['seats'])
+            && is_numeric($filters['seats'])
+        ) {
+            $qb->andWhere('c.seats >= :seats')
+                ->setParameter(
+                    'seats',
+                    (int) $filters['seats']
+                );
+        }
+
+        return $qb;
+    }
+
 }

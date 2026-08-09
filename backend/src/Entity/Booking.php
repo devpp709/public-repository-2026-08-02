@@ -100,13 +100,6 @@ class Booking
     private ?\DateTimeImmutable $updatedAt = null;
 
     /**
-     * @var Collection<int, BookingItem>
-     */
-    #[ORM\OneToMany(mappedBy: 'booking', targetEntity: BookingItem::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
-    #[Groups(['booking:read'])]
-    private Collection $bookingItems;
-
-    /**
      * @var Collection<int, BookingExtra>
      */
     #[ORM\OneToMany(targetEntity: BookingExtra::class, mappedBy: 'booking', cascade: ['persist', 'remove'], orphanRemoval: true)]
@@ -125,10 +118,29 @@ class Booking
     #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'booking')]
     private ArrayCollection $reviews;
 
+    #[ORM\ManyToOne(
+        targetEntity: Car::class,
+        inversedBy: 'bookings'
+    )]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[Groups(['booking:read', 'booking:write'])]
+    private ?Car $car = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[Groups(['booking:read', 'booking:write'])]
+    private ?string $dailyRate = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    #[Groups(['booking:read', 'booking:write'])]
+    private ?string $hourlyRate = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[Groups(['booking:read', 'booking:write'])]
+    private ?string $totalPrice = null;
+
 
     public function __construct()
     {
-        $this->bookingItems = new ArrayCollection();
         $this->bookingExtras = new ArrayCollection();
         $this->payments = new ArrayCollection();
         $this->rentalHistories = new ArrayCollection();
@@ -165,38 +177,43 @@ class Booking
             $diff = $this->pickupDate->diff($this->dropoffDate);
             $this->totalDays = (int) $diff->days;
 
-            // Если есть время, добавляем часы
             if ($this->pickupTime && $this->dropoffTime) {
                 $pickupDateTime = new \DateTime(
                     $this->pickupDate->format('Y-m-d') . ' ' . $this->pickupTime->format('H:i:s')
                 );
+
                 $dropoffDateTime = new \DateTime(
                     $this->dropoffDate->format('Y-m-d') . ' ' . $this->dropoffTime->format('H:i:s')
                 );
+
                 $diffTime = $pickupDateTime->diff($dropoffDateTime);
                 $this->totalHours = $diffTime->days * 24 + $diffTime->h;
 
-                // Если общее время меньше суток, то дни = 0, а часы = общее количество часов
                 if ($this->totalHours < 24) {
                     $this->totalDays = 0;
                 }
             }
         }
 
-        // Рассчитываем суммы
-        $subtotal = 0;
-        foreach ($this->bookingItems as $item) {
-            $subtotal += (float) $item->getTotalPrice();
-        }
-        $this->subtotal = (string) $subtotal;
+        // Автомобиль теперь один, поэтому subtotal = totalPrice
+        $this->subtotal = $this->totalPrice ?? '0.00';
 
+        // Дополнительные услуги
         $extrasTotal = 0;
+
         foreach ($this->bookingExtras as $extra) {
             $extrasTotal += (float) $extra->getTotalPrice();
         }
-        $this->extrasTotal = (string) $extrasTotal;
 
-        $this->totalAmount = (string) ($subtotal + $extrasTotal);
+        $this->extrasTotal = number_format($extrasTotal, 2, '.', '');
+
+        // Общая сумма
+        $this->totalAmount = number_format(
+            (float) $this->subtotal + $extrasTotal,
+            2,
+            '.',
+            ''
+        );
     }
 
     public function getId(): ?int
@@ -407,35 +424,6 @@ class Booking
     }
 
     /**
-     * @return Collection<int, BookingItem>
-     */
-    public function getBookingItems(): Collection
-    {
-        return $this->bookingItems;
-    }
-
-    public function addBookingItem(BookingItem $bookingItem): static
-    {
-        if (!$this->bookingItems->contains($bookingItem)) {
-            $this->bookingItems->add($bookingItem);
-            $bookingItem->setBooking($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBookingItem(BookingItem $bookingItem): static
-    {
-        if ($this->bookingItems->removeElement($bookingItem)) {
-            if ($bookingItem->getBooking() === $this) {
-                $bookingItem->setBooking(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, BookingExtra>
      */
     public function getBookingExtras(): Collection
@@ -530,6 +518,54 @@ class Booking
         return $this->reviews;
     }
 
+    public function getCar(): ?Car
+    {
+        return $this->car;
+    }
+
+    public function setCar(?Car $car): static
+    {
+        $this->car = $car;
+
+        return $this;
+    }
+
+    public function getDailyRate(): ?string
+    {
+        return $this->dailyRate;
+    }
+
+    public function setDailyRate(string $dailyRate): static
+    {
+        $this->dailyRate = $dailyRate;
+
+        return $this;
+    }
+
+    public function getHourlyRate(): ?string
+    {
+        return $this->hourlyRate;
+    }
+
+    public function setHourlyRate(?string $hourlyRate): static
+    {
+        $this->hourlyRate = $hourlyRate;
+
+        return $this;
+    }
+
+    public function getTotalPrice(): ?string
+    {
+        return $this->totalPrice;
+    }
+
+    public function setTotalPrice(string $totalPrice): static
+    {
+        $this->totalPrice = $totalPrice;
+
+        return $this;
+    }
+
     public function addReview(Review $review): static
     {
         if (!$this->reviews->contains($review)) {
@@ -561,22 +597,6 @@ class Booking
             'cancelled' => 'Отменено',
             default => $this->status ?? 'Неизвестно'
         };
-    }
-
-    public function getCars(): array
-    {
-        $cars = [];
-        foreach ($this->bookingItems as $item) {
-            if ($item->getCar()) {
-                $cars[] = $item->getCar();
-            }
-        }
-        return $cars;
-    }
-
-    public function getTotalCars(): int
-    {
-        return $this->bookingItems->count();
     }
 
     public function getPickupDateTime(): ?\DateTime

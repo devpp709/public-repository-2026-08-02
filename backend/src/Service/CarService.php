@@ -93,9 +93,12 @@ class CarService
         $car = $this->findCarOrFail($id);
 
         // Проверяем, есть ли активные бронирования
-        foreach ($car->getBookingItems() as $bookingItem) {
-            $booking = $bookingItem->getBooking();
-            if ($booking && in_array($booking->getStatus(), ['pending', 'confirmed', 'in_progress'])) {
+        foreach ($car->getBookings() as $booking) {
+            if (in_array($booking->getStatus(), [
+                'pending',
+                'confirmed',
+                'in_progress',
+            ], true)) {
                 throw new \RuntimeException(
                     sprintf(
                         'Невозможно удалить автомобиль "%s", так как есть активные бронирования (#%s)',
@@ -106,9 +109,10 @@ class CarService
             }
         }
 
-        // Мягкое удаление - меняем статус
+        // Мягкое удаление
         $car->setStatus('deleted');
         $car->setIsAvailable(false);
+
         $this->entityManager->flush();
     }
 

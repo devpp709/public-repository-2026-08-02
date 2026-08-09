@@ -150,12 +150,6 @@ class Car
     private Collection $carExtraServices;
 
     /**
-     * @var Collection<int, BookingItem>
-     */
-    #[ORM\OneToMany(targetEntity: BookingItem::class, mappedBy: 'car')]
-    private Collection $bookingItems;
-
-    /**
      * @var Collection<int, CarRentalHistory>
      */
     #[ORM\OneToMany(targetEntity: CarRentalHistory::class, mappedBy: 'car')]
@@ -167,12 +161,21 @@ class Car
     #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'car')]
     private Collection $reviews;
 
+    /**
+     * @var Collection<int, Booking>
+     */
+    #[ORM\OneToMany(
+        targetEntity: Booking::class,
+        mappedBy: 'car'
+    )]
+    private Collection $bookings;
+
     public function __construct()
     {
+        $this->bookings = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->carFeatures = new ArrayCollection();
         $this->carExtraServices = new ArrayCollection();
-        $this->bookingItems = new ArrayCollection();
         $this->rentalHistories = new ArrayCollection();
         $this->reviews = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
@@ -563,35 +566,6 @@ class Car
     }
 
     /**
-     * @return Collection<int, BookingItem>
-     */
-    public function getBookingItems(): Collection
-    {
-        return $this->bookingItems;
-    }
-
-    public function addBookingItem(BookingItem $bookingItem): static
-    {
-        if (!$this->bookingItems->contains($bookingItem)) {
-            $this->bookingItems->add($bookingItem);
-            $bookingItem->setCar($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBookingItem(BookingItem $bookingItem): static
-    {
-        if ($this->bookingItems->removeElement($bookingItem)) {
-            if ($bookingItem->getCar() === $this) {
-                $bookingItem->setCar(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, CarRentalHistory>
      */
     public function getRentalHistories(): Collection
@@ -656,7 +630,7 @@ class Car
 
     public function getFuelTypeLabel(): string
     {
-        return match($this->fuelType) {
+        return match ($this->fuelType) {
             'Petrol' => 'Бензин',
             'Diesel' => 'Дизель',
             'Electric' => 'Электрический',
@@ -668,7 +642,7 @@ class Car
 
     public function getTransmissionLabel(): string
     {
-        return match($this->transmission) {
+        return match ($this->transmission) {
             'Automatic' => 'Автоматическая',
             'Manual' => 'Механическая',
             'CVT' => 'Вариатор',
@@ -679,7 +653,7 @@ class Car
 
     public function getStatusLabel(): string
     {
-        return match($this->status) {
+        return match ($this->status) {
             'available' => 'Доступен',
             'rented' => 'В аренде',
             'maintenance' => 'На обслуживании',
@@ -705,7 +679,7 @@ class Car
 
     public function getTotalBookings(): int
     {
-        return $this->bookingItems->count();
+        return $this->bookings->count();
     }
 
     public function getTotalRentalDays(): int
@@ -722,13 +696,42 @@ class Car
         $total = 0;
 
         if ($days > 0 && $this->dailyPrice) {
-            $total += (float) $this->dailyPrice * $days;
+            $total += (float)$this->dailyPrice * $days;
         }
 
         if ($hours > 0 && $this->hourlyPrice) {
-            $total += (float) $this->hourlyPrice * $hours;
+            $total += (float)$this->hourlyPrice * $hours;
         }
 
         return $total;
+    }
+
+    /**
+     * @return Collection<int, Booking>
+     */
+    public function getBookings(): Collection
+    {
+        return $this->bookings;
+    }
+
+    public function addBooking(Booking $booking): static
+    {
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings->add($booking);
+            $booking->setCar($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBooking(Booking $booking): static
+    {
+        if ($this->bookings->removeElement($booking)) {
+            if ($booking->getCar() === $this) {
+                $booking->setCar(null);
+            }
+        }
+
+        return $this;
     }
 }

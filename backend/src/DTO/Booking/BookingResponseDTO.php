@@ -2,9 +2,10 @@
 
 namespace App\DTO\Booking;
 
-use App\Entity\Booking;
-use App\DTO\User\UserResponseDTO;
+use App\DTO\Car\CarResponseDTO;
 use App\DTO\Location\LocationResponseDTO;
+use App\DTO\User\UserResponseDTO;
+use App\Entity\Booking;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 class BookingResponseDTO
@@ -70,7 +71,7 @@ class BookingResponseDTO
     public string $updatedAt;
 
     #[Groups(['booking:read'])]
-    public array $items = [];
+    public ?CarResponseDTO $car = null;
 
     #[Groups(['booking:read'])]
     public array $extras = [];
@@ -79,7 +80,13 @@ class BookingResponseDTO
     public array $payments = [];
 
     #[Groups(['booking:read'])]
-    public ?int $totalCars = 0;
+    public ?string $dailyRate = null;
+
+    #[Groups(['booking:read'])]
+    public ?string $hourlyRate = null;
+
+    #[Groups(['booking:read'])]
+    public ?string $totalPrice = null;
 
     #[Groups(['booking:read'])]
     public ?string $duration = null;
@@ -87,47 +94,59 @@ class BookingResponseDTO
     public static function fromEntity(Booking $booking, bool $withDetails = false): self
     {
         $dto = new self();
+
         $dto->id = $booking->getId();
         $dto->user = UserResponseDTO::fromEntity($booking->getUser());
         $dto->bookingNumber = $booking->getBookingNumber();
+
         $dto->pickupLocation = $booking->getPickupLocation()
             ? LocationResponseDTO::fromEntity($booking->getPickupLocation())
             : null;
+
         $dto->dropoffLocation = $booking->getDropoffLocation()
             ? LocationResponseDTO::fromEntity($booking->getDropoffLocation())
             : null;
+
         $dto->pickupDate = $booking->getPickupDate()->format('Y-m-d');
         $dto->pickupTime = $booking->getPickupTime()->format('H:i:s');
         $dto->dropoffDate = $booking->getDropoffDate()->format('Y-m-d');
         $dto->dropoffTime = $booking->getDropoffTime()->format('H:i:s');
+
         $dto->totalDays = $booking->getTotalDays();
         $dto->totalHours = $booking->getTotalHours();
+
         $dto->subtotal = (float) $booking->getSubtotal();
         $dto->extrasTotal = (float) $booking->getExtrasTotal();
         $dto->totalAmount = (float) $booking->getTotalAmount();
         $dto->securityDeposit = (float) $booking->getSecurityDeposit();
+
         $dto->status = $booking->getStatus();
         $dto->statusLabel = $booking->getStatusLabel();
         $dto->notes = $booking->getNotes();
+
         $dto->createdAt = $booking->getCreatedAt()->format('Y-m-d H:i:s');
         $dto->updatedAt = $booking->getUpdatedAt()->format('Y-m-d H:i:s');
-        $dto->totalCars = $booking->getTotalCars();
+
+        $dto->car = $booking->getCar()
+            ? CarResponseDTO::fromEntity($booking->getCar())
+            : null;
+
+        $dto->dailyRate = $booking->getDailyRate();
+        $dto->hourlyRate = $booking->getHourlyRate();
+        $dto->totalPrice = $booking->getTotalPrice();
 
         $durationHours = $booking->getDurationInHours();
+
         if ($durationHours > 0) {
             $days = floor($durationHours / 24);
             $hours = $durationHours % 24;
+
             $dto->duration = $days > 0
                 ? sprintf('%d дн. %d ч.', $days, $hours)
                 : sprintf('%d ч.', $hours);
         }
 
         if ($withDetails) {
-            $dto->items = array_map(
-                fn($item) => BookingItemResponseDTO::fromEntity($item),
-                $booking->getBookingItems()->toArray()
-            );
-
             $dto->extras = array_map(
                 fn($extra) => BookingExtraResponseDTO::fromEntity($extra),
                 $booking->getBookingExtras()->toArray()

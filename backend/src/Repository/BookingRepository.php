@@ -115,9 +115,7 @@ class BookingRepository extends ServiceEntityRepository
     public function findByCar(int $carId): array
     {
         return $this->createQueryBuilder('b')
-            ->innerJoin('b.bookingItems', 'bi')
-            ->innerJoin('bi.car', 'c')
-            ->where('c.id = :carId')
+            ->where('b.car = :carId')
             ->setParameter('carId', $carId)
             ->orderBy('b.pickupDate', 'DESC')
             ->getQuery()
@@ -127,12 +125,14 @@ class BookingRepository extends ServiceEntityRepository
     /**
      * Проверяет доступность автомобиля на указанный период
      */
-    public function isCarAvailable(int $carId, \DateTimeInterface $pickupDate, \DateTimeInterface $dropoffDate): bool
-    {
+    public function isCarAvailable(
+        int $carId,
+        \DateTimeInterface $pickupDate,
+        \DateTimeInterface $dropoffDate
+    ): bool {
         $result = $this->createQueryBuilder('b')
             ->select('COUNT(b.id)')
-            ->innerJoin('b.bookingItems', 'bi')
-            ->where('bi.car = :carId')
+            ->where('b.car = :carId')
             ->andWhere('b.status IN (:statuses)')
             ->andWhere('b.pickupDate <= :dropoffDate')
             ->andWhere('b.dropoffDate >= :pickupDate')
@@ -231,8 +231,7 @@ class BookingRepository extends ServiceEntityRepository
         }
 
         if (isset($criteria['carId'])) {
-            $qb->innerJoin('b.bookingItems', 'bi')
-                ->andWhere('bi.car = :carId')
+            $qb->andWhere('b.car = :carId')
                 ->setParameter('carId', $criteria['carId']);
         }
 

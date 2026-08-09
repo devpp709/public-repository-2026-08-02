@@ -273,11 +273,55 @@ class CarRepository extends ServiceEntityRepository
     public function findPopular(int $limit = 10): array
     {
         return $this->createQueryBuilder('c')
-            ->select('c', 'COUNT(bi.id) as rental_count')
-            ->leftJoin('c.bookingItems', 'bi')
+            ->select('c', 'COUNT(b.id) as rental_count')
+            ->leftJoin('c.bookings', 'b')
             ->groupBy('c.id')
             ->orderBy('rental_count', 'DESC')
             ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Находит автомобили, доступные в указанный период
+     */
+    public function findAvailableForPeriod(
+        \DateTimeInterface $startDate,
+        \DateTimeInterface $endDate,
+        array $filters = []
+    ): array {
+        $subquery = $this->getEntityManager()->createQueryBuilder()
+            ->select('IDENTITY(b.car)')
+            ->from('App\Entity\Booking', 'b')
+            ->where('b.status IN (:statuses)')
+            ->andWhere(
+                '(b.pickupDate < :endDate AND b.dropoffDate > :startDate)'
+            )
+            ->setParameter('statuses', [
+                'confirmed',
+                'in_progress',
+                'pending',
+            ])
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate);
+
+        $qb = $this->createQueryBuilder('c')
+            ->where('c.isAvailable = :available')
+            ->andWhere('c.status = :status')
+            ->andWhere('c.id NOT IN (' . $subquery->getDQL() . ')')
+            ->setParameter('available', true)
+            ->setParameter('status', 'available');
+
+        foreach ($subquery->getParameters() as $parameter) {
+            $qb->setParameter(
+                $parameter->getName(),
+                $parameter->getValue()
+            );
+        }
+
+        return $this->applyFilters($qb, $filters)
+            ->orderBy('c.brand', 'ASC')
+            ->addOrderBy('c.model', 'ASC')
             ->getQuery()
             ->getResult();
     }
@@ -335,79 +379,40 @@ class CarRepository extends ServiceEntityRepository
     }
 
     /**
-     * Находит автомобили, доступные в указанный период
-     */
-    public function findAvailableForPeriod(
-        \DateTimeInterface $startDate,
-        \DateTimeInterface $endDate,
-        array $filters = []
-    ): array {
-
-        $subquery = $this->getEntityManager()->createQueryBuilder()
-            ->select('IDENTITY(bi.car)')
-            ->from('App\Entity\BookingItem', 'bi')
-            ->innerJoin('bi.booking', 'b')
-            ->where('b.status IN (:statuses)')
-            ->andWhere('b.pickupDate <= :endDate')
-            ->andWhere('b.dropoffDate >= :startDate')
-            ->setParameter('statuses', [
-                'confirmed',
-                'in_progress',
-                'pending'
-            ])
-            ->setParameter('startDate', $startDate)
-            ->setParameter('endDate', $endDate);
-
-        $qb = $this->createQueryBuilder('c')
-            ->where('c.isAvailable = :available')
-            ->andWhere('c.status = :status')
-            ->andWhere('c.id NOT IN (' . $subquery->getDQL() . ')')
-            ->setParameter('available', true)
-            ->setParameter('status', 'available');
-
-        foreach ($subquery->getParameters() as $parameter) {
-            $qb->setParameter(
-                $parameter->getName(),
-                $parameter->getValue()
-            );
-        }
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
      * Применяет дополнительные фильтры к запросу
      */
+
     private function applyFilters($qb, array $filters): object
     {
         // Фильтр по локации pickup
         if (!empty($filters['pickup_location'])) {
             $qb->andWhere('c.location = :pickupLocation')
-                ->setParameter('pickupLocation', (int)$filters['pickup_location']);
+                ->setParameter('pickupLocation', (int) $filters['pickup_location']);
         }
 
         // Фильтр по локации dropoff
         if (!empty($filters['dropoff_location'])) {
-            $qb->andWhere('c.dropoffLocation = :dropoffLocation')
-                ->setParameter('dropoffLocation', (int)$filters['dropoff_location']);
+            $qb->innerJoin('c.bookings', 'filterBooking')
+                ->andWhere('filterBooking.dropoffLocation = :dropoffLocation')
+                ->setParameter('dropoffLocation', (int) $filters['dropoff_location']);
         }
 
         // Фильтр по классу автомобиля
         if (!empty($filters['class_id'])) {
             $qb->andWhere('c.carClass = :classId')
-                ->setParameter('classId', (int)$filters['class_id']);
+                ->setParameter('classId', (int) $filters['class_id']);
         }
 
         // Фильтр по минимальной цене
         if (!empty($filters['min_price']) && is_numeric($filters['min_price'])) {
             $qb->andWhere('c.dailyPrice >= :minPrice')
-                ->setParameter('minPrice', (float)$filters['min_price']);
+                ->setParameter('minPrice', (float) $filters['min_price']);
         }
 
         // Фильтр по максимальной цене
         if (!empty($filters['max_price']) && is_numeric($filters['max_price'])) {
             $qb->andWhere('c.dailyPrice <= :maxPrice')
-                ->setParameter('maxPrice', (float)$filters['max_price']);
+                ->setParameter('maxPrice', (float) $filters['max_price']);
         }
 
         // Фильтр по типу топлива
@@ -425,9 +430,10 @@ class CarRepository extends ServiceEntityRepository
         // Фильтр по количеству мест
         if (!empty($filters['seats']) && is_numeric($filters['seats'])) {
             $qb->andWhere('c.seats >= :seats')
-                ->setParameter('seats', (int)$filters['seats']);
+                ->setParameter('seats', (int) $filters['seats']);
         }
 
         return $qb;
     }
+
 }
