@@ -70,4 +70,28 @@ class BookingsController extends AbstractController
             'year' => $year,
         ]);
     }
+
+    #[Route('/statistics/chart', methods: ['GET'])]
+    public function statisticsChart(Request $request): JsonResponse
+    {
+        $period = $request->query->get('period', 'month');
+
+        if (!in_array($period, ['month', 'quarter', 'year', 'custom'], true)) {
+            return $this->json([
+                'error' => 'Invalid period',
+            ], 400);
+        }
+
+        $start = $request->query->get('start');
+        $end = $request->query->get('end');
+
+        return $this->json([
+            'data' => $this->bookingRepository->getBookingStatisticsByPeriod(
+                $period,
+                $start,
+                $end
+            ),
+            'period' => $period,
+        ]);
+    }
 }

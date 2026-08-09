@@ -218,3 +218,84 @@ export const useBookingsMonthlyStatistics = (
         refetch: fetchData,
     };
 };
+
+export interface UseBookingsChartStatisticsReturn {
+    data: {
+        categories: string[];
+        series: {
+            name: string;
+            data: number[];
+        }[];
+    } | null;
+    loading: boolean;
+    error: string | null;
+    refetch: () => Promise<void>;
+}
+
+export interface UseBookingsChartStatisticsParams {
+    period: "month" | "quarter" | "year" | "custom";
+    start?: string | null;
+    end?: string | null;
+    autoFetch?: boolean;
+}
+
+export const useBookingsChartStatistics = (
+    params: UseBookingsChartStatisticsParams,
+): UseBookingsChartStatisticsReturn => {
+    const {
+        period,
+        start,
+        end,
+        autoFetch = true,
+    } = params;
+
+    const [data, setData] =
+        useState<UseBookingsChartStatisticsReturn['data']>(null);
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const fetchData = useCallback(async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const token =
+                localStorage.getItem('auth_token') || undefined;
+
+            const response =
+                await bookingsService.getStatisticsChartByPeriod(
+                    {
+                        period,
+                        start,
+                        end,
+                    },
+                    token
+                );
+
+            setData(response.data);
+        } catch (err) {
+            const errorMessage =
+                err instanceof Error
+                    ? err.message
+                    : 'Не удалось загрузить статистику заказов';
+
+            setError(errorMessage);
+        } finally {
+            setLoading(false);
+        }
+    }, [period, start, end]);
+
+    useEffect(() => {
+        if (autoFetch) {
+            fetchData();
+        }
+    }, [fetchData, autoFetch]);
+
+    return {
+        data,
+        loading,
+        error,
+        refetch: fetchData,
+    };
+};

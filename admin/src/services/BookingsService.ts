@@ -38,6 +38,15 @@ export interface MonthlyBookingStatsResponse {
     };
 }
 
+export interface BookingPeriodSeries {
+    name: 'plan' | 'fact';
+    data: number[];
+}
+
+export interface BookingPeriodStatisticsResponse {
+    data: BookingPeriodSeries[];
+}
+
 class BookingsService {
     private readonly baseEndpoint = '/api/admin/bookings';
 
@@ -54,8 +63,8 @@ class BookingsService {
     }
 
     async getStatisticsByPeriod(
-        period: 'week' | 'month',
-        token?: string
+        period: "month" | "quarter" | "year",
+        token?: string | undefined
     ): Promise<BookingsStatisticsResponse> {
         return this.getStatistics(
             {
@@ -97,6 +106,34 @@ class BookingsService {
         };
 
         return colors[trend];
+    }
+
+    async getStatisticsChartByPeriod(
+        params: {
+            period: "month" | "quarter" | "year" | "custom";
+            start?: string | null;
+            end?: string | null;
+        },
+        token?: string
+    ): Promise<BookingPeriodStatisticsResponse> {
+        const query = new URLSearchParams({
+            period: params.period,
+        });
+
+        if (params.period === "custom") {
+            if (params.start) {
+                query.set("start", params.start);
+            }
+
+            if (params.end) {
+                query.set("end", params.end);
+            }
+        }
+
+        return api.get<BookingPeriodStatisticsResponse>(
+            `${this.baseEndpoint}/statistics/chart?${query.toString()}`,
+            token
+        );
     }
 
     async getMonthlyStatistics(

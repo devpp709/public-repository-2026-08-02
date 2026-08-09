@@ -433,4 +433,302 @@ class BookingRepository extends ServiceEntityRepository
 
         return array_values($stats);
     }
+
+    public function getBookingStatisticsByPeriod(
+        string $period,
+        ?string $customStart = null,
+        ?string $customEnd = null
+    ): array
+    {
+        $connection = $this->getEntityManager()->getConnection();
+
+        $today = new \DateTimeImmutable('today');
+        $year = (int) $today->format('Y');
+
+        switch ($period) {
+            case 'month':
+                $start = $today->modify('first day of this month')->setTime(0, 0);
+                $end = $start->modify('+1 month');
+
+                $daysInMonth = (int) $end->modify('-1 day')->format('d');
+
+                // FACT
+                $factResult = $connection->executeQuery(
+                    <<<SQL
+                SELECT
+                    EXTRACT(DAY FROM created_at)::integer AS period,
+                    COUNT(id) AS count
+                FROM bookings
+                WHERE created_at >= :start
+                  AND created_at < :end
+                  AND status != :cancelled
+                GROUP BY EXTRACT(DAY FROM created_at)
+                ORDER BY period
+                SQL,
+                    [
+                        'start' => $start->format('Y-m-d H:i:s'),
+                        'end' => $end->format('Y-m-d H:i:s'),
+                        'cancelled' => 'cancelled',
+                    ]
+                )->fetchAllAssociative();
+
+                // PLAN
+                $planResult = $connection->executeQuery(
+                    <<<SQL
+                SELECT
+                    EXTRACT(DAY FROM date)::integer AS period,
+                    bookings AS count
+                FROM booking_plan
+                WHERE date >= :start
+                  AND date < :end
+                ORDER BY date
+                SQL,
+                    [
+                        'start' => $start->format('Y-m-d'),
+                        'end' => $end->format('Y-m-d'),
+                    ]
+                )->fetchAllAssociative();
+
+                $fact = array_fill(1, $daysInMonth, 0);
+                $plan = array_fill(1, $daysInMonth, 0);
+
+                foreach ($factResult as $row) {
+                    $fact[(int) $row['period']] = (int) $row['count'];
+                }
+
+                foreach ($planResult as $row) {
+                    $plan[(int) $row['period']] = (int) $row['count'];
+                }
+
+                return [
+                    [
+                        'name' => 'plan',
+                        'data' => array_values($plan),
+                    ],
+                    [
+                        'name' => 'fact',
+                        'data' => array_values($fact),
+                    ],
+                ];
+
+            case 'quarter':
+                $start = new \DateTimeImmutable("$year-01-01 00:00:00");
+                $end = $start->modify('+1 year');
+
+                // FACT
+                $factResult = $connection->executeQuery(
+                    <<<SQL
+                SELECT
+                    EXTRACT(QUARTER FROM created_at)::integer AS period,
+                    COUNT(id) AS count
+                FROM bookings
+                WHERE created_at >= :start
+                  AND created_at < :end
+                  AND status != :cancelled
+                GROUP BY EXTRACT(QUARTER FROM created_at)
+                ORDER BY period
+                SQL,
+                    [
+                        'start' => $start->format('Y-m-d H:i:s'),
+                        'end' => $end->format('Y-m-d H:i:s'),
+                        'cancelled' => 'cancelled',
+                    ]
+                )->fetchAllAssociative();
+
+                // PLAN
+                $planResult = $connection->executeQuery(
+                    <<<SQL
+                SELECT
+                    EXTRACT(QUARTER FROM date)::integer AS period,
+                    SUM(bookings) AS count
+                FROM booking_plan
+                WHERE date >= :start
+                  AND date < :end
+                GROUP BY EXTRACT(QUARTER FROM date)
+                ORDER BY period
+                SQL,
+                    [
+                        'start' => $start->format('Y-m-d'),
+                        'end' => $end->format('Y-m-d'),
+                    ]
+                )->fetchAllAssociative();
+
+                $fact = array_fill(1, 4, 0);
+                $plan = array_fill(1, 4, 0);
+
+                foreach ($factResult as $row) {
+                    $fact[(int) $row['period']] = (int) $row['count'];
+                }
+
+                foreach ($planResult as $row) {
+                    $plan[(int) $row['period']] = (int) $row['count'];
+                }
+
+                return [
+                    [
+                        'name' => 'plan',
+                        'data' => array_values($plan),
+                    ],
+                    [
+                        'name' => 'fact',
+                        'data' => array_values($fact),
+                    ],
+                ];
+
+            case 'year':
+                $start = new \DateTimeImmutable("$year-01-01 00:00:00");
+                $end = $start->modify('+1 year');
+
+                // FACT
+                $factResult = $connection->executeQuery(
+                    <<<SQL
+                SELECT
+                    EXTRACT(MONTH FROM created_at)::integer AS period,
+                    COUNT(id) AS count
+                FROM bookings
+                WHERE created_at >= :start
+                  AND created_at < :end
+                  AND status != :cancelled
+                GROUP BY EXTRACT(MONTH FROM created_at)
+                ORDER BY period
+                SQL,
+                    [
+                        'start' => $start->format('Y-m-d H:i:s'),
+                        'end' => $end->format('Y-m-d H:i:s'),
+                        'cancelled' => 'cancelled',
+                    ]
+                )->fetchAllAssociative();
+
+                // PLAN
+                $planResult = $connection->executeQuery(
+                    <<<SQL
+                SELECT
+                    EXTRACT(MONTH FROM date)::integer AS period,
+                    SUM(bookings) AS count
+                FROM booking_plan
+                WHERE date >= :start
+                  AND date < :end
+                GROUP BY EXTRACT(MONTH FROM date)
+                ORDER BY period
+                SQL,
+                    [
+                        'start' => $start->format('Y-m-d'),
+                        'end' => $end->format('Y-m-d'),
+                    ]
+                )->fetchAllAssociative();
+
+                $fact = array_fill(1, 12, 0);
+                $plan = array_fill(1, 12, 0);
+
+                foreach ($factResult as $row) {
+                    $fact[(int) $row['period']] = (int) $row['count'];
+                }
+
+                foreach ($planResult as $row) {
+                    $plan[(int) $row['period']] = (int) $row['count'];
+                }
+
+                return [
+                    [
+                        'name' => 'plan',
+                        'data' => array_values($plan),
+                    ],
+                    [
+                        'name' => 'fact',
+                        'data' => array_values($fact),
+                    ],
+                ];
+
+            case 'custom':
+                if (!$customStart || !$customEnd) {
+                    throw new \InvalidArgumentException(
+                        'For custom period start and end are required'
+                    );
+                }
+
+                $start = new \DateTimeImmutable($customStart . ' 00:00:00');
+                $end = new \DateTimeImmutable($customEnd . ' 00:00:00');
+
+                // включаем конечный день
+                $endExclusive = $end->modify('+1 day');
+
+                $days = (int) $start->diff($endExclusive)->days;
+
+                // FACT
+                $factResult = $connection->executeQuery(
+                    <<<SQL
+        SELECT
+            DATE(created_at) AS period,
+            COUNT(id) AS count
+        FROM bookings
+        WHERE created_at >= :start
+          AND created_at < :end
+          AND status != :cancelled
+        GROUP BY DATE(created_at)
+        ORDER BY period
+        SQL,
+                    [
+                        'start' => $start->format('Y-m-d H:i:s'),
+                        'end' => $endExclusive->format('Y-m-d H:i:s'),
+                        'cancelled' => 'cancelled',
+                    ]
+                )->fetchAllAssociative();
+
+                // PLAN
+                $planResult = $connection->executeQuery(
+                    <<<SQL
+        SELECT
+            date AS period,
+            bookings AS count
+        FROM booking_plan
+        WHERE date >= :start
+          AND date < :end
+        ORDER BY date
+        SQL,
+                    [
+                        'start' => $start->format('Y-m-d'),
+                        'end' => $endExclusive->format('Y-m-d'),
+                    ]
+                )->fetchAllAssociative();
+
+                $fact = array_fill(0, $days, 0);
+                $plan = array_fill(0, $days, 0);
+
+                $startDate = $start;
+
+                foreach ($factResult as $row) {
+                    $date = new \DateTimeImmutable($row['period']);
+                    $index = (int) $startDate->diff($date)->days;
+
+                    if ($index >= 0 && $index < $days) {
+                        $fact[$index] = (int) $row['count'];
+                    }
+                }
+
+                foreach ($planResult as $row) {
+                    $date = new \DateTimeImmutable($row['period']);
+                    $index = (int) $startDate->diff($date)->days;
+
+                    if ($index >= 0 && $index < $days) {
+                        $plan[$index] = (int) $row['count'];
+                    }
+                }
+
+                return [
+                    [
+                        'name' => 'plan',
+                        'data' => $plan,
+                    ],
+                    [
+                        'name' => 'fact',
+                        'data' => $fact,
+                    ],
+                ];
+
+            default:
+                throw new \InvalidArgumentException(
+                    'Invalid period. Allowed: month, quarter, year'
+                );
+        }
+    }
 }
