@@ -58,6 +58,27 @@ export interface RegionBookingStatsResponse {
     data: RegionBookingStat[];
 }
 
+export interface LatestBookingCar {
+    id: number;
+    name: string;
+    licensePlate: string;
+    image: string | null;
+}
+
+export interface LatestBooking {
+    id: number;
+    car: LatestBookingCar;
+    orderDate: string;
+    days: number;
+    status: string;
+    totalPrice: string;
+}
+
+export interface LatestBookingsResponse {
+    success: boolean;
+    data: LatestBooking[];
+}
+
 
 
 class BookingsService {
@@ -167,7 +188,19 @@ class BookingsService {
             token
         );
     }
+
+    async getLatest(
+        limit: number = 5,
+        token?: string
+    ): Promise<LatestBookingsResponse> {
+        return api.get<LatestBookingsResponse>(
+            `${this.baseEndpoint}/latest?limit=${limit}`,
+            token
+        );
+    }
 }
+
+
 
 
 export const bookingsService = new BookingsService();

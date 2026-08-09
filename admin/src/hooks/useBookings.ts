@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import {
     BookingsStatisticsResponse,
     bookingsService,
-    DailyBookingStat, MonthlyBookingStatsResponse, RegionBookingStat,
+    DailyBookingStat, MonthlyBookingStatsResponse, RegionBookingStat, LatestBooking,
 } from '../services/BookingsService';
 
 export interface UseBookingsStatisticsParams {
@@ -348,6 +348,64 @@ export const useBookingsRegionStatistics = (
             setLoading(false);
         }
     }, []);
+
+    useEffect(() => {
+        if (autoFetch) {
+            fetchData();
+        }
+    }, [fetchData, autoFetch]);
+
+    return {
+        data,
+        loading,
+        error,
+        refetch: fetchData,
+    };
+};
+
+export interface UseLatestBookingsReturn {
+    data: LatestBooking[];
+    loading: boolean;
+    error: string | null;
+    refetch: () => Promise<void>;
+}
+
+export const useLatestBookings = (
+    limit: number = 5,
+    autoFetch: boolean = true
+): UseLatestBookingsReturn => {
+    const [data, setData] = useState<LatestBooking[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const fetchData = useCallback(async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const token =
+                localStorage.getItem('auth_token') || undefined;
+
+            const response =
+                await bookingsService.getLatest(limit, token);
+
+            setData(response.data);
+        } catch (err) {
+            const errorMessage =
+                err instanceof Error
+                    ? err.message
+                    : 'Не удалось загрузить последние заказы';
+
+            setError(errorMessage);
+
+            console.error(
+                'Error fetching latest bookings:',
+                err
+            );
+        } finally {
+            setLoading(false);
+        }
+    }, [limit]);
 
     useEffect(() => {
         if (autoFetch) {

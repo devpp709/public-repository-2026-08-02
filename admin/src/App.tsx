@@ -1,3 +1,4 @@
+
 import { Routes, Route } from "react-router-dom";
 import { RequireAuth } from "./components/auth/RequireAuth";
 import SignIn from "./pages/AuthPages/SignIn";
@@ -20,40 +21,86 @@ import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
 
+// Bookings
+import BookingsAll from "./pages/Bookings/BookingsAll.tsx";
+import Planning from "./pages/Bookings/Planning";
+import History from "./pages/Bookings/History";
+import Payments from "./pages/Bookings/Payments";
+
+// Cars
+import CarsAll from "./pages/Cars/CarsAll.tsx";
+import Classes from "./pages/Cars/Classes";
+import Configurations from "./pages/Cars/Configurations";
+
+// Other
+import ExtraServices from "./pages/ExtraServices/ExtraServices";
+import Locations from "./pages/Locations/Locations";
+import Reviews from "./pages/Reviews/Reviews";
+
+// Users
+import UsersAll from "./pages/Users/UsersAll.tsx";
+import Roles from "./pages/Users/Roles";
+
 export default function App() {
   return (
-    <>
+      <>
         <ScrollToTop />
-      <Routes>
-        {/* Публичные */}
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
 
-        {/* Приватные */}
-        <Route element={<RequireAuth />}>
-          <Route element={<AppLayout />}>
-            <Route index path="/" element={<Home />} />
-            <Route path="/profile" element={<UserProfiles />} />
-            <Route path="/calendar" element={<Calendar />} />
-            <Route path="/blank" element={<Blank />} />
+        <Routes>
+          {/* Публичные */}
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
 
-            <Route path="/form-elements" element={<FormElements />} />
-            <Route path="/basic-tables" element={<BasicTables />} />
+          {/* Приватные */}
+          <Route element={<RequireAuth />}>
+            <Route element={<AppLayout />}>
+              <Route index path="/" element={<Home />} />
 
-            <Route path="/alerts" element={<Alerts />} />
-            <Route path="/avatars" element={<Avatars />} />
-            <Route path="/badge" element={<Badges />} />
-            <Route path="/buttons" element={<Buttons />} />
-            <Route path="/images" element={<Images />} />
-            <Route path="/videos" element={<Videos />} />
+              <Route path="/profile" element={<UserProfiles />} />
+              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/blank" element={<Blank />} />
 
-            <Route path="/line-chart" element={<LineChart />} />
-            <Route path="/bar-chart" element={<BarChart />} />
+              {/* Bookings */}
+              <Route path="/bookings/bookings-all" element={<BookingsAll />} />
+              <Route path="/bookings/planning" element={<Planning />} />
+              <Route path="/bookings/history" element={<History />} />
+              <Route path="/bookings/payments" element={<Payments />} />
+
+              {/* Cars */}
+              <Route path="/cars/cars-all" element={<CarsAll />} />
+              <Route path="/cars/classes" element={<Classes />} />
+              <Route
+                  path="/cars/configurations"
+                  element={<Configurations />}
+              />
+
+              {/* Other */}
+              <Route path="/extra-services" element={<ExtraServices />} />
+              <Route path="/locations" element={<Locations />} />
+              <Route path="/reviews" element={<Reviews />} />
+
+              {/* Users */}
+              <Route path="/users/users-all" element={<UsersAll />} />
+              <Route path="/users/roles" element={<Roles />} />
+
+              {/* Старые страницы */}
+              <Route path="/form-elements" element={<FormElements />} />
+              <Route path="/basic-tables" element={<BasicTables />} />
+
+              <Route path="/alerts" element={<Alerts />} />
+              <Route path="/avatars" element={<Avatars />} />
+              <Route path="/badge" element={<Badges />} />
+              <Route path="/buttons" element={<Buttons />} />
+              <Route path="/images" element={<Images />} />
+              <Route path="/videos" element={<Videos />} />
+
+              <Route path="/line-chart" element={<LineChart />} />
+              <Route path="/bar-chart" element={<BarChart />} />
+            </Route>
           </Route>
-        </Route>
 
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </>
   );
 }

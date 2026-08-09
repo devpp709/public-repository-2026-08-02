@@ -759,4 +759,20 @@ class BookingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getArrayResult();
     }
+
+    /**
+     * Последние бронирования
+     */
+    public function findLatest(int $limit = 10): array
+    {
+        return $this->createQueryBuilder('b')
+            ->innerJoin('b.car', 'c')
+            ->addSelect('c')
+            ->leftJoin('c.images', 'ci')
+            ->addSelect('ci')
+            ->orderBy('b.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 }

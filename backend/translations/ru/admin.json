@@ -50,7 +50,6 @@
     "electronics": "Электроника",
     "accessories": "Аксессуары",
 
-
     "bar_chart": "Столбчатая диаграмма",
     "bar_chart_1": "Столбчатая диаграмма 1",
     "line_chart": "Линейная диаграмма",
@@ -219,5 +218,26 @@
     "social_links": "Социальные сети",
     "toggle_sidebar": "Переключить боковую панель",
     "plan": "План",
-    "fact": "Факт"
+    "fact": "Факт",
+    "bookings": "Бронирование",
+    "cars": "Автомобили",
+    "extra_services": "Доп. услуги",
+    "locations": "Локации",
+    "reviews": "Отзывы",
+    "users": "Пользователи",
+    "all_orders": "Все заказы",
+    "planning": "Планирование",
+    "history": "История",
+    "payments": "Платежи",
+    "all_cars": "Машины",
+    "classes": "Классы",
+    "configurations": "Комплектации",
+    "all_users": "Пользователи",
+    "roles": "Роли",
+    "menu": "Меню",
+    "new": "новое",
+    "pro": "про",
+    "booking_management": "Управление бронированием",
+    "car_management": "Управление автомобилями",
+    "user_management": "Управление пользователями"
 }

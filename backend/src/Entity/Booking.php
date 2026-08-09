@@ -113,10 +113,10 @@ class Booking
     #[Groups(['booking:read'])]
     private Collection $payments;
     #[ORM\OneToMany(targetEntity: CarRentalHistory::class, mappedBy: 'booking')]
-    private ArrayCollection $rentalHistories;
+    private Collection $rentalHistories;
 
     #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'booking')]
-    private ArrayCollection $reviews;
+    private Collection $reviews;
 
     #[ORM\ManyToOne(
         targetEntity: Car::class,

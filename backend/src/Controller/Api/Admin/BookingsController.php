@@ -3,6 +3,7 @@
 namespace App\Controller\Api\Admin;
 
 use App\DTO\Api\Admin\BookingsStatisticsDto;
+use App\DTO\Booking\LatestBookingDTO;
 use App\Repository\BookingRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -102,6 +103,22 @@ class BookingsController extends AbstractController
 
         return $this->json([
             'data' => $statistics,
+        ]);
+    }
+
+    #[Route('/latest', methods: ['GET'])]
+    public function latest(Request $request): JsonResponse
+    {
+        $limit = max(1, min(
+            50,
+            (int) $request->query->get('limit', 10)
+        ));
+
+        $bookings = $this->bookingRepository->findLatest($limit);
+
+        return $this->json([
+            'success' => true,
+            'data' => LatestBookingDTO::fromEntities($bookings),
         ]);
     }
 }
