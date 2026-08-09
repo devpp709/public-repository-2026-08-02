@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import {
     BookingsStatisticsResponse,
     bookingsService,
-    DailyBookingStat, MonthlyBookingStatsResponse,
+    DailyBookingStat, MonthlyBookingStatsResponse, RegionBookingStat,
 } from '../services/BookingsService';
 
 export interface UseBookingsStatisticsParams {
@@ -285,6 +285,69 @@ export const useBookingsChartStatistics = (
             setLoading(false);
         }
     }, [period, start, end]);
+
+    useEffect(() => {
+        if (autoFetch) {
+            fetchData();
+        }
+    }, [fetchData, autoFetch]);
+
+    return {
+        data,
+        loading,
+        error,
+        refetch: fetchData,
+    };
+};
+
+export interface UseBookingsRegionStatisticsReturn {
+    data: Record<string, RegionBookingStat>;
+    loading: boolean;
+    error: string | null;
+    refetch: () => Promise<void>;
+}
+
+export const useBookingsRegionStatistics = (
+    autoFetch: boolean = true
+): UseBookingsRegionStatisticsReturn => {
+    const [data, setData] = useState<Record<string, RegionBookingStat>>({});
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const fetchData = useCallback(async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const token =
+                localStorage.getItem("auth_token") || undefined;
+
+            const response =
+                await bookingsService.getRegionStatistics(token);
+
+            const regions: Record<string, RegionBookingStat> = {};
+
+            response.data.forEach((region) => {
+                regions[region.code] = region;
+            });
+
+            setData(regions);
+        } catch (err) {
+            const errorMessage =
+                err instanceof Error
+                    ? err.message
+                    : "Не удалось загрузить статистику регионов";
+
+            setError(errorMessage);
+
+            console.error(
+                "Error fetching region booking statistics:",
+                err
+            );
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
     useEffect(() => {
         if (autoFetch) {

@@ -731,4 +731,33 @@ class BookingRepository extends ServiceEntityRepository
                 );
         }
     }
+
+    public function getRegionStatistics(): array
+    {
+        return $this->getEntityManager()
+            ->createQueryBuilder()
+            ->select(
+                'r.code AS code',
+                'r.name AS name',
+                'COUNT(b.id) AS orders'
+            )
+            ->from(\App\Entity\Region::class, 'r')
+            ->leftJoin(
+                \App\Entity\Location::class,
+                'l',
+                'WITH',
+                'l.region = r'
+            )
+            ->leftJoin(
+                'l.pickupBookings',
+                'b',
+                'WITH',
+                'b.status != :cancelled'
+            )
+            ->setParameter('cancelled', 'cancelled')
+            ->groupBy('r.id')
+            ->orderBy('orders', 'DESC')
+            ->getQuery()
+            ->getArrayResult();
+    }
 }

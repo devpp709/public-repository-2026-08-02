@@ -83,6 +83,11 @@ class Location
     #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'dropoffLocation')]
     private Collection $dropoffBookings;
 
+    #[ORM\ManyToOne(targetEntity: Region::class, inversedBy: 'locations')]
+    #[ORM\JoinColumn(name: 'region_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    #[Groups(['location:read', 'location:write', 'booking:read'])]
+    private ?Region $region = null;
+
     public function __construct()
     {
         $this->cars = new ArrayCollection();
@@ -269,6 +274,18 @@ class Location
     public function getPickupBookings(): Collection
     {
         return $this->pickupBookings;
+    }
+
+    public function getRegion(): ?Region
+    {
+        return $this->region;
+    }
+
+    public function setRegion(?Region $region): static
+    {
+        $this->region = $region;
+
+        return $this;
     }
 
     public function addPickupBooking(Booking $booking): static

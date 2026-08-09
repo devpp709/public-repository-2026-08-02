@@ -47,6 +47,19 @@ export interface BookingPeriodStatisticsResponse {
     data: BookingPeriodSeries[];
 }
 
+
+export interface RegionBookingStat {
+    code: string;
+    name: string;
+    orders: number;
+}
+
+export interface RegionBookingStatsResponse {
+    data: RegionBookingStat[];
+}
+
+
+
 class BookingsService {
     private readonly baseEndpoint = '/api/admin/bookings';
 
@@ -145,7 +158,17 @@ class BookingsService {
             token
         );
     }
+
+    async getRegionStatistics(
+        token?: string
+    ): Promise<RegionBookingStatsResponse> {
+        return api.get<RegionBookingStatsResponse>(
+            `${this.baseEndpoint}/statistics/regions`,
+            token
+        );
+    }
 }
+
 
 export const bookingsService = new BookingsService();
 

@@ -94,4 +94,14 @@ class BookingsController extends AbstractController
             'period' => $period,
         ]);
     }
+
+    #[Route('/statistics/regions', name: 'statistics_regions', methods: ['GET'])]
+    public function regionStatistics(): JsonResponse
+    {
+        $statistics = $this->bookingRepository->getRegionStatistics();
+
+        return $this->json([
+            'data' => $statistics,
+        ]);
+    }
 }
