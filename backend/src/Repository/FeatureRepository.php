@@ -16,6 +16,14 @@ class FeatureRepository extends ServiceEntityRepository
         parent::__construct($registry, Feature::class);
     }
 
+    public function findAllOrderedByName(): array
+    {
+        return $this->createQueryBuilder('f')
+            ->orderBy('f.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * Находит все характеристики с сортировкой по категории и имени
      */

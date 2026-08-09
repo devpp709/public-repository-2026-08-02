@@ -10,7 +10,7 @@ use App\Repository\CarClassRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class CarClassService
+class CarsService
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,

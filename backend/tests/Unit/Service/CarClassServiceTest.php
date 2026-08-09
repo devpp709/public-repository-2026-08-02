@@ -5,14 +5,14 @@ namespace App\Tests\Unit\Service;
 use App\DTO\CarClass\CarClassRequestDTO;
 use App\Entity\CarClass;
 use App\Repository\CarClassRepository;
-use App\Service\CarClassService;
+use App\Service\CarsService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CarClassServiceTest extends TestCase
 {
-    private CarClassService $service;
+    private CarsService $service;
     private $entityManager;
     private $repository;
 
@@ -21,7 +21,7 @@ class CarClassServiceTest extends TestCase
         $this->entityManager = $this->createMock(EntityManagerInterface::class);
         $this->repository = $this->createMock(CarClassRepository::class);
 
-        $this->service = new CarClassService(
+        $this->service = new CarsService(
             $this->entityManager,
             $this->repository
         );

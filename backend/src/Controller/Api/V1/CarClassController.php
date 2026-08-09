@@ -3,7 +3,7 @@
 namespace App\Controller\Api\V1;
 
 use App\DTO\CarClass\CarClassRequestDTO;
-use App\Service\CarClassService;
+use App\Service\CarsService;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class CarClassController extends AbstractController
 {
     public function __construct(
-        private readonly CarClassService $carClassService,
+        private readonly CarsService         $carClassService,
         private readonly SerializerInterface $serializer
     ) {
     }

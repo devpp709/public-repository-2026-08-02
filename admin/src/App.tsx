@@ -30,7 +30,7 @@ import Payments from "./pages/Bookings/Payments";
 // Cars
 import CarsAll from "./pages/Cars/CarsAll.tsx";
 import Classes from "./pages/Cars/Classes";
-import Configurations from "./pages/Cars/Configurations";
+import Features from "./pages/Cars/Features.tsx";
 
 // Other
 import ExtraServices from "./pages/ExtraServices/ExtraServices";
@@ -70,7 +70,7 @@ export default function App() {
               <Route path="/cars/classes" element={<Classes />} />
               <Route
                   path="/cars/configurations"
-                  element={<Configurations />}
+                  element={<Features />}
               />
 
               {/* Other */}

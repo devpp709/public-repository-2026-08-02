@@ -198,6 +198,13 @@ class Feature
     public static function getCategoryLabels(): array
     {
         $config = self::getCategoryConfig();
-        return array_column($config, 'label', 'code');
+
+        $result = [];
+
+        foreach ($config as $code => $item) {
+            $result[$code] = $item['label'];
+        }
+
+        return $result;
     }
 }
