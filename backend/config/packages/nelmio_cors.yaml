@@ -9,8 +9,8 @@ nelmio_cors:
             - 'http://31.31.201.163:3004'
             - 'https://31.31.201.163:3003'
             - 'https://31.31.201.163:3004'
-            - 'http://31.31.201.163'  # ДОБАВЬТЕ ЭТО!
-            - 'http://31.31.201.163:80'  # ДОБАВЬТЕ ЭТО!
+            - 'http://31.31.201.163'
+            - 'http://31.31.201.163:80'
             - 'http://rentcar-admin:5173'
             - 'http://rentcar-frontend:3000'
         allow_credentials: true
@@ -43,8 +43,8 @@ nelmio_cors:
                 - 'http://31.31.201.163:3004'
                 - 'https://31.31.201.163:3003'
                 - 'https://31.31.201.163:3004'
-                - 'http://31.31.201.163'  # ДОБАВЬТЕ ЭТО!
-                - 'http://31.31.201.163:80'  # ДОБАВЬТЕ ЭТО!
+                - 'http://31.31.201.163'
+                - 'http://31.31.201.163:80'
                 - 'http://rentcar-admin:5173'
                 - 'http://rentcar-frontend:3000'
             allow_credentials: true
@@ -70,7 +70,7 @@ nelmio_cors:
                 - 'http://localhost:3004'
                 - 'http://31.31.201.163:3003'
                 - 'http://31.31.201.163:3004'
-                - 'http://31.31.201.163'  # ДОБАВЬТЕ ЭТО!
+                - 'http://31.31.201.163'
             allow_credentials: true
             allow_methods:
                 - GET
