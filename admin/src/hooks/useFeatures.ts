@@ -1,40 +1,60 @@
-import { useCallback, useEffect, useState } from 'react';
-import featuresService, {
-    Feature,
-} from '../services/FeaturesService';
+// src/hooks/useFeatures.ts
+
+import {useCallback, useEffect, useState} from 'react';
+import {featuresService} from '../services/FeaturesService';
+
+export interface Feature {
+    id: number;
+    name: string;
+    icon?: string;
+    category?: string;
+    categoryLabel?: string;
+    categoryCode?: string;
+    createdAt: string;
+    updatedAt: string;
+}
 
 export function useFeatures() {
     const [features, setFeatures] = useState<Feature[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const loadFeatures = useCallback(async () => {
+    const fetchFeatures = useCallback(async () => {
         try {
             setLoading(true);
             setError(null);
-
-            const data = await featuresService.getAllFeatures();
-
-            setFeatures(data);
-        } catch (e) {
-            setError(
-                e instanceof Error
-                    ? e.message
-                    : 'Не удалось загрузить комплектации'
-            );
+            const response = await featuresService.getFeatures();
+            setFeatures(response.data || []);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to fetch features');
         } finally {
             setLoading(false);
         }
     }, []);
 
+    const createFeature = useCallback(async (data: any) => {
+        return await featuresService.createFeature(data);
+    }, []);
+
+    const updateFeature = useCallback(async (id: number, data: any) => {
+        return await featuresService.updateFeature(id, data);
+    }, []);
+
+    const deleteFeature = useCallback(async (id: number) => {
+        await featuresService.deleteFeature(id);
+    }, []);
+
     useEffect(() => {
-        loadFeatures();
-    }, [loadFeatures]);
+        fetchFeatures();
+    }, [fetchFeatures]);
 
     return {
         features,
         loading,
         error,
-        reload: loadFeatures,
+        refresh: fetchFeatures,
+        createFeature,
+        updateFeature,
+        deleteFeature,
     };
 }

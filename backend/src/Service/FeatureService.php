@@ -194,8 +194,11 @@ class FeatureService
         if ($dto->icon !== null) {
             $feature->setIcon($dto->icon);
         }
-        if ($dto->category !== null) {
-            $feature->setCategory($dto->category);
+        if ($dto->categoryCode !== null) {
+            // Устанавливаем и categoryCode, и category (для обратной совместимости)
+            $feature->setCategoryCode($dto->categoryCode);
+            // Получаем метку категории через метод Feature
+            $feature->setCategory($feature->getCategoryLabel());
         }
     }
 
@@ -218,12 +221,13 @@ class FeatureService
     private function getCategoryLabel(?string $category): string
     {
         return match($category) {
-            'Safety' => 'Безопасность',
-            'Comfort' => 'Комфорт',
-            'Technology' => 'Технологии',
-            'Exterior' => 'Экстерьер',
-            'Interior' => 'Интерьер',
-            'Performance' => 'Производительность',
+            'safety' => 'Безопасность',
+            'comfort' => 'Комфорт',
+            'technology' => 'Технологии',
+            'exterior' => 'Экстерьер',
+            'interior' => 'Интерьер',
+            'performance' => 'Производительность',
+            'media' => 'Мультимедиа', // Добавьте эту строку
             default => $category ?? 'Другое'
         };
     }

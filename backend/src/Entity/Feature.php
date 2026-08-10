@@ -41,7 +41,7 @@ class Feature
 
     #[ORM\Column(length: 50, nullable: true)]
     #[Assert\Choice(
-        choices: ['safety', 'comfort', 'technology', 'exterior', 'interior', 'performance'],
+        choices: ['safety', 'comfort', 'technology', 'exterior', 'interior', 'performance', 'media'],
         message: 'Выберите корректный код категории'
     )]
     #[Groups(['feature:read', 'feature:write'])]
@@ -175,6 +175,7 @@ class Feature
             'exterior' => ['label' => 'Экстерьер', 'icon' => '🚗'],
             'interior' => ['label' => 'Интерьер', 'icon' => '🪑'],
             'performance' => ['label' => 'Производительность', 'icon' => '⚡'],
+            'media' => ['label' => 'Мультимедиа', 'icon' => '🎵'], // Добавьте эту строку
         ];
     }
 

@@ -1,59 +1,53 @@
+// src/services/featuresService.ts
+
 import { api } from './api';
 
 export interface Feature {
     id: number;
     name: string;
-    icon: string | null;
-    category: string | null;
-    categoryLabel: string | null;
-    categoryCode: string | null;
+    icon?: string;
+    category?: string;
+    categoryLabel?: string;
+    categoryCode?: string;
     createdAt: string;
     updatedAt: string;
-    carsCount: number;
-    usageCount: number;
 }
 
-interface FeaturesResponse {
+export interface FeaturesResponse {
     data: Feature[];
 }
 
+export interface CreateFeatureRequest {
+    name: string;
+    icon?: string;
+    categoryCode: string;
+}
+
+export interface UpdateFeatureRequest extends Partial<CreateFeatureRequest> {}
+
 class FeaturesService {
-    private readonly baseEndpoint = '/api/admin/cars-features';
+    private readonly baseEndpoint = '/api/admin/features';
 
-    async getAllFeatures(token?: string): Promise<Feature[]> {
-        const response = await api.get<FeaturesResponse>(
-            this.baseEndpoint,
-            token
-        );
-
-        return response.data;
+    async getFeatures(token?: string): Promise<FeaturesResponse> {
+        return api.get<FeaturesResponse>(this.baseEndpoint, token);
     }
 
-    async getFeatureById(
-        id: number,
-        token?: string
-    ): Promise<Feature> {
-        const response = await api.get<{ data: Feature }>(
-            `${this.baseEndpoint}/${id}`,
-            token
-        );
-
-        return response.data;
+    async getFeatureById(id: number, token?: string): Promise<Feature> {
+        return api.get<Feature>(`${this.baseEndpoint}/${id}`, token);
     }
 
-    async searchFeatures(
-        search: string,
-        token?: string
-    ): Promise<Feature[]> {
-        const response = await api.get<FeaturesResponse>(
-            `${this.baseEndpoint}/search?q=${encodeURIComponent(search)}`,
-            token
-        );
+    async createFeature(data: CreateFeatureRequest, token?: string): Promise<Feature> {
+        return api.post<Feature>(this.baseEndpoint, data, token);
+    }
 
-        return response.data;
+    async updateFeature(id: number, data: UpdateFeatureRequest, token?: string): Promise<Feature> {
+        return api.put<Feature>(`${this.baseEndpoint}/${id}`, data, token);
+    }
+
+    async deleteFeature(id: number, token?: string): Promise<void> {
+        return api.delete<void>(`${this.baseEndpoint}/${id}`, token);
     }
 }
 
 export const featuresService = new FeaturesService();
-
 export default featuresService;

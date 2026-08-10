@@ -14,7 +14,7 @@ class FeatureRequestDTO
     public ?string $icon = null;
 
     #[Assert\Choice(
-        choices: ['safety', 'comfort', 'technology', 'exterior', 'interior', 'performance'],
+        choices: ['safety', 'comfort', 'technology', 'exterior', 'interior', 'performance', 'media'],
         message: 'Выберите корректный код категории'
     )]
     public ?string $categoryCode = null;
