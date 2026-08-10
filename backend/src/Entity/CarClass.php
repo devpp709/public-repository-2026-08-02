@@ -35,16 +35,6 @@ class CarClass
     #[Groups(['car_class:read', 'car_class:write'])]
     private ?string $icon = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
-    #[Assert\PositiveOrZero]
-    #[Groups(['car_class:read', 'car_class:write', 'car:read'])]
-    private ?string $dailyRate = null;
-
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
-    #[Assert\PositiveOrZero]
-    #[Groups(['car_class:read', 'car_class:write'])]
-    private ?string $hourlyRate = null;
-
     #[ORM\Column]
     #[Groups(['car_class:read'])]
     private ?\DateTimeImmutable $createdAt = null;
@@ -106,30 +96,6 @@ class CarClass
     public function setIcon(?string $icon): static
     {
         $this->icon = $icon;
-
-        return $this;
-    }
-
-    public function getDailyRate(): ?string
-    {
-        return $this->dailyRate;
-    }
-
-    public function setDailyRate(?string $dailyRate): static
-    {
-        $this->dailyRate = $dailyRate;
-
-        return $this;
-    }
-
-    public function getHourlyRate(): ?string
-    {
-        return $this->hourlyRate;
-    }
-
-    public function setHourlyRate(?string $hourlyRate): static
-    {
-        $this->hourlyRate = $hourlyRate;
 
         return $this;
     }

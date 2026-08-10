@@ -1,4 +1,5 @@
 <?php
+// src/DTO/CarClass/CarClassResponseDTO.php
 
 namespace App\DTO\CarClass;
 
@@ -20,12 +21,6 @@ class CarClassResponseDTO
     public ?string $icon;
 
     #[Groups(['car_class:read'])]
-    public ?float $dailyRate;
-
-    #[Groups(['car_class:read'])]
-    public ?float $hourlyRate;
-
-    #[Groups(['car_class:read'])]
     public string $createdAt;
 
     #[Groups(['car_class:read'])]
@@ -41,8 +36,6 @@ class CarClassResponseDTO
         $dto->name = $carClass->getName();
         $dto->description = $carClass->getDescription();
         $dto->icon = $carClass->getIcon();
-        $dto->dailyRate = $carClass->getDailyRate() ? (float) $carClass->getDailyRate() : null;
-        $dto->hourlyRate = $carClass->getHourlyRate() ? (float) $carClass->getHourlyRate() : null;
         $dto->createdAt = $carClass->getCreatedAt()->format('Y-m-d H:i:s');
         $dto->updatedAt = $carClass->getUpdatedAt()->format('Y-m-d H:i:s');
 
@@ -68,8 +61,6 @@ class CarClassResponseDTO
             'name' => $this->name,
             'description' => $this->description,
             'icon' => $this->icon,
-            'dailyRate' => $this->dailyRate,
-            'hourlyRate' => $this->hourlyRate,
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
             'carsCount' => $this->carsCount,

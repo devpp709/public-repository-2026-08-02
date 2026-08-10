@@ -1,69 +1,52 @@
+// src/services/carClassesService.ts
+
 import { api } from './api';
 
 export interface CarClass {
     id: number;
     name: string;
-    description: string | null;
-    icon: string | null;
-    dailyRate: number | null;
-    hourlyRate: number | null;
+    description?: string;
+    icon?: string;
     createdAt: string;
     updatedAt: string;
     carsCount: number;
 }
 
-interface CarClassesResponse {
+export interface CarClassResponse {
     data: CarClass[];
 }
 
+export interface CreateCarClassRequest {
+    name: string;
+    description?: string | null;
+    icon?: string;
+}
+
+export interface UpdateCarClassRequest extends Partial<CreateCarClassRequest> {}
+
 class CarClassesService {
-    private readonly baseEndpoint = '/api/admin';
+    private readonly baseEndpoint = '/api/admin/car-classes';
 
-    async getAllClasses(token?: string): Promise<CarClass[]> {
-        const response = await api.get<CarClassesResponse>(
-            `${this.baseEndpoint}/car-classes`,
-            token
-        );
-
-        return response.data;
+    async getCarClasses(token?: string): Promise<CarClassResponse> {
+        return api.get<CarClassResponse>(this.baseEndpoint, token);
     }
 
-    async getClassById(
-        id: number,
-        token?: string
-    ): Promise<CarClass> {
-        const response = await api.get<CarClass | { data: CarClass }>(
-            `${this.baseEndpoint}/${id}`,
-            token
-        );
-
-        return 'data' in response ? response.data : response;
+    async getCarClassById(id: number, token?: string): Promise<CarClass> {
+        return api.get<CarClass>(`${this.baseEndpoint}/${id}`, token);
     }
 
-    async getClassesWithAvailableCars(
-        token?: string
-    ): Promise<CarClass[]> {
-        const response = await api.get<CarClassesResponse>(
-            `${this.baseEndpoint}/car-available`,
-            token
-        );
-
-        return response.data;
+    async createCarClass(data: CreateCarClassRequest, token?: string): Promise<CarClass> {
+        return api.post<CarClass>(this.baseEndpoint, data, token);
     }
 
-    async searchClasses(
-        search: string,
-        token?: string
-    ): Promise<CarClass[]> {
-        const response = await api.get<CarClassesResponse>(
-            `${this.baseEndpoint}/search?search=${encodeURIComponent(search)}`,
-            token
-        );
+    async updateCarClass(id: number, data: UpdateCarClassRequest, token?: string): Promise<CarClass> {
+        return api.put<CarClass>(`${this.baseEndpoint}/${id}`, data, token);
+    }
 
-        return response.data;
+    async deleteCarClass(id: number, token?: string): Promise<void> {
+        return api.delete<void>(`${this.baseEndpoint}/${id}`, token);
     }
 }
 
 export const carClassesService = new CarClassesService();
-
 export default carClassesService;

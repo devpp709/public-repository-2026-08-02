@@ -221,8 +221,6 @@ class CarService
         $class->setName($dto->name);
         $class->setDescription($dto->description);
         $class->setIcon($dto->icon);
-        $class->setDailyRate($dto->dailyRate !== null ? (string) $dto->dailyRate : null);
-        $class->setHourlyRate($dto->hourlyRate !== null ? (string) $dto->hourlyRate : null);
 
         $this->entityManager->persist($class);
         $this->entityManager->flush();
@@ -242,12 +240,6 @@ class CarService
         }
         if ($dto->icon !== null) {
             $class->setIcon($dto->icon);
-        }
-        if ($dto->dailyRate !== null) {
-            $class->setDailyRate((string) $dto->dailyRate);
-        }
-        if ($dto->hourlyRate !== null) {
-            $class->setHourlyRate((string) $dto->hourlyRate);
         }
 
         $this->entityManager->flush();

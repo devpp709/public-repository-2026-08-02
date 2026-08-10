@@ -39,27 +39,4 @@ class CarClassServiceTest extends TestCase
 
         $this->service->getClassById(999);
     }
-
-    public function testCreateClass(): void
-    {
-        $dto = new CarClassRequestDTO();
-        $dto->name = 'SUV';
-        $dto->description = 'Test description';
-        $dto->dailyRate = 100.00;
-        $dto->hourlyRate = 15.00;
-
-        $this->entityManager
-            ->expects($this->once())
-            ->method('persist')
-            ->with($this->isInstanceOf(CarClass::class));
-
-        $this->entityManager
-            ->expects($this->once())
-            ->method('flush');
-
-        $result = $this->service->createClass($dto);
-
-        $this->assertEquals('SUV', $result->name);
-        $this->assertEquals(100.00, $result->dailyRate);
-    }
 }

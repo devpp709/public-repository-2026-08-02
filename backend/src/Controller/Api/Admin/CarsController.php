@@ -61,13 +61,6 @@ class CarsController extends AbstractController
         $dto->name = $data['name'] ?? null;
         $dto->description = $data['description'] ?? null;
         $dto->icon = $data['icon'] ?? null;
-        $dto->dailyRate = isset($data['dailyRate'])
-            ? (float) $data['dailyRate']
-            : null;
-        $dto->hourlyRate = isset($data['hourlyRate'])
-            ? (float) $data['hourlyRate']
-            : null;
-
         $class = $this->carService->createClass($dto);
 
         return $this->json([
@@ -99,12 +92,6 @@ class CarsController extends AbstractController
         $dto->name = $data['name'] ?? null;
         $dto->description = $data['description'] ?? null;
         $dto->icon = $data['icon'] ?? null;
-        $dto->dailyRate = isset($data['dailyRate'])
-            ? (float) $data['dailyRate']
-            : null;
-        $dto->hourlyRate = isset($data['hourlyRate'])
-            ? (float) $data['hourlyRate']
-            : null;
 
         return $this->json([
             'data' => $this->carService->updateClass($id, $dto),
