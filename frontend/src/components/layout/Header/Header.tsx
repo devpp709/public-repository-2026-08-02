@@ -83,7 +83,7 @@ export default function Header(): ReactElement {
                                                 <li className={menuItemClass('cta', isCarsPath)}>
                                                     <Link
                                                         className="main-header-btn"
-                                                        href="/cars/catalog"
+                                                        href="/catalog"
                                                         aria-current={isCarsPath ? 'page' : undefined}
                                                     >
                                                         {t('book_a_car')}

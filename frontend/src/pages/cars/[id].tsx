@@ -43,7 +43,7 @@ export default function CarPage() {
                         <div className="tf-not-found" style={{ textAlign: 'center', padding: '60px 20px' }}>
                             <h1>Автомобиль не найден</h1>
                             <p>Извините, запрашиваемый автомобиль не существует или был удален.</p>
-                            <Link href="/cars/catalog" className="tf-btn tf-btn-primary" style={{ display: 'inline-block', marginTop: '20px' }}>
+                            <Link href="/catalog" className="tf-btn tf-btn-primary" style={{ display: 'inline-block', marginTop: '20px' }}>
                                 Вернуться к списку
                             </Link>
                         </div>

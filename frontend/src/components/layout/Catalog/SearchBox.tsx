@@ -104,12 +104,12 @@ export default function SearchBox() {
         }
 
         if (rentalPeriod.length !== 2 || !rentalPeriod[0] || !rentalPeriod[1]) {
-            alert(t('please_select_rental_period') || 'Пожалуйста, выберите период аренды');
+            alert(t('please_select_rental_period'));
             return;
         }
 
         if (rentalPeriod[0] >= rentalPeriod[1]) {
-            alert(t('end_date_must_be_after_start') || 'Дата окончания должна быть позже даты начала');
+            alert(t('end_date_must_be_after_start'));
             return;
         }
 
@@ -141,7 +141,7 @@ export default function SearchBox() {
         }
 
         // Переход на страницу каталога с параметрами
-        router.push(`/cars/catalog?${params.toString()}`);
+        router.push(`/catalog?${params.toString()}`);
     };
 
     const handleReturnSameLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -172,30 +172,6 @@ export default function SearchBox() {
                 <div className="tf-archive-search-box-wrapper">
                     {/* ТРИ БЛОКА В ОДНУ СТРОКУ */}
                     <div className="tf-search-row">
-                        {/* Блок 1: Откуда */}
-                        <div className="tf-search-block tf-search-block-location" style={{ position: 'relative', zIndex: 2 }}>
-                            <LocationDropdown
-                                label={t('pickup_location')}
-                                locations={locations}
-                                value={pickupLocation}
-                                onChange={setPickupLocation}
-                                placeholder={t('select_address')}
-                                isDisabled={false}
-                            />
-                        </div>
-
-                        {/* Блок 2: Куда */}
-                        <div className="tf-search-block tf-search-block-location" style={{ position: 'relative', zIndex: 1 }}>
-                            <LocationDropdown
-                                label={t('dropoff_location')}
-                                locations={locations}
-                                value={dropoffLocation}
-                                onChange={setDropoffLocation}
-                                placeholder={t('select_address')}
-                                isDisabled={returnSameLocation}
-                            />
-                        </div>
-
                         {/* Блок 3: Даты */}
                         <div className="tf-search-block tf-search-block-date" style={{position: 'relative', zIndex: 0}}>
                             <div className="tf-date-select-box tf-flex tf-flex-gap-8">
@@ -223,6 +199,30 @@ export default function SearchBox() {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        {/* Блок 1: Откуда */}
+                        <div className="tf-search-block tf-search-block-location" style={{ position: 'relative', zIndex: 2 }}>
+                            <LocationDropdown
+                                label={t('pickup_location')}
+                                locations={locations}
+                                value={pickupLocation}
+                                onChange={setPickupLocation}
+                                placeholder={t('select_address')}
+                                isDisabled={false}
+                            />
+                        </div>
+
+                        {/* Блок 2: Куда */}
+                        <div className="tf-search-block tf-search-block-location" style={{ position: 'relative', zIndex: 1 }}>
+                            <LocationDropdown
+                                label={t('dropoff_location')}
+                                locations={locations}
+                                value={dropoffLocation}
+                                onChange={setDropoffLocation}
+                                placeholder={t('select_address')}
+                                isDisabled={returnSameLocation}
+                            />
                         </div>
                     </div>
 

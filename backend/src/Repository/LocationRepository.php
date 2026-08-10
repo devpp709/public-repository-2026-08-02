@@ -224,4 +224,16 @@ class LocationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Находит все активные локации с данными города
+     */
+    public function findActiveWithCity(): array
+    {
+        return $this->createQueryBuilder('l')
+            ->orderBy('l.city', 'ASC')
+            ->addOrderBy('l.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -9,14 +9,17 @@ import { AuthProvider } from '../context/AuthContext';
 import Header from '../components/layout/Header/Header';
 import Footer from '../components/layout/Footer/Footer';
 import BackButton from '../components/common/BackButton';
+import {useRouter} from "next/router";
 
 function App({ Component, pageProps }: AppProps): ReactElement {
+    const router = useRouter();
+    const isHomePage = router.pathname === '/';
     return (
         <AuthProvider>
             <LanguageProvider>
                 <div className="zita-site">
                     <Header />
-                    <BackButton />
+                    {!isHomePage && <BackButton />}
                     <Component {...pageProps} />
                     <Footer />
                 </div>

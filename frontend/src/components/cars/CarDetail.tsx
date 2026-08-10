@@ -111,7 +111,7 @@ export default function CarDetail({ car, loading = false }: CarDetailProps) {
                                 <ul>
                                     <li><Link href="/">Home</Link></li>
                                     <li>/</li>
-                                    <li><Link href="/cars/catalog">Cars</Link></li>
+                                    <li><Link href="/catalog">Cars</Link></li>
                                     <li>/</li>
                                     <li>{carName}</li>
                                 </ul>

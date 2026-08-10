@@ -55,7 +55,7 @@ export default function HeroSection() {
         }
 
         // Перенаправляем на страницу каталога
-        const url = `/cars/catalog?${params.toString()}`;
+        const url = `/catalog?${params.toString()}`;
         console.log('Redirecting to:', url);
 
         router.push(url);
