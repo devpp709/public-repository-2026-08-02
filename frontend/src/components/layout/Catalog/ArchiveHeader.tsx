@@ -1,5 +1,5 @@
 import {useTranslation} from 'react-i18next';
-import React, {useState} from "react";
+import React from "react";
 
 interface ArchiveHeaderProps {
     totalResults?: number,
@@ -32,11 +32,9 @@ export default function ArchiveHeader({totalResults, viewMode, setViewMode}: Arc
             </div>
             <div className="tf-total-result-bar">
                 <span>{t('total_results')}</span>
-                <span> (</span>
                 <div className="tf-total-results">
                     <span>{totalResults}</span>
                 </div>
-                <span>)</span>
             </div>
         </div>
     );

@@ -3,9 +3,9 @@ import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {Car} from '../../services/carService';
 import CarSpecIcons from "../icons/CarSpecIcons";
+import Link from 'next/link';
 
 interface CarCardProps {
-   // key?: number;
     car: Car;
     viewMode?: 'grid' | 'list';
     onDetailsClick?: (carId: number) => void;
@@ -29,7 +29,7 @@ export default function CarCard({car, viewMode = 'grid', onDetailsClick}: CarCar
                     decoding="async"
                     width="800"
                     height="533"
-                    src={car.images?.[0]?.path || car.image || car.mainImage || car.img || defaultImage}
+                    src={car.images?.[0]?.url || car.image || car.mainImage || car.img || defaultImage}
                     className="attachment-full size-full wp-post-image"
                     alt={car.fullName || car.name || car.brand || 'Car'}
                     loading="lazy"
@@ -53,9 +53,9 @@ export default function CarCard({car, viewMode = 'grid', onDetailsClick}: CarCar
             <div className="tf-car-details">
                 <div className="tf-car-content">
                     <h3 className="tf-mb-24">
-                        <a href={`/cars/${car.id || 0}`} onClick={handleDetailsClick}>
+                        <Link href={`/cars/${car.id || 0}`} onClick={handleDetailsClick}>
                             {car.fullName || car.name || `${car.brand} ${car.model}` || 'Unknown Car'}
-                        </a>
+                        </Link>
                     </h3>
 
                     {/* Используем CarSpecIcons */}
@@ -83,9 +83,9 @@ export default function CarCard({car, viewMode = 'grid', onDetailsClick}: CarCar
                             <small> / {t('day')}</small>
                         </h3>
                     </div>
-                    <a className="view-more" href={`/cars/${car.id || 0}`} onClick={handleDetailsClick}>
+                    <Link className="view-more" href={`/cars/${car.id || 0}`} onClick={handleDetailsClick}>
                         {t('details')}
-                    </a>
+                    </Link>
                 </div>
             </div>
         </div>

@@ -4,8 +4,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import CarDetail from '../../components/cars/CarDetail';
 import { carService, Car } from '../../services/carService';
-import Header from "../../components/layout/Header/Header";
-import Footer from "../../components/layout/Footer/Footer";
+import Link from 'next/link';
 
 export default function CarPage() {
     const router = useRouter();
@@ -38,33 +37,25 @@ export default function CarPage() {
     // Если машина не найдена - можно показать 404 или редирект
     if (notFound) {
         return (
-            <div className="zita-site">
-                <Header />
-                <main id="content" className="site-content">
-                    <div className="tf-container">
-                        <div className="tf-container-inner">
-                            <div className="tf-not-found" style={{ textAlign: 'center', padding: '60px 20px' }}>
-                                <h1>Автомобиль не найден</h1>
-                                <p>Извините, запрашиваемый автомобиль не существует или был удален.</p>
-                                <a href="/cars" className="tf-btn tf-btn-primary" style={{ display: 'inline-block', marginTop: '20px' }}>
-                                    Вернуться к списку
-                                </a>
-                            </div>
+            <main id="content" className="site-content">
+                <div className="tf-container">
+                    <div className="tf-container-inner">
+                        <div className="tf-not-found" style={{ textAlign: 'center', padding: '60px 20px' }}>
+                            <h1>Автомобиль не найден</h1>
+                            <p>Извините, запрашиваемый автомобиль не существует или был удален.</p>
+                            <Link href="/cars/catalog" className="tf-btn tf-btn-primary" style={{ display: 'inline-block', marginTop: '20px' }}>
+                                Вернуться к списку
+                            </Link>
                         </div>
                     </div>
-                </main>
-                <Footer />
-            </div>
+                </div>
+            </main>
         );
     }
 
     return (
-        <div className="zita-site">
-            <Header />
-            <main id="content" className="site-content">
-                <CarDetail car={car} loading={loading} />
-            </main>
-            <Footer />
-        </div>
+        <main id="content" className="site-content">
+            <CarDetail car={car} loading={loading} />
+        </main>
     );
 }

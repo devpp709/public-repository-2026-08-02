@@ -48,27 +48,90 @@ img {
 }
 
 .main-header-container {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 217px 136px minmax(0, 1fr);
+    column-gap: clamp(16px, 2vw, 32px);
     align-items: center;
+    width: 100%;
+    min-height: 72px;
 }
 
 .zita-logo img {
-    max-width: 217px;
+    display: block;
+    width: 217px;
+    max-width: 100%;
+}
+
+.custom-logo-link,
+.main-header-language,
+.header-language-options {
+    display: flex;
+    align-items: center;
+}
+
+.custom-logo-link {
+    justify-content: flex-start;
+}
+
+.main-header-language {
+    width: 136px;
+    min-width: 136px;
+    justify-content: center;
+    justify-self: center;
+}
+
+.header-language-options {
+    width: 136px;
+    gap: 8px;
+}
+
+.main-header-col1,
+.main-header-col2,
+.main-header-col2 nav,
+.main-header-col2 .sider,
+.main-header-col2 .sider-inner {
+    min-width: 0;
+}
+
+.main-header-col2,
+.main-header-col2 nav,
+.main-header-col2 .sider,
+.main-header-col2 .sider-inner {
+    width: 100%;
 }
 
 #zita-menu {
-    display: flex;
+    display: grid;
+    grid-template-columns:
+        minmax(72px, 0.7fr)
+        minmax(88px, 0.85fr)
+        minmax(190px, 1.5fr)
+        minmax(150px, 1.2fr)
+        minmax(180px, 1.3fr);
     align-items: center;
-    gap: 20px;
+    gap: clamp(4px, 0.65vw, 12px);
     list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#zita-menu li {
+    min-width: 0;
+    height: 52px;
 }
 
 #zita-menu li a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
     font-family: Poppins;
     font-weight: 500;
     color: #000;
-    padding: 8px 12px;
+    padding: 8px clamp(6px, 0.7vw, 12px);
+    line-height: 1.2;
+    text-align: center;
     transition: color 0.3s;
 }
 
@@ -83,7 +146,7 @@ img {
 .main-header-btn {
     background: var(--primary-color);
     color: #fff !important;
-    padding: 8px 24px;
+    padding: 8px 16px !important;
     border-radius: 9px;
     border: 1px solid var(--primary-color);
     transition: all 0.3s;
@@ -92,6 +155,102 @@ img {
 .main-header-btn:hover {
     background: transparent;
     color: var(--primary-color) !important;
+}
+
+.site-navigation-controls {
+    background: #fff;
+    border-top: 1px solid #eef1f4;
+}
+
+.site-navigation-controls .container {
+    display: flex;
+    align-items: center;
+    min-height: 56px;
+}
+
+.site-back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 38px;
+    padding: 7px 14px;
+    border: 1px solid #d8e0e8;
+    border-radius: 9px;
+    background: #fff;
+    color: #1f2937;
+    font: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.site-back-button:hover {
+    border-color: var(--primary-color);
+    background: #eff6ff;
+    color: var(--primary-color);
+}
+
+.site-back-button:focus-visible {
+    outline: 3px solid rgba(8, 102, 196, 0.25);
+    outline-offset: 2px;
+}
+
+.site-back-button__icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.static-page {
+    min-height: 45vh;
+}
+
+.static-page-section {
+    padding: clamp(48px, 7vw, 96px) 0;
+}
+
+.static-page-title {
+    margin: 0 0 32px;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.15;
+    text-align: center;
+}
+
+.faq-page-grid,
+.contact-page-card {
+    display: grid;
+    gap: 20px;
+}
+
+.faq-page-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.faq-page-card,
+.contact-page-card > div {
+    padding: 24px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.faq-page-card h2,
+.contact-page-card h2 {
+    margin: 0 0 10px;
+    font-size: 1.15rem;
+}
+
+.faq-page-card p,
+.contact-page-card p {
+    margin: 0;
+}
+
+.contact-page-card {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.contact-page-card a {
+    color: var(--primary-color);
+    font-weight: 600;
 }
 
 /* --- Hero Section --- */
@@ -139,7 +298,8 @@ img {
 .compact-search {
     position: relative;
     z-index: 1;
-    max-width: 900px;
+    width: 100%;
+    max-width: 1180px;
     margin: 0 auto;
 }
 
@@ -245,10 +405,38 @@ img {
     transform: translateY(-6px);
 }
 
+.service-item .elementor-icon-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
 .service-item .elementor-icon {
-    font-size: 48px;
+    width: 96px;
+    height: 96px;
+    min-width: 96px;
+    padding: 0;
+    margin: 0;
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
     color: var(--primary-color);
-    margin-bottom: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 96px;
+    aspect-ratio: 1 / 1;
+    box-sizing: border-box;
+    font-size: 42px;
+    line-height: 1;
+}
+
+.service-item .elementor-icon i {
+    width: 1.25em;
+    height: 1.25em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 }
 
 .service-item .elementor-divider-separator {
@@ -436,14 +624,37 @@ img {
     padding: 24px;
 }
 
-.elementor-icon {
+.feature-section .elementor-icon {
+    width: 88px;
+    height: 88px;
+    min-width: 88px;
     font-size: 40px;
     color: var(--primary-color);
-    display: inline-block;
-    padding: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 88px;
+    aspect-ratio: 1 / 1;
+    padding: 0;
     border: 2px solid var(--primary-color);
     border-radius: 50%;
     margin-bottom: 16px;
+    box-sizing: border-box;
+    line-height: 1;
+}
+
+.feature-section .elementor-icon-box-icon {
+    display: flex;
+    justify-content: center;
+}
+
+.feature-section .elementor-icon i {
+    width: 1.2em;
+    height: 1.2em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 }
 
 .elementor-icon-box-content h3 {
@@ -458,7 +669,7 @@ img {
 
 /* --- Promo Section --- */
 .promo-section {
-    padding: 60px 0;
+    padding: 60px 30px;
 }
 
 .promo-grid {
@@ -534,6 +745,7 @@ img {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 24px;
+    padding: 0 30px 0 30px;
 }
 
 .testimonial-item {
@@ -609,7 +821,13 @@ img {
 
 /* --- About Section --- */
 .about-section {
-    padding: 80px 0;
+    padding: 80px 60px;
+}
+
+.about-section > .elementor-container {
+    width: 100%;
+    max-width: 1301px;
+    margin: 0 auto;
 }
 
 .about-grid {
@@ -857,14 +1075,56 @@ img {
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1180px) {
     .main-header-container {
-        flex-wrap: wrap;
+        grid-template-columns: minmax(160px, 1fr) 136px;
+        row-gap: 4px;
+        padding: 8px 0;
+    }
+
+    .main-header-language {
+        justify-self: end;
+    }
+
+    .main-header-col2 {
+        grid-column: 1 / -1;
     }
 
     #zita-menu {
-        flex-wrap: wrap;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .main-header-container {
+        grid-template-columns: minmax(140px, 1fr) 136px;
+        row-gap: 8px;
+    }
+
+    #zita-menu {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 8px;
+    }
+
+    #zita-menu .menu-item--cta {
+        grid-column: 1 / -1;
+    }
+
+    #zita-menu li {
+        height: 48px;
+    }
+
+    .zita-logo img {
+        width: 180px;
+    }
+
+    .faq-page-grid,
+    .contact-page-card {
+        grid-template-columns: 1fr;
+    }
+
+    .about-section {
+        padding: 60px 20px;
     }
 
     .hero-title {
@@ -891,6 +1151,22 @@ img {
         grid-template-columns: 1fr;
     }
 
+    .service-item .elementor-icon {
+        width: 88px;
+        height: 88px;
+        min-width: 88px;
+        flex-basis: 88px;
+        font-size: 38px;
+    }
+
+    .feature-section .elementor-icon {
+        width: 80px;
+        height: 80px;
+        min-width: 80px;
+        flex-basis: 80px;
+        font-size: 36px;
+    }
+
     .features-grid {
         grid-template-columns: 1fr;
     }
@@ -899,6 +1175,38 @@ img {
         flex-direction: column;
         gap: 12px;
         text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .about-section {
+        padding: 48px 15px;
+    }
+
+    .main-header-container {
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+
+    .custom-logo-link {
+        justify-content: center;
+    }
+
+    .main-header-language {
+        justify-self: center;
+    }
+
+    .main-header-col2 {
+        grid-column: 1;
+    }
+
+    #zita-menu {
+        grid-template-columns: 1fr;
+        width: 100%;
+    }
+
+    #zita-menu .menu-item--cta {
+        grid-column: 1;
     }
 }
 
@@ -917,6 +1225,17 @@ img {
 
 .tf_custom-inner {
     width: 100%;
+    padding: 26px;
+    border: none;
+    border-radius: 24px;
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08)),
+        rgba(15, 23, 42, 0.18);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.35),
+        0 20px 45px rgba(0, 0, 0, 0.3);
+    -webkit-backdrop-filter: blur(22px) saturate(145%);
+    backdrop-filter: blur(22px) saturate(145%);
 }
 
 .tf-booking-forms-wrapper {
@@ -934,22 +1253,25 @@ img {
 }
 
 .tf_homepage-booking {
-    display: table;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(190px, 0.45fr);
+    align-items: stretch;
     width: 100%;
-    table-layout: fixed;
-    background: #fff;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    margin: 24px 0 16px;
-    height: 55px;
+    min-height: 96px;
+    margin: 0;
+    border: 1px solid rgba(255, 255, 255, 0.78);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 10px 26px rgba(5, 15, 30, 0.2);
 }
 
 .tf_destination-wrap {
-    display: table-cell;
-    vertical-align: middle;
-    padding: 0 15px;
-    height: 55px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    min-height: 96px;
+    padding: 14px 18px;
 }
 
 .tf_destination-wrap:not(:last-child) {
@@ -957,6 +1279,7 @@ img {
 }
 
 .tf_input-inner {
+    width: 100%;
     padding: 0;
 }
 
@@ -978,18 +1301,104 @@ img {
     display: flex;
     align-items: center;
     position: relative;
-    padding: 0;
+    width: 100%;
+    min-height: 64px;
+    padding: 0 16px;
+    border: 1px solid rgba(209, 215, 238, 0.72);
+    border-radius: 12px;
+    background: rgba(245, 247, 255, 0.78);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.tf_form-inner:focus-within {
+    border-color: rgba(8, 102, 196, 0.65);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(8, 102, 196, 0.12);
 }
 
 .tf-search-form-field-icon {
     display: flex;
     align-items: center;
-    margin-right: 8px;
+    justify-content: center;
+    min-width: 26px;
+    margin-right: 12px;
 }
 
 .tf-search-form-field-icon i {
-    font-size: 15px;
+    font-size: 20px;
     color: #566676;
+}
+
+.selected-car-class {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    min-height: 62px;
+    padding: 0;
+}
+
+.selected-car-class .text {
+    min-width: 0;
+    overflow: hidden;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.selected-car-class .icon {
+    display: flex;
+    flex-shrink: 0;
+}
+
+.tf_homepage-booking .rs-picker {
+    width: 100%;
+    min-width: 0;
+}
+
+.tf_homepage-booking .rs-picker-default .rs-picker-toggle {
+    display: flex;
+    align-items: center;
+    min-height: 62px;
+    padding: 10px 38px 10px 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.tf_homepage-booking .rs-picker-input-group {
+    min-height: 62px;
+    border: 0 !important;
+    border-radius: 0;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.tf_homepage-booking .rs-date-range-input {
+    min-width: 0;
+    padding: 10px 0 !important;
+    background: transparent !important;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.tf_homepage-booking .rs-picker-toggle-indicator {
+    padding-right: 0;
+}
+
+.tf_homepage-booking .rs-picker-toggle-placeholder,
+.tf_homepage-booking .rs-picker-toggle-value {
+    overflow: hidden;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .tf_form-inner input[type="text"] {
@@ -1064,50 +1473,61 @@ img {
 }
 
 .tf_submit-wrap {
-    text-align: center;
-    margin-top: 0;
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    margin: 0;
+    padding: 14px 18px;
 }
 
 .tf_btn.tf-submit {
+    width: 100%;
     background: #0866c4;
     color: #fff;
     border: none;
-    padding: 12px 48px;
-    border-radius: 6px;
-    font-size: 16px;
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-size: 18px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.3s;
-    height: 48px;
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    min-height: 64px;
 }
 
 .tf_btn.tf-submit:hover {
     background: #0550a0;
+    box-shadow: 0 8px 18px rgba(8, 102, 196, 0.25);
+    transform: translateY(-1px);
 }
 
 /* Адаптивность для мобильных устройств */
 @media (max-width: 1024px) {
+    .compact-search {
+        max-width: 760px;
+    }
+
+    .tf_custom-inner {
+        padding: 20px;
+        border-radius: 20px;
+    }
+
     .tf_homepage-booking {
-        display: block;
-        height: auto;
-        padding: 10px;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        min-height: 0;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.9);
     }
 
     .tf_destination-wrap {
-        display: block;
-        width: 100% !important;
+        min-height: 78px;
         border-right: none !important;
-        border-bottom: 1px solid #D1D7EE;
-        padding: 5px 10px;
-        height: auto;
-    }
-
-    .tf_destination-wrap:last-child {
-        border-bottom: none;
+        border-bottom: 0;
+        padding: 7px 8px;
     }
 
     .tf_submit-wrap {
-        margin-top: 10px;
+        padding: 7px 8px;
     }
 }
 
@@ -1117,11 +1537,17 @@ img {
     }
 
     .tf_homepage-booking {
-        margin: 16px 0;
+        gap: 8px;
+        margin: 0;
+        padding: 10px;
+    }
+
+    .tf_custom-inner {
+        padding: 12px;
+        border-radius: 18px;
     }
 
     .tf_btn.tf-submit {
-        width: 100%;
         padding: 12px 20px;
     }
 }
@@ -1308,8 +1734,9 @@ img {
 /* Search Box */
 .tf-archive-search-box {
     background: #fff;
-    border-radius: 12px;
-    padding: 20px 25px;
+    border: 1px solid #edf0f5;
+    border-radius: 16px;
+    padding: 28px 32px;
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
     margin-bottom: 40px;
 }
@@ -1317,7 +1744,7 @@ img {
 .tf-archive-search-box-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 24px;
 }
 
 .tf-date-select-box {
@@ -1400,10 +1827,11 @@ img {
 
 /* Driver Location Box */
 .tf-driver-location-box {
-    padding-top: 16px;
+    min-height: 68px;
+    padding-top: 20px;
     border-top: 1px solid #e8ecf1;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 20px;
 }
 
 .tf-driver-location ul {
@@ -1411,31 +1839,55 @@ img {
     list-style: none;
     padding: 0;
     margin: 0;
-    gap: 24px;
+    gap: 12px;
     flex-wrap: wrap;
 }
 
 .tf-driver-location ul li label {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    min-height: 44px;
+    padding: 9px 12px;
+    border: 1px solid #e8ecf1;
+    border-radius: 9px;
+    background: #f8f9fc;
     font-size: 14px;
+    line-height: 1.3;
     color: #4a5a6e;
     cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .tf-driver-location ul li input[type="checkbox"] {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
 }
 
 .tf-checkmark {
-    width: 18px;
-    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
     border: 2px solid #cbd5e0;
-    border-radius: 4px;
-    display: inline-block;
+    border-radius: 5px;
     position: relative;
     flex-shrink: 0;
+    background: #fff;
+}
+
+.tf-driver-location ul li label:hover {
+    border-color: #cbd5e0;
+    background: #fff;
+}
+
+.tf-driver-location ul li label:focus-within {
+    border-color: #0866c4;
+    box-shadow: 0 0 0 3px rgba(8, 102, 196, 0.12);
 }
 
 .tf-driver-location ul li input[type="checkbox"]:checked + .tf-checkmark {
@@ -1446,20 +1898,24 @@ img {
 .tf-driver-location ul li input[type="checkbox"]:checked + .tf-checkmark::after {
     content: '';
     position: absolute;
-    left: 5px;
-    top: 2px;
+    left: 50%;
+    top: 50%;
     width: 5px;
-    height: 10px;
+    height: 9px;
     border: solid white;
     border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
+    transform: translate(-50%, -58%) rotate(45deg);
+    transform-origin: center;
 }
 
 .tf-submit-button .tf-filter-cars {
     background: #0866c4;
     color: #fff;
     border: none;
-    padding: 10px 32px;
+    justify-content: center;
+    min-width: 150px;
+    min-height: 48px;
+    padding: 10px 28px;
     border-radius: 8px;
     font-size: 15px;
     font-weight: 600;
@@ -1476,7 +1932,8 @@ img {
 
 /* Archive Header */
 .tf-archive-header {
-    margin-bottom: 30px;
+    min-height: 44px;
+    margin-bottom: 24px;
     flex-wrap: wrap;
     gap: 16px;
 }
@@ -1512,8 +1969,8 @@ img {
 .tf-total-result-bar {
     display: flex;
     align-items: center;
-    gap: 4px;
-    font-size: 14px;
+    gap: 8px;
+    font-size: 15px;
     color: #4a5a6e;
 }
 
@@ -1815,6 +2272,13 @@ img {
         gap: 12px;
     }
 
+    .tf-driver-location,
+    .tf-driver-location ul,
+    .tf-driver-location ul li,
+    .tf-driver-location ul li label {
+        width: 100%;
+    }
+
     .tf-car-result {
         grid-template-columns: 1fr;
     }
@@ -1897,24 +2361,105 @@ img {
 
 /* Три блока в одну строку */
 .tf-search-row {
-    display: flex;
-    gap: 0;
-    background: #fff;
-    border-radius: 12px;
-    border: 1px solid #e8ecf1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 16px;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
     overflow: visible;
 }
 
 .tf-search-block {
-    flex: 1;
-    padding: 12px 16px;
-    border-right: 1px solid #e8ecf1;
+    display: flex;
+    align-items: stretch;
+    padding: 0;
+    border: 0;
     min-width: 0;
     position: relative;
 }
 
-.tf-search-block:last-child {
-    border-right: none;
+.tf-search-block > * {
+    width: 100%;
+}
+
+.tf-archive-search-box .tf-date-single-select {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    min-height: 112px;
+    padding: 18px 20px;
+    border-radius: 12px;
+}
+
+.tf-archive-search-box .tf-select-date > .tf-flex {
+    align-items: center;
+    min-height: 74px;
+}
+
+.tf-archive-search-box .tf-location-input {
+    height: auto;
+    min-height: 36px !important;
+}
+
+.tf-archive-search-box .tf-date-select-box,
+.tf-archive-search-box .tf-date-single-select,
+.tf-archive-search-box .tf-select-date,
+.tf-archive-search-box .info-select,
+.tf-archive-search-box .rs-picker {
+    width: 100%;
+    min-width: 0;
+}
+
+.tf-archive-search-box .tf-date-select-box {
+    display: flex;
+    gap: 0;
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+    background: transparent;
+}
+
+.tf-archive-search-box .tf-date-select-box .tf-date-single-select {
+    margin: 0;
+    padding: 18px 20px;
+    border-radius: 12px;
+    background: #f8f9fc;
+}
+
+.tf-archive-search-box .tf-date-select-box .tf-date-single-select .tf-select-date {
+    width: 100%;
+}
+
+.tf-archive-search-box .tf-date-select-box .tf-date-single-select .tf-select-date:first-child {
+    border-right: 0;
+}
+
+.tf-archive-search-box .tf-date-select-box .tf-date-single-select .tf-select-date .info-select h5 {
+    margin: 0 0 2px;
+    color: #6b7a8f;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.tf-archive-search-box .rs-picker-input-group {
+    min-height: 38px;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.tf-archive-search-box .rs-date-range-input {
+    min-width: 0;
+    padding: 6px 0 !important;
+    background: transparent !important;
+    font-size: 14px;
+}
+
+.tf-archive-search-box .rs-picker-toggle-indicator {
+    padding-right: 0;
 }
 
 /* Блоки с выпадающими списками поверх других */
@@ -1929,35 +2474,34 @@ img {
 /* Адаптивность */
 @media (max-width: 1024px) {
     .tf-search-row {
-        flex-wrap: wrap;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         overflow: visible;
     }
 
-    .tf-search-block {
-        flex: 1 1 33.33%;
-        border-right: none;
-        border-bottom: 1px solid #e8ecf1;
-    }
-
-    .tf-search-block:last-child {
-        border-bottom: none;
+    .tf-search-block-date {
+        grid-column: 1 / -1;
     }
 }
 
 @media (max-width: 768px) {
     .tf-search-row {
-        flex-direction: column;
+        grid-template-columns: 1fr;
         overflow: visible;
     }
 
-    .tf-search-block {
-        flex: 1 1 auto;
-        border-bottom: 1px solid #e8ecf1;
-        padding: 10px 12px;
+    .tf-search-block-date {
+        grid-column: auto;
     }
 
-    .tf-search-block:last-child {
-        border-bottom: none;
+    .tf-archive-search-box .tf-date-select-box .tf-date-single-select {
+        flex-direction: row;
+        min-height: 112px;
+        padding: 14px 16px;
+    }
+
+    .tf-submit-button,
+    .tf-submit-button .tf-filter-cars {
+        width: 100%;
     }
 }
 .tf-location-input-disabled {
@@ -2417,6 +2961,12 @@ img {
     width: 100%;
 }
 
+.tf-single-car-details-warper .tf-car-details-column .tf-template-part.tf-flex.tf-flex-gap-32 {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
 .tf-single-car-details-warper .tf-car-details-column h3 {
     color: var(--tf-text-heading, #1C2130);
     font-size: 1.313rem;
@@ -2427,34 +2977,46 @@ img {
 
 /* ===== CAR INFO ===== */
 .tf-car-info ul {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     margin: 0;
     padding: 0;
     list-style: none;
-    gap: 16px 8px;
+    gap: 16px;
 }
 
 .tf-car-info ul li {
     color: var(--tf-text-paragraph, #494D59);
     font-size: 1rem;
     font-weight: 400;
-    width: calc(25% - 8px);
+    width: auto;
+    min-width: 0;
+    min-height: 58px;
     border-radius: 8px;
     border: 1px solid var(--tf-brand-lite, #C9D4F7);
-    padding: 8px;
+    padding: 12px 16px;
     position: relative;
+    line-height: 1.3;
 }
 
-@media only screen and (max-width: 768px) {
-    .tf-car-info ul li {
-        width: calc(50% - 8px);
+.tf-car-info ul li > svg,
+.tf-car-info ul li > i {
+    width: 24px;
+    min-width: 24px;
+    height: 24px;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+@media only screen and (max-width: 1024px) {
+    .tf-car-info ul {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
 @media only screen and (max-width: 480px) {
-    .tf-car-info ul li {
-        width: 100%;
+    .tf-car-info ul {
+        grid-template-columns: 1fr;
     }
 }
 

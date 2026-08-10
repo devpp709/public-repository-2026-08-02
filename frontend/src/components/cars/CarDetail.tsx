@@ -16,6 +16,7 @@ import {LocationDropdown} from "../LocationDropdown";
 import {useLocations} from "../../hooks/useLocations";
 import {useRouter} from "next/router";
 import BookingDateRangePicker from "../ui/BookingDateRangePicker";
+import Link from 'next/link';
 
 interface CarDetailProps {
     car: Car | null;
@@ -76,6 +77,20 @@ export default function CarDetail({ car, loading = false }: CarDetailProps) {
     }
 
     const defaultImage = 'https://zitademo.wpzita.com/car-rental/wp-content/uploads/sites/92/2025/08/04-1-1.jpg';
+    const carName = car.fullName || car.name || [car.brand, car.model].filter(Boolean).join(' ') || `Car #${car.id}`;
+    const mainImage = car.images?.find((image) => image.isMain)?.url
+        || car.mainImage
+        || car.images?.[0]?.url
+        || car.image
+        || car.img
+        || defaultImage;
+    const galleryImages = (car.images || []).filter((image) => image.url && image.url !== mainImage);
+    const rating = car.averageRating ?? car.rating ?? 0;
+    const totalTrips = car.totalBookings ?? car.totalTrips ?? 0;
+    const hourlyPrice = car.hourlyPrice ?? car.dailyPrice ?? car.price ?? 0;
+    const mapQuery = car.location
+        ? `${car.location.latitude},${car.location.longitude}`
+        : '';
 
     const handleTabClick = (tab: string) => {
         setActiveTab(tab);
@@ -91,14 +106,14 @@ export default function CarDetail({ car, loading = false }: CarDetailProps) {
                 <div className="tf-single-car-details-warper">
                     <div className="tf-car-details-column">
                         <div className="tf-car-title">
-                            <h1>Mercedes-Benz C-Class</h1>
+                            <h1>{carName}</h1>
                             <div className="breadcrumb">
                                 <ul>
-                                    <li><a href="/">Home</a></li>
+                                    <li><Link href="/">Home</Link></li>
                                     <li>/</li>
-                                    <li><a href="/cars">Cars</a></li>
+                                    <li><Link href="/cars/catalog">Cars</Link></li>
                                     <li>/</li>
-                                    <li>Mercedes-Benz C-Class</li>
+                                    <li>{carName}</li>
                                 </ul>
                             </div>
                         </div>
@@ -106,15 +121,15 @@ export default function CarDetail({ car, loading = false }: CarDetailProps) {
                         <div className="tf-car-hero-gallery">
                             <div className="tf-featured-car">
                                 <img
-                                    src="https://zitademo.wpzita.com/car-rental/wp-content/uploads/sites/92/2025/08/04-1-1.jpg"
-                                    alt="Car Image"/>
+                                    src={mainImage}
+                                    alt={carName}/>
 
                                 <div className="tf-featured-reviews">
                                     <a href="#tf-reviews" className="tf-single-rating">
                                     <span>
-                                        0.0
+                                        {rating.toFixed(1)}
                                         <i className="fa-solid fa-star"></i>
-                                    </span> (0 trips)
+                                    </span> ({totalTrips} {t('trips')})
                                     </a>
                                 </div>
 
@@ -132,6 +147,9 @@ export default function CarDetail({ car, loading = false }: CarDetailProps) {
                             </div>
 
                             <div className="tf-gallery tf-flex tf-flex-gap-16">
+                                {galleryImages.map((image) => (
+                                    <img key={image.id} src={image.url} alt={carName} />
+                                ))}
                             </div>
                         </div>
 
@@ -163,9 +181,9 @@ export default function CarDetail({ car, loading = false }: CarDetailProps) {
                         <div className="tf-template-part tf-flex tf-flex-gap-32 tf-flex-direction-column">
                             <div id="tf-description">
                                 <div className="tf-short-description">
+                                    <p>{car.description}</p>
                                 </div>
                                 <div className="tf-full-description">
-                                    <span className="tf-see-less-description">See less</span>
                                 </div>
                             </div>
 
@@ -191,9 +209,9 @@ export default function CarDetail({ car, loading = false }: CarDetailProps) {
                                                 </clipPath>
                                             </defs>
                                         </svg>
-                                        8 Persons
+                                        {car.seats} {t('seats')}
                                         <div className="tf-car-info-tooltip">
-                                            <span>This car has 8 Seats available for passengers.</span>
+                                            <span>{car.seats} {t('seats')}</span>
                                         </div>
                                     </li>
 
@@ -213,9 +231,9 @@ export default function CarDetail({ car, loading = false }: CarDetailProps) {
                                                 stroke="#566676" strokeWidth="1.5" strokeLinecap="round"
                                                 strokeLinejoin="round"></path>
                                         </svg>
-                                        7 Bag
+                                        {car.bags} {t('bags')}
                                         <div className="tf-car-info-tooltip">
-                                            <span>The car can accommodate up to 7 bags in the luggage compartment.</span>
+                                            <span>{car.bags} {t('bags')}</span>
                                         </div>
                                     </li>
 
@@ -246,9 +264,9 @@ export default function CarDetail({ car, loading = false }: CarDetailProps) {
                                                 </clipPath>
                                             </defs>
                                         </svg>
-                                        Diesel
+                                        {car.fuelTypeLabel || car.fuelType}
                                         <div className="tf-car-info-tooltip">
-                                            <span>The vehicle runs on Diesel fuel.</span>
+                                            <span>{car.fuelTypeLabel || car.fuelType}</span>
                                         </div>
                                     </li>
 
@@ -282,7 +300,7 @@ export default function CarDetail({ car, loading = false }: CarDetailProps) {
                                                 stroke="#566676" strokeWidth="1.3" strokeLinecap="round"
                                                 strokeLinejoin="round"></path>
                                         </svg>
-                                        2024
+                                        {car.year}
                                         <div className="tf-car-info-tooltip">
                                             <span>This is the vehicle's model year.</span>
                                         </div>
@@ -309,9 +327,9 @@ export default function CarDetail({ car, loading = false }: CarDetailProps) {
                                                 </clipPath>
                                             </defs>
                                         </svg>
-                                        km
+                                        {car.mileage} {t('km')}
                                         <div className="tf-car-info-tooltip">
-                                            <span>km is included in this rental.</span>
+                                            <span>{car.mileage} {t('km')}</span>
                                         </div>
                                     </li>
 
@@ -354,16 +372,16 @@ export default function CarDetail({ car, loading = false }: CarDetailProps) {
                                                 </clipPath>
                                             </defs>
                                         </svg>
-                                        Manual
+                                        {car.transmissionLabel || car.transmission}
                                         <div className="tf-car-info-tooltip">
-                                            <span>This car has manual transmission</span>
+                                            <span>{car.transmissionLabel || car.transmission}</span>
                                         </div>
                                     </li>
 
                                     <li className="tf-flex tf-flex-align-center tf-flex-gap-6">
-                                        <i className="ri-gas-station-line"></i>full
+                                        <i className="ri-car-line"></i>{car.doors} {t('doors')}
                                         <div className="tf-car-info-tooltip">
-                                            <span>Fuel: full</span>
+                                            <span>{car.doors} {t('doors')}</span>
                                         </div>
                                     </li>
                                 </ul>
@@ -374,7 +392,8 @@ export default function CarDetail({ car, loading = false }: CarDetailProps) {
                         <div className="tf-car-location" id="tf-location">
                             <h3>Location</h3>
                             <div className="tf-car-location-map">
-                                <iframe src="https://maps.google.com/maps?q=&output=embed" width="100%" height="260"
+                                <iframe title={car.location?.name || carName}
+                                        src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`} width="100%" height="260"
                                         style={{border: 0}} allowFullScreen loading="lazy"></iframe>
                             </div>
                         </div>
@@ -386,10 +405,10 @@ export default function CarDetail({ car, loading = false }: CarDetailProps) {
                                 Total:
                                 <span className="woocommerce-Price-amount amount">
                                 <bdi>
-                                    <span className="woocommerce-Price-currencySymbol">$</span>199.90
+                                    <span className="woocommerce-Price-currencySymbol">$</span>{hourlyPrice.toFixed(2)}
                                 </bdi>
                             </span>
-                                <small className="pricing-type">/ hour</small>
+                                <small className="pricing-type">/ {t('per_hour')}</small>
                             </h2>
                             <p>Without Taxes</p>
                         </div>

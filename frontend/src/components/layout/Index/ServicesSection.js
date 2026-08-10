@@ -23,7 +23,7 @@ export default function ServicesSection() {
 
     return (
         <section className="elementor-section services-section">
-            <div className="elementor-container">
+            <div className="elementor-container container">
                 <div className="elementor-column">
                     <div className="elementor-widget-wrap">
                         <h2 className="section-title">{t('easy_to_use_rental_services')}</h2>
