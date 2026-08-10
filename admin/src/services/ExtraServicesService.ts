@@ -18,7 +18,7 @@ interface ExtraServicesResponse {
 }
 
 class ExtraServicesService {
-    private readonly baseEndpoint = '/api/admin/cars/extraService';
+    private readonly baseEndpoint = '/api/admin/extra-services';
 
     async getAllExtraServices(token?: string): Promise<ExtraService[]> {
         const response = await api.get<ExtraServicesResponse>(

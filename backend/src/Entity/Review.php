@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\ReviewRepository;
+use App\Repository\ReviewsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Entity(repositoryClass: ReviewRepository::class)]
+#[ORM\Entity(repositoryClass: ReviewsRepository::class)]
 #[ORM\Table(name: 'reviews')]
 #[ORM\UniqueConstraint(name: 'idx_reviews_unique', columns: ['booking_id', 'user_id'])]
 #[ORM\HasLifecycleCallbacks]

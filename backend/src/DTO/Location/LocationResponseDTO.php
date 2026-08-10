@@ -91,4 +91,26 @@ class LocationResponseDTO
             $locations
         );
     }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'address' => $this->address,
+            'city' => $this->city,
+            'state' => $this->state,
+            'country' => $this->country,
+            'zipCode' => $this->zipCode,
+            'phone' => $this->phone,
+            'email' => $this->email,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
+            'fullAddress' => $this->fullAddress,
+            'carsCount' => $this->carsCount,
+            'availableCarsCount' => $this->availableCarsCount,
+        ];
+    }
 }

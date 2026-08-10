@@ -4,6 +4,7 @@ namespace App\DTO\Booking;
 
 use App\DTO\Car\CarResponseDTO;
 use App\DTO\Location\LocationResponseDTO;
+use App\DTO\Payment\PaymentResponseDTO;
 use App\DTO\User\UserResponseDTO;
 use App\Entity\Booking;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -167,5 +168,38 @@ class BookingResponseDTO
             fn(Booking $booking) => self::fromEntity($booking, $withDetails),
             $bookings
         );
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'user' => $this->user->toArray(),
+            'bookingNumber' => $this->bookingNumber,
+            'pickupLocation' => $this->pickupLocation?->toArray(),
+            'dropoffLocation' => $this->dropoffLocation?->toArray(),
+            'pickupDate' => $this->pickupDate,
+            'pickupTime' => $this->pickupTime,
+            'dropoffDate' => $this->dropoffDate,
+            'dropoffTime' => $this->dropoffTime,
+            'totalDays' => $this->totalDays,
+            'totalHours' => $this->totalHours,
+            'subtotal' => $this->subtotal,
+            'extrasTotal' => $this->extrasTotal,
+            'totalAmount' => $this->totalAmount,
+            'securityDeposit' => $this->securityDeposit,
+            'status' => $this->status,
+            'statusLabel' => $this->statusLabel,
+            'notes' => $this->notes,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
+            'car' => $this->car?->toArray(),
+            'extras' => $this->extras,
+            'payments' => $this->payments,
+            'dailyRate' => $this->dailyRate,
+            'hourlyRate' => $this->hourlyRate,
+            'totalPrice' => $this->totalPrice,
+            'duration' => $this->duration,
+        ];
     }
 }

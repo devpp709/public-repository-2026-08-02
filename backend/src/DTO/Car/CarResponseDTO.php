@@ -163,27 +163,21 @@ class CarResponseDTO
         $mainImage = $car->getMainImage();
         $dto->mainImage = $mainImage ? $mainImage->getImageUrl() : null;
 
-        // В CarResponseDTO::fromEntity()
-
         if ($withDetails) {
             // Характеристики
             $dto->features = $car->getFeatures()->map(function($feature) {
                 return FeatureResponseDTO::fromEntity($feature);
             })->toArray();
 
-            // Дополнительные услуги - ПОЛУЧАЕМ ИЗ car_extra_services
+            // Дополнительные услуги
             $dto->extraServices = $car->getCarExtraServices()->map(function($carExtraService) {
                 $extraService = $carExtraService->getExtraService();
                 $dto = ExtraServiceResponseDTO::fromEntity($extraService);
 
-                // Берем данные ИЗ СВЯЗУЮЩЕЙ ТАБЛИЦЫ
                 $dto->priceForCar = $carExtraService->getPrice() !== null
                     ? (float) $carExtraService->getPrice()
                     : null;
                 $dto->isRequiredForCar = $carExtraService->isRequired();
-
-                // Добавляем ID связи, если нужно
-               // $dto->carExtraServiceId = $carExtraService->getId();
 
                 return $dto;
             })->toArray();
@@ -198,5 +192,46 @@ class CarResponseDTO
             fn(Car $car) => self::fromEntity($car, $withDetails),
             $cars
         );
+    }
+
+    // Добавьте этот метод
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'carClass' => $this->carClass?->toArray(),
+            'location' => $this->location?->toArray(),
+            'brand' => $this->brand,
+            'model' => $this->model,
+            'fullName' => $this->fullName,
+            'year' => $this->year,
+            'color' => $this->color,
+            'licensePlate' => $this->licensePlate,
+            'vin' => $this->vin,
+            'mileage' => $this->mileage,
+            'fuelType' => $this->fuelType,
+            'fuelTypeLabel' => $this->fuelTypeLabel,
+            'transmission' => $this->transmission,
+            'transmissionLabel' => $this->transmissionLabel,
+            'seats' => $this->seats,
+            'doors' => $this->doors,
+            'bags' => $this->bags,
+            'dailyPrice' => $this->dailyPrice,
+            'hourlyPrice' => $this->hourlyPrice,
+            'securityDeposit' => $this->securityDeposit,
+            'isAvailable' => $this->isAvailable,
+            'status' => $this->status,
+            'statusLabel' => $this->statusLabel,
+            'description' => $this->description,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
+            'images' => $this->images,
+            'mainImage' => $this->mainImage,
+            'features' => $this->features,
+            'extraServices' => $this->extraServices,
+            'averageRating' => $this->averageRating,
+            'totalBookings' => $this->totalBookings,
+            'totalRentalDays' => $this->totalRentalDays,
+        ];
     }
 }

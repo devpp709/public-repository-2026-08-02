@@ -17,24 +17,7 @@ class CarsController extends AbstractController
 {
     public function __construct(
         private readonly CarService $carService,
-        private readonly FeatureRepository $featureRepository,
-        private readonly ExtraServiceRepository $extraServiceRepository,
     ) {
-    }
-
-
-
-    #[Route('/extraService', methods: ['GET'])]
-    public function extraService(): JsonResponse
-    {
-        $extraServices = $this->extraServiceRepository->findAllOrdered();
-
-        return $this->json([
-            'data' => ExtraServiceResponseDTO::fromEntities(
-                $extraServices,
-                true
-            ),
-        ]);
     }
 
     #[Route('/search', methods: ['GET'])]

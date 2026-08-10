@@ -60,4 +60,19 @@ class CarClassResponseDTO
             $carClasses
         );
     }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'icon' => $this->icon,
+            'dailyRate' => $this->dailyRate,
+            'hourlyRate' => $this->hourlyRate,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
+            'carsCount' => $this->carsCount,
+        ];
+    }
 }

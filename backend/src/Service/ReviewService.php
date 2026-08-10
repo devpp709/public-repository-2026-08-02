@@ -8,7 +8,7 @@ use App\DTO\Review\ReviewStatisticsDTO;
 use App\Entity\Car;
 use App\Entity\Review;
 use App\Entity\User;
-use App\Repository\ReviewRepository;
+use App\Repository\ReviewsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -16,7 +16,7 @@ class ReviewService
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly ReviewRepository $reviewRepository
+        private readonly ReviewsRepository $reviewRepository
     ) {
     }
 

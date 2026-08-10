@@ -108,4 +108,32 @@ class UserResponseDTO
             $users
         );
     }
+
+    // Добавьте этот метод
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'email' => $this->email,
+            'name' => $this->name,
+            'fullName' => $this->fullName,
+            'initials' => $this->initials,
+            'phone' => $this->phone,
+            'driverLicense' => $this->driverLicense,
+            'passportNumber' => $this->passportNumber,
+            'avatar' => $this->avatar,
+            'role' => $this->role,
+            'roleLabel' => $this->roleLabel,
+            'status' => $this->status,
+            'statusLabel' => $this->statusLabel,
+            'isActive' => $this->isActive,
+            'isAdmin' => $this->isAdmin,
+            'isManager' => $this->isManager,
+            'isCustomer' => $this->isCustomer,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
+            'bookingsCount' => $this->bookingsCount,
+            'reviewsCount' => $this->reviewsCount,
+        ];
+    }
 }
