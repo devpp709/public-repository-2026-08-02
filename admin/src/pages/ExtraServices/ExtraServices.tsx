@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import PageMeta from "../../components/common/PageMeta";
 import { useExtraServices } from '../../hooks/useExtraServices';
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import ErrorMessage from "../../components/common/ErrorMessage";
+import ExtraServiceModal from './components/ExtraServiceModal';
 
 // Конфигурация иконок
 const iconMap: Record<string, string> = {
@@ -15,20 +17,30 @@ const iconMap: Record<string, string> = {
 
 // Конфигурация категорий
 const categoryConfig: Record<string, { label: string; icon: string; color: string }> = {
-    safety: {
-        label: 'Безопасность',
+    Insurance: {
+        label: 'Страхование',
         icon: '🛡️',
         color: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
     },
-    media: {
-        label: 'Мультимедиа',
-        icon: '🎵',
-        color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400'
-    },
-    service: {
-        label: 'Услуги',
+    Equipment: {
+        label: 'Оборудование',
         icon: '🔧',
         color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
+    },
+    Comfort: {
+        label: 'Комфорт',
+        icon: '🛋️',
+        color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+    },
+    Safety: {
+        label: 'Безопасность',
+        icon: '🛡️',
+        color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
+    },
+    Additional: {
+        label: 'Дополнительно',
+        icon: '📦',
+        color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400'
     }
 };
 
@@ -38,12 +50,54 @@ export default function ExtraServices() {
         loading,
         error,
         refresh,
+        deleteExtraService,
     } = useExtraServices();
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingService, setEditingService] = useState<any>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     // Форматирование суммы
     const formatPrice = (price: number | null) => {
         if (price === null) return '—';
         return new Intl.NumberFormat('ru-RU').format(price);
+    };
+
+    const handleEdit = (item: any) => {
+        setEditingService(item);
+        setIsModalOpen(true);
+    };
+
+    const handleCreate = () => {
+        setEditingService(null);
+        setIsModalOpen(true);
+    };
+
+    const handleDelete = async (id: number, name: string) => {
+        if (!confirm(`Вы уверены, что хотите удалить услугу "${name}"?`)) {
+            return;
+        }
+
+        try {
+            setIsDeleting(true);
+            await deleteExtraService(id);
+            await refresh();
+        } catch (err) {
+            console.error('Error deleting service:', err);
+            alert('Ошибка при удалении услуги');
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+        setEditingService(null);
+    };
+
+    const handleModalSuccess = async () => {
+        await refresh();
+        handleModalClose();
     };
 
     if (loading && extraServices.length === 0) {
@@ -79,13 +133,25 @@ export default function ExtraServices() {
 
             <div className="container mx-auto px-4 py-8">
                 {/* Заголовок */}
-                <div className="flex items-center justify-between mb-6">
-                    <h1 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
-                        Дополнительные услуги
-                    </h1>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                        Всего: {extraServices.length}
-                    </span>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                    <div>
+                        <h1 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
+                            Дополнительные услуги
+                        </h1>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                            Всего: {extraServices.length}
+                        </span>
+                    </div>
+
+                    <button
+                        onClick={handleCreate}
+                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm font-medium"
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
+                        Добавить услугу
+                    </button>
                 </div>
 
                 {extraServices.length === 0 ? (
@@ -93,6 +159,12 @@ export default function ExtraServices() {
                         <p className="text-gray-500 dark:text-gray-400">
                             Дополнительные услуги не найдены
                         </p>
+                        <button
+                            onClick={handleCreate}
+                            className="mt-4 text-blue-600 dark:text-blue-400 hover:underline"
+                        >
+                            Добавить первую услугу
+                        </button>
                     </div>
                 ) : (
                     <div className="space-y-6">
@@ -126,15 +198,38 @@ export default function ExtraServices() {
                                         {activeServices.map((service) => (
                                             <div
                                                 key={service.id}
-                                                className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow"
+                                                className="group relative bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow"
                                             >
+                                                {/* Кнопки действий */}
+                                                <div className="absolute top-2 right-2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <button
+                                                        onClick={() => handleEdit(service)}
+                                                        className="p-1.5 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                                        title="Редактировать"
+                                                    >
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                        </svg>
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDelete(service.id, service.name)}
+                                                        disabled={isDeleting}
+                                                        className="p-1.5 text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
+                                                        title="Удалить"
+                                                    >
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+
                                                 <div className="flex items-start gap-3">
                                                     <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-xl">
                                                         {iconMap[service.icon] || '🔹'}
                                                     </div>
 
                                                     <div className="flex-1 min-w-0">
-                                                        <h3 className="font-medium text-gray-800 dark:text-white truncate">
+                                                        <h3 className="font-medium text-gray-800 dark:text-white truncate pr-8">
                                                             {service.name}
                                                         </h3>
                                                         {service.description && (
@@ -162,7 +257,7 @@ export default function ExtraServices() {
                                         {inactiveServices.map((service) => (
                                             <div
                                                 key={service.id}
-                                                className="bg-gray-50 dark:bg-gray-800/30 rounded-lg border border-gray-200 dark:border-gray-700 p-4 opacity-60"
+                                                className="group relative bg-gray-50 dark:bg-gray-800/30 rounded-lg border border-gray-200 dark:border-gray-700 p-4 opacity-60"
                                             >
                                                 <div className="flex items-start gap-3">
                                                     <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xl">
@@ -196,6 +291,14 @@ export default function ExtraServices() {
                     </div>
                 )}
             </div>
+
+            {/* Модальное окно */}
+            <ExtraServiceModal
+                isOpen={isModalOpen}
+                onClose={handleModalClose}
+                onSuccess={handleModalSuccess}
+                editingItem={editingService}
+            />
         </>
     );
 }
