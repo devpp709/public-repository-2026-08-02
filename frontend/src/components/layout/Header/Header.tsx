@@ -36,7 +36,7 @@ export default function Header(): ReactElement {
                                 <div className="zita-logo">
                                     <a href="/" className="custom-logo-link">
                                         <img
-                                            fetchPriority="high"
+                                            priority="high"
                                             width="471"
                                             height="157"
                                             src="https://zitademo.wpzita.com/car-rental/wp-content/uploads/sites/92/2025/08/logo3.png"

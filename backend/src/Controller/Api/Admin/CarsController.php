@@ -6,7 +6,7 @@ use App\DTO\CarClass\CarClassRequestDTO;
 use App\DTO\ExtraService\ExtraServiceResponseDTO;
 use App\Repository\FeatureRepository;
 use App\Repository\ExtraServiceRepository;
-use App\Service\CarsService;
+use App\Service\CarService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class CarsController extends AbstractController
 {
     public function __construct(
-        private readonly CarsService $carsService,
+        private readonly CarService $carService,
         private readonly FeatureRepository $featureRepository,
         private readonly ExtraServiceRepository $extraServiceRepository,
     ) {
@@ -28,7 +28,7 @@ class CarsController extends AbstractController
         $withCarsCount = $request->query->getBoolean('withCarsCount', true);
 
         return $this->json([
-            'data' => $this->carsService->getAllClasses($withCarsCount),
+            'data' => $this->carService->getAllClasses($withCarsCount),
         ]);
     }
 
@@ -77,7 +77,7 @@ class CarsController extends AbstractController
         }
 
         return $this->json([
-            'data' => $this->carsService->searchClasses($query),
+            'data' => $this->carService->searchClasses($query),
         ]);
     }
 
@@ -85,7 +85,7 @@ class CarsController extends AbstractController
     public function available(): JsonResponse
     {
         return $this->json([
-            'data' => $this->carsService->getClassesWithAvailableCars(),
+            'data' => $this->carService->getClassesWithAvailableCars(),
         ]);
     }
 
@@ -93,7 +93,7 @@ class CarsController extends AbstractController
     public function statistics(): JsonResponse
     {
         return $this->json([
-            'data' => $this->carsService->getClassStatistics(),
+            'data' => $this->carService->getClassStatistics(),
         ]);
     }
 
@@ -113,7 +113,7 @@ class CarsController extends AbstractController
             ? (float) $data['hourlyRate']
             : null;
 
-        $class = $this->carsService->createClass($dto);
+        $class = $this->carService->createClass($dto);
 
         return $this->json([
             'data' => $class,
@@ -126,7 +126,7 @@ class CarsController extends AbstractController
         $withCarsCount = $request->query->getBoolean('withCarsCount', false);
 
         return $this->json([
-            'data' => $this->carsService->getClassById(
+            'data' => $this->carService->getClassById(
                 $id,
                 $withCarsCount
             ),
@@ -152,14 +152,14 @@ class CarsController extends AbstractController
             : null;
 
         return $this->json([
-            'data' => $this->carsService->updateClass($id, $dto),
+            'data' => $this->carService->updateClass($id, $dto),
         ]);
     }
 
     #[Route('/{id}', requirements: ['id' => '\d+'], methods: ['DELETE'])]
     public function delete(int $id): JsonResponse
     {
-        $this->carsService->deleteClass($id);
+        $this->carService->deleteClass($id);
 
         return $this->json([
             'success' => true,

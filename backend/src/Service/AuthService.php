@@ -83,6 +83,13 @@ class AuthService
 
             return $this->generateAuthResponse($user);
         } catch (\Exception $e) {
+            dump([
+                'class' => $e::class,
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->logger->error('Login service error: ' . $e->getMessage(), ['exception' => $e]);
             return null;
         }

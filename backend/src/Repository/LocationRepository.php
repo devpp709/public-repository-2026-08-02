@@ -17,7 +17,7 @@ class LocationRepository extends ServiceEntityRepository
     }
 
     /**
-     * Находит все локации с сортировкой по названию
+     * Все локации с сортировкой по названию.
      */
     public function findAllOrderedByName(): array
     {
@@ -28,7 +28,20 @@ class LocationRepository extends ServiceEntityRepository
     }
 
     /**
-     * Находит локации по городу
+     * Все локации с сортировкой по стране, городу и названию.
+     */
+    public function findAllOrdered(): array
+    {
+        return $this->createQueryBuilder('l')
+            ->orderBy('l.country', 'ASC')
+            ->addOrderBy('l.city', 'ASC')
+            ->addOrderBy('l.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Локации по городу.
      */
     public function findByCity(string $city): array
     {
@@ -41,7 +54,7 @@ class LocationRepository extends ServiceEntityRepository
     }
 
     /**
-     * Находит локации с доступными автомобилями
+     * Локации с доступными автомобилями.
      */
     public function findWithAvailableCars(): array
     {
@@ -52,14 +65,13 @@ class LocationRepository extends ServiceEntityRepository
             ->setParameter('available', true)
             ->setParameter('status', 'available')
             ->groupBy('l.id')
-            ->having('COUNT(car.id) > 0')
             ->orderBy('l.name', 'ASC')
             ->getQuery()
             ->getResult();
     }
 
     /**
-     * Поиск локаций по названию или адресу
+     * Поиск по названию, адресу, городу, региону и стране.
      */
     public function search(string $searchTerm): array
     {
@@ -67,6 +79,8 @@ class LocationRepository extends ServiceEntityRepository
             ->where('LOWER(l.name) LIKE LOWER(:search)')
             ->orWhere('LOWER(l.address) LIKE LOWER(:search)')
             ->orWhere('LOWER(l.city) LIKE LOWER(:search)')
+            ->orWhere('LOWER(l.state) LIKE LOWER(:search)')
+            ->orWhere('LOWER(l.country) LIKE LOWER(:search)')
             ->setParameter('search', '%' . $searchTerm . '%')
             ->orderBy('l.name', 'ASC')
             ->getQuery()
@@ -74,28 +88,35 @@ class LocationRepository extends ServiceEntityRepository
     }
 
     /**
-     * Находит локации в радиусе (в километрах)
+     * Локации в приблизительном радиусе.
      */
-    public function findNearby(float $latitude, float $longitude, float $radiusKm = 10): array
-    {
-        // Преобразуем радиус в градусы (приблизительно 1 градус = 111 км)
-        $radiusDeg = $radiusKm / 111;
+    public function findNearby(
+        float $latitude,
+        float $longitude,
+        float $radiusKm = 10
+    ): array {
+        $radiusLat = $radiusKm / 111;
+
+        $radiusLng = $radiusKm / (
+                111 * max(cos(deg2rad($latitude)), 0.01)
+            );
 
         return $this->createQueryBuilder('l')
             ->where('l.latitude IS NOT NULL')
             ->andWhere('l.longitude IS NOT NULL')
-            ->andWhere('ABS(l.latitude - :lat) <= :radius')
-            ->andWhere('ABS(l.longitude - :lng) <= :radius')
+            ->andWhere('ABS(CAST(l.latitude AS float) - :lat) <= :radiusLat')
+            ->andWhere('ABS(CAST(l.longitude AS float) - :lng) <= :radiusLng')
             ->setParameter('lat', $latitude)
             ->setParameter('lng', $longitude)
-            ->setParameter('radius', $radiusDeg)
+            ->setParameter('radiusLat', $radiusLat)
+            ->setParameter('radiusLng', $radiusLng)
             ->orderBy('l.name', 'ASC')
             ->getQuery()
             ->getResult();
     }
 
     /**
-     * Получает статистику по локациям
+     * Статистика по локациям.
      */
     public function getStatistics(): array
     {
@@ -104,8 +125,8 @@ class LocationRepository extends ServiceEntityRepository
                 'l.id',
                 'l.name',
                 'l.city',
-                'COUNT(car.id) as total_cars',
-                'SUM(CASE WHEN car.isAvailable = true AND car.status = :available THEN 1 ELSE 0 END) as available_cars',
+                'COUNT(DISTINCT car.id) as total_cars',
+                'COUNT(DISTINCT CASE WHEN car.isAvailable = true AND car.status = :available THEN car.id ELSE NULL END) as available_cars',
                 'COUNT(DISTINCT pb.id) as pickup_bookings',
                 'COUNT(DISTINCT db.id) as dropoff_bookings'
             )
@@ -119,15 +140,18 @@ class LocationRepository extends ServiceEntityRepository
     }
 
     /**
-     * Находит популярные локации (по количеству бронирований)
+     * Популярные локации по количеству бронирований.
      */
     public function findPopular(int $limit = 5): array
     {
         return $this->createQueryBuilder('l')
-            ->select('l', 'COUNT(pb.id) as booking_count')
+            ->select('l', 'COUNT(DISTINCT pb.id) as booking_count')
             ->leftJoin('l.pickupBookings', 'pb')
-            ->where('pb.status IN (:statuses)')
-            ->setParameter('statuses', ['confirmed', 'in_progress', 'completed'])
+            ->andWhere('pb.status IN (:statuses)')
+            ->setParameter(
+                'statuses',
+                ['confirmed', 'in_progress', 'completed']
+            )
             ->groupBy('l.id')
             ->orderBy('booking_count', 'DESC')
             ->setMaxResults($limit)
@@ -136,44 +160,51 @@ class LocationRepository extends ServiceEntityRepository
     }
 
     /**
-     * Проверяет наличие локации с таким названием
+     * Проверяет наличие локации с таким названием.
      */
-    public function existsByName(string $name, ?int $excludeId = null): bool
-    {
+    public function existsByName(
+        string $name,
+        ?int $excludeId = null
+    ): bool {
         $qb = $this->createQueryBuilder('l')
             ->select('COUNT(l.id)')
             ->where('LOWER(l.name) = LOWER(:name)')
             ->setParameter('name', $name);
 
         if ($excludeId !== null) {
-            $qb->andWhere('l.id != :excludeId')
+            $qb
+                ->andWhere('l.id != :excludeId')
                 ->setParameter('excludeId', $excludeId);
         }
 
-        return (int) $qb->getQuery()->getSingleScalarResult() > 0;
+        return (int) $qb
+                ->getQuery()
+                ->getSingleScalarResult() > 0;
     }
 
     /**
-     * Находит все локации с данными города
+     * Локации с координатами.
      */
-    public function findAllWithCity(): array
+    public function findWithCoordinates(): array
     {
         return $this->createQueryBuilder('l')
-            ->leftJoin('l.city', 'c')
-            ->addSelect('c')
-            ->orderBy('c.name', 'ASC')
-            ->addOrderBy('l.sortOrder', 'ASC')
+            ->where('l.latitude IS NOT NULL')
+            ->andWhere('l.longitude IS NOT NULL')
+            ->orderBy('l.country', 'ASC')
+            ->addOrderBy('l.city', 'ASC')
             ->addOrderBy('l.name', 'ASC')
             ->getQuery()
             ->getResult();
     }
 
     /**
-     * Находит все активные локации с данными города
+     * Локации конкретной страны.
      */
-    public function findActiveWithCity(): array
+    public function findByCountry(string $country): array
     {
         return $this->createQueryBuilder('l')
+            ->where('LOWER(l.country) = LOWER(:country)')
+            ->setParameter('country', $country)
             ->orderBy('l.city', 'ASC')
             ->addOrderBy('l.name', 'ASC')
             ->getQuery()
@@ -181,70 +212,13 @@ class LocationRepository extends ServiceEntityRepository
     }
 
     /**
-     * Находит локации по ID города
+     * Локации конкретного региона.
      */
-    public function findByCityId(int $cityId, bool $onlyActive = true): array
-    {
-        $qb = $this->createQueryBuilder('l')
-            ->leftJoin('l.city', 'c')
-            ->addSelect('c')
-            ->where('c.id = :cityId')
-            ->setParameter('cityId', $cityId)
-            ->orderBy('l.sortOrder', 'ASC')
-            ->addOrderBy('l.name', 'ASC');
-
-        if ($onlyActive) {
-            $qb->andWhere('l.isActive = :active')
-                ->setParameter('active', true);
-        }
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * Находит локации по коду города
-     */
-    public function findByCityCode(string $cityCode, bool $onlyActive = true): array
-    {
-        $qb = $this->createQueryBuilder('l')
-            ->leftJoin('l.city', 'c')
-            ->addSelect('c')
-            ->where('c.code = :cityCode')
-            ->setParameter('cityCode', $cityCode)
-            ->orderBy('l.sortOrder', 'ASC')
-            ->addOrderBy('l.name', 'ASC');
-
-        if ($onlyActive) {
-            $qb->andWhere('l.isActive = :active')
-                ->setParameter('active', true);
-        }
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * Находит локации с координатами
-     */
-    public function findWithCoordinates(): array
+    public function findByState(string $state): array
     {
         return $this->createQueryBuilder('l')
-            ->leftJoin('l.city', 'c')
-            ->addSelect('c')
-            ->where('l.latitude IS NOT NULL')
-            ->andWhere('l.longitude IS NOT NULL')
-            ->andWhere('l.isActive = :active')
-            ->setParameter('active', true)
-            ->orderBy('c.name', 'ASC')
-            ->addOrderBy('l.sortOrder', 'ASC')
-            ->getQuery()
-            ->getResult();
-    }
-
-    public function findActive(): array
-    {
-        return $this->createQueryBuilder('l')
-            ->where('l.isActive = :active')
-            ->setParameter('active', true)
+            ->where('LOWER(l.state) = LOWER(:state)')
+            ->setParameter('state', $state)
             ->orderBy('l.city', 'ASC')
             ->addOrderBy('l.name', 'ASC')
             ->getQuery()

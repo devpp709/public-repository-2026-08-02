@@ -14,7 +14,6 @@ export default function BookingDateRangePicker({
             onChange={onChange}
             format="MM/dd/yyyy HH:mm"
             placeholder={placeholder}
-            showMeridian={false}
             showOneCalendar={false}
             ranges={[]}
             editable={false}

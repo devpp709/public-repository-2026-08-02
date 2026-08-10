@@ -5,13 +5,13 @@ import {Car} from '../../services/carService';
 import CarSpecIcons from "../icons/CarSpecIcons";
 
 interface CarCardProps {
-    key?: number;
+   // key?: number;
     car: Car;
     viewMode?: 'grid' | 'list';
     onDetailsClick?: (carId: number) => void;
 }
 
-export default function CarCard({car, viewMode = 'grid', onDetailsClick, key}: CarCardProps) {
+export default function CarCard({car, viewMode = 'grid', onDetailsClick}: CarCardProps) {
     const {t} = useTranslation('common');
 
     const defaultImage = 'https://zitademo.wpzita.com/car-rental/wp-content/uploads/sites/92/2025/08/05-1-1.jpg';

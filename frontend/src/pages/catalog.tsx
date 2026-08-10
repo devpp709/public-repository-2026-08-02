@@ -1,14 +1,14 @@
-// src/pages/catalog.tsx
+// src/pages/cars/catalog.tsx
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Header from '../../components/layout/Header/Header';
-import Footer from '../../components/layout/Footer/Footer';
-import { useCarClasses } from '../../hooks/useCarClasses';
-import { carService, Car } from '../../services/carService';
-import SearchBox from "../../components/layout/Catalog/SearchBox";
-import ArchiveHeader from "../../components/layout/Catalog/ArchiveHeader";
-import CarListings from "../../components/layout/Catalog/CarListings";
+import Header from '../components/layout/Header/Header';
+import Footer from '../components/layout/Footer/Footer';
+import { useCarClasses } from '../hooks/useCarClasses';
+import { carService, Car } from '../services/carService';
+import SearchBox from "../components/layout/Catalog/SearchBox";
+import ArchiveHeader from "../components/layout/Catalog/ArchiveHeader";
+import CarListings from "../components/layout/Catalog/CarListings";
 
 export default function Catalog() {
     const router = useRouter();

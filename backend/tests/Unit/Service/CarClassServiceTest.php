@@ -5,7 +5,7 @@ namespace App\Tests\Unit\Service;
 use App\DTO\CarClass\CarClassRequestDTO;
 use App\Entity\CarClass;
 use App\Repository\CarClassRepository;
-use App\Service\CarsService;
+use App\Service\CarService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

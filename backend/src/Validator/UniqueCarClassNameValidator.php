@@ -2,8 +2,8 @@
 
 namespace App\Validator;
 
-use App\Service\CarsService;
-use App\src\Validator\Constraints\UniqueCarClassName;
+use App\Service\CarClassService;
+use App\Validator\Constraints\UniqueCarClassName;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 class UniqueCarClassNameValidator extends ConstraintValidator
 {
     public function __construct(
-        private readonly CarsService $carClassService
+        private readonly CarClassService $carClassService
     ) {
     }
 

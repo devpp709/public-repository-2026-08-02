@@ -10,7 +10,7 @@ use App\Repository\CarClassRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class CarsService
+class CarClassService
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -89,7 +89,6 @@ class CarsService
     {
         $class = $this->findClassOrFail($id);
 
-        // Проверяем, есть ли у класса автомобили
         if ($class->getCars()->count() > 0) {
             throw new \RuntimeException('Невозможно удалить класс, так как к нему привязаны автомобили');
         }
