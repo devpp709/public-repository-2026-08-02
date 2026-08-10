@@ -43,7 +43,7 @@ const getNavItems = (t: (key: string) => string): NavItem[] => [
     name: t("cars"),
     subItems: [
       { name: t("all_cars"), path: "/cars/cars-all", pro: false },
-      { name: t("classes"), path: "/cars/classes", pro: false },
+      { name: t("classes"), path: "/car-classes", pro: false },
       { name: t("configurations"), path: "/cars/configurations", pro: false },
     ],
   },

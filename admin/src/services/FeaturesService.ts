@@ -18,7 +18,7 @@ interface FeaturesResponse {
 }
 
 class FeaturesService {
-    private readonly baseEndpoint = '/api/admin/cars/features';
+    private readonly baseEndpoint = '/api/admin/cars-features';
 
     async getAllFeatures(token?: string): Promise<Feature[]> {
         const response = await api.get<FeaturesResponse>(

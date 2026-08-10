@@ -67,7 +67,7 @@ export default function App() {
 
               {/* Cars */}
               <Route path="/cars/cars-all" element={<CarsAll />} />
-              <Route path="/cars/classes" element={<Classes />} />
+              <Route path="/car-classes" element={<Classes />} />
               <Route
                   path="/cars/configurations"
                   element={<Features />}

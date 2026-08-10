@@ -17,11 +17,11 @@ interface CarClassesResponse {
 }
 
 class CarClassesService {
-    private readonly baseEndpoint = '/api/admin/cars';
+    private readonly baseEndpoint = '/api/admin';
 
     async getAllClasses(token?: string): Promise<CarClass[]> {
         const response = await api.get<CarClassesResponse>(
-            `${this.baseEndpoint}/classes`,
+            `${this.baseEndpoint}/car-classes`,
             token
         );
 
@@ -44,7 +44,7 @@ class CarClassesService {
         token?: string
     ): Promise<CarClass[]> {
         const response = await api.get<CarClassesResponse>(
-            `${this.baseEndpoint}/available`,
+            `${this.baseEndpoint}/car-available`,
             token
         );
 

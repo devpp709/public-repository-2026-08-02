@@ -22,35 +22,7 @@ class CarsController extends AbstractController
     ) {
     }
 
-    #[Route('/classes', methods: ['GET'])]
-    public function classes(Request $request): JsonResponse
-    {
-        $withCarsCount = $request->query->getBoolean('withCarsCount', true);
 
-        return $this->json([
-            'data' => $this->carService->getAllClasses($withCarsCount),
-        ]);
-    }
-
-    #[Route('/features', methods: ['GET'])]
-    public function features(): JsonResponse
-    {
-        $features = $this->featureRepository->findAllOrderedByName();
-
-        return $this->json([
-            'data' => array_map(
-                static fn ($feature) => [
-                    'id' => $feature->getId(),
-                    'name' => $feature->getName(),
-                    'icon' => $feature->getIcon(),
-                    'category' => $feature->getCategory(),
-                    'categoryLabel' => $feature->getCategoryLabel(),
-                    'categoryCode' => $feature->getCategoryCode(),
-                ],
-                $features
-            ),
-        ]);
-    }
 
     #[Route('/extraService', methods: ['GET'])]
     public function extraService(): JsonResponse
