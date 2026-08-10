@@ -21,6 +21,40 @@ class ReviewService
     }
 
     /**
+     * Получить отзывы с фильтрацией и сортировкой
+     */
+    public function getReviews(
+        ?int $carId = null,
+        ?int $userId = null,
+        ?int $rating = null,
+        ?bool $verified = null,
+        string $sort = 'newest',
+        int $page = 1,
+        int $perPage = 10
+    ): array {
+        $result = $this->reviewRepository->findReviews(
+            carId: $carId,
+            userId: $userId,
+            rating: $rating,
+            verified: $verified,
+            sort: $sort,
+            page: $page,
+            perPage: $perPage
+        );
+
+        // Преобразуем сущности в DTO
+        $data = ReviewResponseDTO::fromEntities($result['data']);
+
+        return [
+            'data' => $data,
+            'total' => $result['total'],
+            'page' => $result['page'],
+            'perPage' => $result['perPage'],
+            'totalPages' => $result['totalPages'],
+        ];
+    }
+
+    /**
      * Получить все отзывы
      */
     public function getAllReviews(): array

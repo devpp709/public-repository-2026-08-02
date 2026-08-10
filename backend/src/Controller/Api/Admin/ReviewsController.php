@@ -26,23 +26,39 @@ class ReviewsController extends AbstractController
     #[Route('', name: 'list', methods: ['GET'])]
     public function list(Request $request): JsonResponse
     {
-        $type = $request->query->get('type');
-        $limit = $request->query->getInt('limit', 10);
+        // Получаем параметры из запроса
+        $carId = $request->query->getInt('carId', 0);
+        $userId = $request->query->getInt('userId', 0);
+        $rating = $request->query->getInt('rating', 0);
+        $verified = $request->query->get('verified');
+        $page = $request->query->getInt('page', 1);
+        $perPage = $request->query->getInt('perPage', 10);
+        $sort = $request->query->get('sort', 'newest');
 
-        if ($type === 'top') {
-            $reviews = $this->reviewService->getTopRatedReviews($limit);
-        } elseif ($type === 'helpful') {
-            $reviews = $this->reviewService->getMostHelpfulReviews($limit);
-        } elseif ($type === 'latest') {
-            $reviews = $this->reviewService->getLatestReviews($limit);
-        } else {
-            $reviews = $this->reviewService->getAllReviews();
-        }
+        // Получаем отзывы с фильтрацией и сортировкой
+        $result = $this->reviewService->getReviews(
+            carId: $carId ?: null,
+            userId: $userId ?: null,
+            rating: $rating ?: null,
+            verified: $verified !== null ? (bool) $verified : null,
+            sort: $sort,
+            page: $page,
+            perPage: $perPage
+        );
+
+        // Очищаем данные перед отправкой
+        $cleanData = $this->cleanReviewData($result['data']);
 
         return $this->json(
             [
                 'success' => true,
-                'data' => $this->cleanReviewData($reviews)
+                'data' => $cleanData,
+                'meta' => [
+                    'total' => $result['total'],
+                    'page' => $result['page'],
+                    'perPage' => $result['perPage'],
+                    'totalPages' => $result['totalPages'],
+                ]
             ],
             Response::HTTP_OK,
             [],
