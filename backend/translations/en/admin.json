@@ -352,5 +352,17 @@
     "category_Equipment": "Equipment",
     "category_Comfort": "Comfort",
     "category_Safety": "Safety",
-    "category_Additional": "Additional"
+    "category_Additional": "Additional",
+    "service_category_media": "Media",
+    "service_category_safety": "Safety",
+    "service_category_service": "Services",
+    "confirmed": "Confirmed",
+    "in_progress": "In Progress",
+    "completed": "Completed",
+    "month": "Month",
+    "quarter": "Quarter",
+    "year": "Year",
+    "week": "Week",
+    "order_date": "Order Date",
+    "days": "Days"
 }
