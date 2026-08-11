@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useCarClasses } from '../../../hooks/useCarClasses';
+import { useLanguage } from '../../../i18n/LanguageProvider';
 
 interface CarClassModalProps {
     isOpen: boolean;
@@ -20,6 +21,7 @@ const AVAILABLE_ICONS = [
 ];
 
 export default function CarClassModal({ isOpen, onClose, onSuccess, editingItem }: CarClassModalProps) {
+    const { t } = useLanguage();
     const { createClass, updateClass } = useCarClasses();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -36,9 +38,9 @@ export default function CarClassModal({ isOpen, onClose, onSuccess, editingItem 
     useEffect(() => {
         if (editingItem) {
             setFormData({
-                name: editingItem.name || '',
-                description: editingItem.description || '',
-                icon: editingItem.icon || 'economy',
+                name: editingItem.name ?? '',
+                description: editingItem.description ?? '',
+                icon: editingItem.icon ?? 'economy',
             });
         } else {
             setFormData({
@@ -61,7 +63,7 @@ export default function CarClassModal({ isOpen, onClose, onSuccess, editingItem 
 
         // Валидация
         if (!formData.name.trim()) {
-            setError('Название обязательно');
+            setError(t('name_required'));
             return;
         }
 
@@ -82,7 +84,7 @@ export default function CarClassModal({ isOpen, onClose, onSuccess, editingItem 
 
             onSuccess();
         } catch (err: any) {
-            setError(err?.message || 'Ошибка при сохранении');
+            setError(err?.message || t('save_error'));
         } finally {
             setLoading(false);
         }
@@ -96,7 +98,7 @@ export default function CarClassModal({ isOpen, onClose, onSuccess, editingItem 
                 {/* Заголовок */}
                 <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
                     <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
-                        {isEditing ? 'Редактировать класс' : 'Новый класс автомобилей'}
+                        {isEditing ? t('edit_class') : t('new_class')}
                     </h2>
                     <button
                         onClick={onClose}
@@ -119,7 +121,7 @@ export default function CarClassModal({ isOpen, onClose, onSuccess, editingItem 
                     {/* Название */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Название *
+                            {t('name')} *
                         </label>
                         <input
                             type="text"
@@ -127,7 +129,7 @@ export default function CarClassModal({ isOpen, onClose, onSuccess, editingItem 
                             value={formData.name}
                             onChange={handleChange}
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            placeholder="Например: Эконом"
+                            placeholder={t('enter_class_name')}
                             required
                         />
                     </div>
@@ -135,7 +137,7 @@ export default function CarClassModal({ isOpen, onClose, onSuccess, editingItem 
                     {/* Описание */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Описание
+                            {t('description')}
                         </label>
                         <textarea
                             name="description"
@@ -143,14 +145,14 @@ export default function CarClassModal({ isOpen, onClose, onSuccess, editingItem 
                             onChange={handleChange}
                             rows={3}
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                            placeholder="Описание класса"
+                            placeholder={t('enter_class_description')}
                         />
                     </div>
 
                     {/* Иконка */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Иконка
+                            {t('icon')}
                         </label>
                         <select
                             name="icon"
@@ -173,14 +175,14 @@ export default function CarClassModal({ isOpen, onClose, onSuccess, editingItem 
                             onClick={onClose}
                             className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
-                            Отмена
+                            {t('cancel')}
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
                             className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {loading ? 'Сохранение...' : isEditing ? 'Сохранить' : 'Создать'}
+                            {loading ? t('saving') : isEditing ? t('save') : t('create')}
                         </button>
                     </div>
                 </form>

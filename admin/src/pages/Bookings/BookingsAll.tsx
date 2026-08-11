@@ -2,32 +2,29 @@ import PageMeta from "../../components/common/PageMeta";
 import { useBookings } from "../../hooks/useBookings";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import ErrorMessage from "../../components/common/ErrorMessage";
+import { useLanguage } from "../../i18n/LanguageProvider";
 
 // Статус бейджи
-const statusConfig: Record<string, { label: string; className: string }> = {
+const statusConfig: Record<string, { className: string }> = {
     pending: {
-        label: 'Ожидает',
         className: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
     },
     confirmed: {
-        label: 'Подтвержден',
         className: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
     },
     in_progress: {
-        label: 'В процессе',
         className: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400'
     },
     completed: {
-        label: 'Завершен',
         className: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
     },
     cancelled: {
-        label: 'Отменен',
         className: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
     }
 };
 
 export default function BookingsAll() {
+    const { t } = useLanguage();
     const {
         bookings,
         loading,
@@ -43,21 +40,28 @@ export default function BookingsAll() {
         return <ErrorMessage message={error} onRetry={refresh} />;
     }
 
+    // Склонение слова "день"
+    const getDaysLabel = (days: number) => {
+        if (days === 1) return t('day_one');
+        if (days >= 2 && days <= 4) return t('day_few');
+        return t('day_many');
+    };
+
     return (
         <>
             <PageMeta
-                title="Все заказы"
-                description="Список всех заказов"
+                title={t('all_orders')}
+                description={t('all_orders_description')}
             />
 
             <div className="container mx-auto px-4 py-8">
                 {/* Заголовок */}
                 <div className="flex items-center justify-between mb-6">
                     <h1 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
-                        Все заказы
+                        {t('all_orders')}
                     </h1>
                     <span className="text-sm text-gray-500 dark:text-gray-400">
-                        Всего: {bookings.length}
+                        {t('total')}: {bookings.length}
                     </span>
                 </div>
 
@@ -65,13 +69,14 @@ export default function BookingsAll() {
                 {bookings.length === 0 ? (
                     <div className="text-center py-12 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
                         <p className="text-gray-500 dark:text-gray-400">
-                            Заказов пока нет
+                            {t('no_orders')}
                         </p>
                     </div>
                 ) : (
                     <div className="grid gap-4">
                         {bookings.map((booking) => {
                             const status = statusConfig[booking.status] || statusConfig.pending;
+                            const statusLabel = t(`status_${booking.status}`) || booking.status;
 
                             return (
                                 <div
@@ -87,7 +92,7 @@ export default function BookingsAll() {
                                                     #{booking.bookingNumber}
                                                 </span>
                                                 <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${status.className}`}>
-                                                    {status.label}
+                                                    {statusLabel}
                                                 </span>
                                             </div>
 
@@ -113,7 +118,7 @@ export default function BookingsAll() {
                                                 <span className="font-medium">📅</span> {booking.pickupDate} → {booking.dropoffDate}
                                             </div>
                                             <div className="text-gray-600 dark:text-gray-300">
-                                                <span className="font-medium">⏱</span> {booking.totalDays} {booking.totalDays === 1 ? 'день' : booking.totalDays < 5 ? 'дня' : 'дней'}
+                                                <span className="font-medium">⏱</span> {booking.totalDays} {getDaysLabel(booking.totalDays)}
                                             </div>
                                             <div className="text-lg font-bold text-blue-600 dark:text-blue-400">
                                                 {booking.totalPrice} ₽
@@ -141,11 +146,11 @@ export default function BookingsAll() {
                                     {/* Локации */}
                                     <div className="mt-3 flex flex-col sm:flex-row gap-1 text-xs text-gray-500 dark:text-gray-400">
                                         <span>
-                                            📍 Забор: {booking.pickupLocation.name}
+                                            📍 {t('pickup')}: {booking.pickupLocation.name}
                                         </span>
                                         <span className="hidden sm:inline text-gray-300 dark:text-gray-600">→</span>
                                         <span>
-                                            📍 Возврат: {booking.dropoffLocation.name}
+                                            📍 {t('dropoff')}: {booking.dropoffLocation.name}
                                         </span>
                                     </div>
                                 </div>

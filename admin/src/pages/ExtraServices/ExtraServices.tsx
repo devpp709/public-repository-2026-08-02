@@ -4,6 +4,7 @@ import { useExtraServices } from '../../hooks/useExtraServices';
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import ErrorMessage from "../../components/common/ErrorMessage";
 import ExtraServiceModal from './components/ExtraServiceModal';
+import { useLanguage } from "../../i18n/LanguageProvider";
 
 // Конфигурация иконок
 const iconMap: Record<string, string> = {
@@ -16,35 +17,31 @@ const iconMap: Record<string, string> = {
 };
 
 // Конфигурация категорий
-const categoryConfig: Record<string, { label: string; icon: string; color: string }> = {
+const categoryConfig: Record<string, { icon: string; color: string }> = {
     Insurance: {
-        label: 'Страхование',
         icon: '🛡️',
         color: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
     },
     Equipment: {
-        label: 'Оборудование',
         icon: '🔧',
         color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
     },
     Comfort: {
-        label: 'Комфорт',
         icon: '🛋️',
         color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
     },
     Safety: {
-        label: 'Безопасность',
         icon: '🛡️',
         color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
     },
     Additional: {
-        label: 'Дополнительно',
         icon: '📦',
         color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400'
     }
 };
 
 export default function ExtraServices() {
+    const { t } = useLanguage();
     const {
         extraServices,
         loading,
@@ -74,7 +71,7 @@ export default function ExtraServices() {
     };
 
     const handleDelete = async (id: number, name: string) => {
-        if (!confirm(`Вы уверены, что хотите удалить услугу "${name}"?`)) {
+        if (!confirm(t('delete_service_confirm', { name }))) {
             return;
         }
 
@@ -84,7 +81,7 @@ export default function ExtraServices() {
             await refresh();
         } catch (err) {
             console.error('Error deleting service:', err);
-            alert('Ошибка при удалении услуги');
+            alert(t('delete_service_error'));
         } finally {
             setIsDeleting(false);
         }
@@ -119,7 +116,7 @@ export default function ExtraServices() {
     }, {} as Record<string, typeof extraServices>);
 
     // Сортировка категорий
-    const categoryOrder = ['safety', 'media', 'service'];
+    const categoryOrder = ['Insurance', 'Equipment', 'Comfort', 'Safety', 'Additional'];
     const sortedCategories = Object.keys(groupedServices).sort(
         (a, b) => categoryOrder.indexOf(a) - categoryOrder.indexOf(b)
     );
@@ -127,8 +124,8 @@ export default function ExtraServices() {
     return (
         <>
             <PageMeta
-                title="Дополнительные услуги"
-                description="Дополнительные услуги для автомобилей"
+                title={t('extra_services')}
+                description={t('extra_services_description')}
             />
 
             <div className="container mx-auto px-4 py-8">
@@ -136,10 +133,10 @@ export default function ExtraServices() {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                     <div>
                         <h1 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
-                            Дополнительные услуги
+                            {t('extra_services')}
                         </h1>
                         <span className="text-sm text-gray-500 dark:text-gray-400">
-                            Всего: {extraServices.length}
+                            {t('total')}: {extraServices.length}
                         </span>
                     </div>
 
@@ -150,20 +147,20 @@ export default function ExtraServices() {
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                         </svg>
-                        Добавить услугу
+                        {t('add_service')}
                     </button>
                 </div>
 
                 {extraServices.length === 0 ? (
                     <div className="text-center py-12 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
                         <p className="text-gray-500 dark:text-gray-400">
-                            Дополнительные услуги не найдены
+                            {t('no_services')}
                         </p>
                         <button
                             onClick={handleCreate}
                             className="mt-4 text-blue-600 dark:text-blue-400 hover:underline"
                         >
-                            Добавить первую услугу
+                            {t('add_first_service')}
                         </button>
                     </div>
                 ) : (
@@ -171,10 +168,10 @@ export default function ExtraServices() {
                         {sortedCategories.map((categoryCode) => {
                             const services = groupedServices[categoryCode];
                             const config = categoryConfig[categoryCode] || {
-                                label: categoryCode,
                                 icon: '📦',
                                 color: 'bg-gray-100 text-gray-800 dark:bg-gray-700/30 dark:text-gray-400'
                             };
+                            const categoryLabel = t(`service_category_${categoryCode}`) || categoryCode;
 
                             // Активные услуги
                             const activeServices = services.filter(s => s.isActive);
@@ -186,7 +183,7 @@ export default function ExtraServices() {
                                     <div className="flex items-center gap-2 mb-3">
                                         <span className="text-xl">{config.icon}</span>
                                         <h2 className="text-lg font-medium text-gray-800 dark:text-white">
-                                            {config.label}
+                                            {categoryLabel}
                                         </h2>
                                         <span className="text-sm text-gray-400 dark:text-gray-500">
                                             ({services.length})
@@ -205,7 +202,7 @@ export default function ExtraServices() {
                                                     <button
                                                         onClick={() => handleEdit(service)}
                                                         className="p-1.5 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                                                        title="Редактировать"
+                                                        title={t('edit')}
                                                     >
                                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -215,7 +212,7 @@ export default function ExtraServices() {
                                                         onClick={() => handleDelete(service.id, service.name)}
                                                         disabled={isDeleting}
                                                         className="p-1.5 text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
-                                                        title="Удалить"
+                                                        title={t('delete')}
                                                     >
                                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -280,7 +277,7 @@ export default function ExtraServices() {
                                                     <div className="text-sm font-medium text-gray-400 dark:text-gray-500">
                                                         {formatPrice(service.defaultPrice)} ₽
                                                     </div>
-                                                    <span className="text-xs text-gray-400 dark:text-gray-500">Неактивна</span>
+                                                    <span className="text-xs text-gray-400 dark:text-gray-500">{t('inactive')}</span>
                                                 </div>
                                             </div>
                                         ))}

@@ -2,37 +2,35 @@ import PageMeta from "../../components/common/PageMeta";
 import { usePayments } from "../../hooks/usePayments";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import ErrorMessage from "../../components/common/ErrorMessage";
+import { useLanguage } from "../../i18n/LanguageProvider";
 
 // Конфигурация статусов
-const statusConfig: Record<string, { label: string; className: string }> = {
+const statusConfig: Record<string, { className: string }> = {
     pending: {
-        label: 'Ожидает оплаты',
         className: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
     },
     completed: {
-        label: 'Оплачен',
         className: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
     },
     refunded: {
-        label: 'Возврат',
         className: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400'
     },
     failed: {
-        label: 'Ошибка',
         className: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
     }
 };
 
 // Конфигурация методов оплаты
-const methodConfig: Record<string, { label: string; icon: string }> = {
-    credit_card: { label: 'Банковская карта', icon: '💳' },
-    bank_transfer: { label: 'Банковский перевод', icon: '🏦' },
-    cash: { label: 'Наличные', icon: '💰' },
-    apple_pay: { label: 'Apple Pay', icon: '📱' },
-    google_pay: { label: 'Google Pay', icon: '📱' }
+const methodConfig: Record<string, { icon: string }> = {
+    credit_card: { icon: '💳' },
+    bank_transfer: { icon: '🏦' },
+    cash: { icon: '💰' },
+    apple_pay: { icon: '📱' },
+    google_pay: { icon: '📱' }
 };
 
 export default function Payments() {
+    const { t } = useLanguage();
     const {
         payments,
         loading,
@@ -78,39 +76,39 @@ export default function Payments() {
     return (
         <>
             <PageMeta
-                title="Платежи"
-                description="Платежи по бронированиям"
+                title={t('payments')}
+                description={t('payments_description')}
             />
 
             <div className="container mx-auto px-4 py-8">
                 {/* Заголовок */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                     <h1 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
-                        Платежи
+                        {t('payments')}
                     </h1>
                     <span className="text-sm text-gray-500 dark:text-gray-400">
-                        Всего: {payments.length}
+                        {t('total')}: {payments.length}
                     </span>
                 </div>
 
                 {/* Статистика */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                     <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                        <div className="text-sm text-gray-500 dark:text-gray-400">Всего платежей</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">{t('total_payments')}</div>
                         <div className="text-2xl font-bold text-gray-800 dark:text-white">{payments.length}</div>
                     </div>
                     <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                        <div className="text-sm text-gray-500 dark:text-gray-400">На сумму</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">{t('total_amount')}</div>
                         <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                             {formatAmount(totalAmount)} ₽
                         </div>
                     </div>
                     <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                        <div className="text-sm text-gray-500 dark:text-gray-400">Оплачено</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">{t('paid')}</div>
                         <div className="text-2xl font-bold text-green-600 dark:text-green-400">{completedCount}</div>
                     </div>
                     <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                        <div className="text-sm text-gray-500 dark:text-gray-400">В ожидании</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">{t('pending')}</div>
                         <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{pendingCount}</div>
                     </div>
                 </div>
@@ -119,7 +117,7 @@ export default function Payments() {
                 {payments.length === 0 ? (
                     <div className="text-center py-12 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
                         <p className="text-gray-500 dark:text-gray-400">
-                            Платежей пока нет
+                            {t('no_payments')}
                         </p>
                     </div>
                 ) : (
@@ -129,22 +127,22 @@ export default function Payments() {
                                 <thead>
                                 <tr className="border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
                                     <th className="px-5 py-3.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                        Бронирование
+                                        {t('booking')}
                                     </th>
                                     <th className="px-5 py-3.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                        Сумма
+                                        {t('amount')}
                                     </th>
                                     <th className="px-5 py-3.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                        Способ оплаты
+                                        {t('payment_method')}
                                     </th>
                                     <th className="px-5 py-3.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                        Статус
+                                        {t('status')}
                                     </th>
                                     <th className="px-5 py-3.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                        Дата платежа
+                                        {t('payment_date')}
                                     </th>
                                     <th className="px-5 py-3.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                        Транзакция
+                                        {t('transaction')}
                                     </th>
                                 </tr>
                                 </thead>
@@ -152,7 +150,9 @@ export default function Payments() {
                                 <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                                 {payments.map((payment) => {
                                     const status = statusConfig[payment.status] || statusConfig.pending;
-                                    const method = methodConfig[payment.paymentMethod] || { label: payment.paymentMethod || '—', icon: '❓' };
+                                    const statusLabel = t(`payment_status_${payment.status}`) || payment.status;
+                                    const method = methodConfig[payment.paymentMethod] || { icon: '❓' };
+                                    const methodLabel = t(`payment_method_${payment.paymentMethod}`) || payment.paymentMethod || '—';
 
                                     return (
                                         <tr
@@ -182,14 +182,14 @@ export default function Payments() {
                                             <td className="px-5 py-4">
                                                 <div className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-300">
                                                     <span>{method.icon}</span>
-                                                    <span>{method.label}</span>
+                                                    <span>{methodLabel}</span>
                                                 </div>
                                             </td>
 
                                             {/* Статус */}
                                             <td className="px-5 py-4">
                                                     <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${status.className}`}>
-                                                        {status.label}
+                                                        {statusLabel}
                                                     </span>
                                             </td>
 
@@ -215,7 +215,7 @@ export default function Payments() {
                                 <tfoot className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
                                 <tr>
                                     <td className="px-5 py-3 text-sm font-medium text-gray-600 dark:text-gray-400" colSpan={1}>
-                                        Итого
+                                        {t('total')}
                                     </td>
                                     <td className="px-5 py-3 text-sm font-bold text-gray-800 dark:text-white">
                                         {formatAmount(totalAmount)} ₽

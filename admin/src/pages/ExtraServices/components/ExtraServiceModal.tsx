@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useExtraServices } from '../../../hooks/useExtraServices';
+import { useLanguage } from '../../../i18n/LanguageProvider';
 
 interface ExtraServiceModalProps {
     isOpen: boolean;
@@ -10,26 +11,25 @@ interface ExtraServiceModalProps {
     editingItem?: any;
 }
 
-// Доступные иконки
-const AVAILABLE_ICONS = [
-    { value: 'child_seat', label: '👶 Детское кресло' },
-    { value: 'gps', label: '🗺️ GPS-навигатор' },
-    { value: 'driver', label: '🧑‍✈️ Дополнительный водитель' },
-    { value: 'winter_tires', label: '❄️ Зимняя резина' },
-    { value: 'roof_rack', label: '🧳 Багажник на крышу' },
-    { value: 'fog_lights', label: '🌫️ Противотуманные фары' },
+const ICONS_CONFIG = [
+    { value: 'child_seat', icon: '👶', key: 'icon_child_seat' },
+    { value: 'gps', icon: '🗺️', key: 'icon_gps' },
+    { value: 'driver', icon: '🧑‍✈️', key: 'icon_driver' },
+    { value: 'winter_tires', icon: '❄️', key: 'icon_winter_tires' },
+    { value: 'roof_rack', icon: '🧳', key: 'icon_roof_rack' },
+    { value: 'fog_lights', icon: '🌫️', key: 'icon_fog_lights' },
 ];
 
-// Доступные категории (в верхнем регистре как на бэке)
-const AVAILABLE_CATEGORIES = [
-    { value: 'Insurance', label: '🛡️ Страхование' },
-    { value: 'Equipment', label: '🔧 Оборудование' },
-    { value: 'Comfort', label: '🛋️ Комфорт' },
-    { value: 'Safety', label: '🛡️ Безопасность' },
-    { value: 'Additional', label: '📦 Дополнительно' },
+const CATEGORIES_CONFIG = [
+    { value: 'Insurance', icon: '🛡️', key: 'category_Insurance' },
+    { value: 'Equipment', icon: '🔧', key: 'category_Equipment' },
+    { value: 'Comfort', icon: '🛋️', key: 'category_Comfort' },
+    { value: 'Safety', icon: '🛡️', key: 'category_Safety' },
+    { value: 'Additional', icon: '📦', key: 'category_Additional' },
 ];
 
 export default function ExtraServiceModal({ isOpen, onClose, onSuccess, editingItem }: ExtraServiceModalProps) {
+    const { t } = useLanguage();
     const { createExtraService, updateExtraService } = useExtraServices();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -44,6 +44,17 @@ export default function ExtraServiceModal({ isOpen, onClose, onSuccess, editingI
     });
 
     const isEditing = !!editingItem;
+
+    // Создаем массивы с переводами внутри компонента
+    const AVAILABLE_ICONS = ICONS_CONFIG.map(item => ({
+        value: item.value,
+        label: `${item.icon} ${t(item.key)}`
+    }));
+
+    const AVAILABLE_CATEGORIES = CATEGORIES_CONFIG.map(item => ({
+        value: item.value,
+        label: `${item.icon} ${t(item.key)}`
+    }));
 
     // Заполняем форму при редактировании
     useEffect(() => {
@@ -90,17 +101,17 @@ export default function ExtraServiceModal({ isOpen, onClose, onSuccess, editingI
 
         // Валидация
         if (!formData.name.trim()) {
-            setError('Название обязательно');
+            setError(t('name_required'));
             return;
         }
 
         if (!formData.category) {
-            setError('Выберите категорию');
+            setError(t('category_required'));
             return;
         }
 
         if (!formData.defaultPrice || parseFloat(formData.defaultPrice) < 0) {
-            setError('Цена должна быть больше 0');
+            setError(t('price_required'));
             return;
         }
 
@@ -124,7 +135,7 @@ export default function ExtraServiceModal({ isOpen, onClose, onSuccess, editingI
 
             onSuccess();
         } catch (err: any) {
-            setError(err?.message || 'Ошибка при сохранении');
+            setError(err?.message || t('save_error'));
         } finally {
             setLoading(false);
         }
@@ -138,7 +149,7 @@ export default function ExtraServiceModal({ isOpen, onClose, onSuccess, editingI
                 {/* Заголовок */}
                 <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
                     <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
-                        {isEditing ? 'Редактировать услугу' : 'Новая услуга'}
+                        {isEditing ? t('edit_service') : t('new_service')}
                     </h2>
                     <button
                         onClick={onClose}
@@ -161,7 +172,7 @@ export default function ExtraServiceModal({ isOpen, onClose, onSuccess, editingI
                     {/* Название */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Название *
+                            {t('name')} *
                         </label>
                         <input
                             type="text"
@@ -169,7 +180,7 @@ export default function ExtraServiceModal({ isOpen, onClose, onSuccess, editingI
                             value={formData.name}
                             onChange={handleChange}
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            placeholder="Например: Детское кресло"
+                            placeholder={t('enter_service_name')}
                             required
                         />
                     </div>
@@ -177,7 +188,7 @@ export default function ExtraServiceModal({ isOpen, onClose, onSuccess, editingI
                     {/* Описание */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Описание
+                            {t('description')}
                         </label>
                         <textarea
                             name="description"
@@ -185,14 +196,14 @@ export default function ExtraServiceModal({ isOpen, onClose, onSuccess, editingI
                             onChange={handleChange}
                             rows={2}
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                            placeholder="Описание услуги"
+                            placeholder={t('enter_service_description')}
                         />
                     </div>
 
                     {/* Иконка */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Иконка
+                            {t('icon')}
                         </label>
                         <select
                             name="icon"
@@ -200,7 +211,7 @@ export default function ExtraServiceModal({ isOpen, onClose, onSuccess, editingI
                             onChange={handleChange}
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         >
-                            <option value="">Выберите иконку</option>
+                            <option value="">{t('select_icon')}</option>
                             {AVAILABLE_ICONS.map((icon) => (
                                 <option key={icon.value} value={icon.value}>
                                     {icon.label}
@@ -212,7 +223,7 @@ export default function ExtraServiceModal({ isOpen, onClose, onSuccess, editingI
                     {/* Категория */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Категория *
+                            {t('category')} *
                         </label>
                         <select
                             name="category"
@@ -221,7 +232,7 @@ export default function ExtraServiceModal({ isOpen, onClose, onSuccess, editingI
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             required
                         >
-                            <option value="">Выберите категорию</option>
+                            <option value="">{t('select_category')}</option>
                             {AVAILABLE_CATEGORIES.map((category) => (
                                 <option key={category.value} value={category.value}>
                                     {category.label}
@@ -233,7 +244,7 @@ export default function ExtraServiceModal({ isOpen, onClose, onSuccess, editingI
                     {/* Цена */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Цена по умолчанию * ₽
+                            {t('default_price')} * ₽
                         </label>
                         <input
                             type="number"
@@ -258,7 +269,7 @@ export default function ExtraServiceModal({ isOpen, onClose, onSuccess, editingI
                             className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                         />
                         <label htmlFor="isActive" className="text-sm text-gray-700 dark:text-gray-300">
-                            Активна
+                            {t('active')}
                         </label>
                     </div>
 
@@ -269,14 +280,14 @@ export default function ExtraServiceModal({ isOpen, onClose, onSuccess, editingI
                             onClick={onClose}
                             className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
-                            Отмена
+                            {t('cancel')}
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
                             className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {loading ? 'Сохранение...' : isEditing ? 'Сохранить' : 'Создать'}
+                            {loading ? t('saving') : isEditing ? t('save') : t('create')}
                         </button>
                     </div>
                 </form>

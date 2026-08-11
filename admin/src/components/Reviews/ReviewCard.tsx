@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Review } from '../../services/reviewsService';
+import { useLanguage } from '../../i18n/LanguageProvider';
 
 interface ReviewCardProps {
     review: Review;
@@ -18,6 +19,8 @@ export default function ReviewCard({
                                        isOwner = false,
                                        showCarInfo = false
                                    }: ReviewCardProps) {
+    const { t } = useLanguage();
+
     const renderStars = (rating: number) => {
         return '★'.repeat(rating) + '☆'.repeat(5 - rating);
     };
@@ -68,7 +71,7 @@ export default function ReviewCard({
                 <div className="flex flex-col items-end space-y-1">
                     {review.isVerified && (
                         <span className="text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded-full">
-                            ✓ Подтверждено
+                            ✓ {t('verified')}
                         </span>
                     )}
                     {showCarInfo && (
@@ -98,13 +101,13 @@ export default function ReviewCard({
                 <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                     {review.pros && (
                         <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3">
-                            <span className="font-medium text-green-600 dark:text-green-400">✓ Плюсы:</span>
+                            <span className="font-medium text-green-600 dark:text-green-400">✓ {t('pros')}:</span>
                             <p className="text-gray-600 dark:text-gray-300 mt-1">{review.pros}</p>
                         </div>
                     )}
                     {review.cons && (
                         <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-3">
-                            <span className="font-medium text-red-600 dark:text-red-400">✗ Минусы:</span>
+                            <span className="font-medium text-red-600 dark:text-red-400">✗ {t('cons')}:</span>
                             <p className="text-gray-600 dark:text-gray-300 mt-1">{review.cons}</p>
                         </div>
                     )}
@@ -118,7 +121,7 @@ export default function ReviewCard({
                     className="flex items-center space-x-1 text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
                     <span>👍</span>
-                    <span>Полезно ({review.helpfulCount})</span>
+                    <span>{t('helpful')} ({review.helpfulCount})</span>
                 </button>
 
                 {isOwner && onDelete && (
@@ -126,7 +129,7 @@ export default function ReviewCard({
                         onClick={() => onDelete(review.id)}
                         className="text-sm text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 transition-colors"
                     >
-                        🗑 Удалить
+                        🗑 {t('delete')}
                     </button>
                 )}
             </div>

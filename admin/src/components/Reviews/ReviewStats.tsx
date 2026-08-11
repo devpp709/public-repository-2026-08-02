@@ -2,12 +2,15 @@
 
 import React from 'react';
 import { Review } from '../../services/reviewsService';
+import { useLanguage } from '../../i18n/LanguageProvider';
 
 interface ReviewStatsProps {
     reviews: Review[];
 }
 
 export default function ReviewStats({ reviews }: ReviewStatsProps) {
+    const { t } = useLanguage();
+
     if (reviews.length === 0) {
         return null;
     }
@@ -26,8 +29,14 @@ export default function ReviewStats({ reviews }: ReviewStatsProps) {
     const maxCount = Math.max(...ratingDistribution);
 
     const getRatingLabel = (rating: number) => {
-        const labels = ['Ужасно', 'Плохо', 'Средне', 'Хорошо', 'Отлично'];
+        const labels = [t('rating_terrible'), t('rating_poor'), t('rating_average'), t('rating_good'), t('rating_excellent')];
         return labels[rating - 1] || '';
+    };
+
+    const getDeclension = (count: number, one: string, few: string, many: string) => {
+        if (count % 10 === 1 && count % 100 !== 11) return one;
+        if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20)) return few;
+        return many;
     };
 
     return (
@@ -42,7 +51,7 @@ export default function ReviewStats({ reviews }: ReviewStatsProps) {
                         {'★'.repeat(Math.round(averageRating))}
                     </div>
                     <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        {totalReviews} {totalReviews === 1 ? 'отзыв' : 'отзывов'}
+                        {totalReviews} {getDeclension(totalReviews, t('review_one'), t('review_few'), t('review_many'))}
                     </div>
                 </div>
 
@@ -74,13 +83,13 @@ export default function ReviewStats({ reviews }: ReviewStatsProps) {
                 {/* Статистика */}
                 <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Подтверждено:</span>
+                        <span className="text-gray-600 dark:text-gray-400">{t('verified')}:</span>
                         <span className="font-medium text-gray-800 dark:text-white">
                             {verifiedCount} ({Math.round((verifiedCount / totalReviews) * 100)}%)
                         </span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Всего полезных:</span>
+                        <span className="text-gray-600 dark:text-gray-400">{t('total_helpful')}:</span>
                         <span className="font-medium text-gray-800 dark:text-white">
                             {totalHelpful}
                         </span>

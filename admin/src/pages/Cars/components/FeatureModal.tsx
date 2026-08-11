@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useFeatures } from '../../../hooks/useFeatures';
+import { useLanguage } from '../../../i18n/LanguageProvider';
 
 interface FeatureModalProps {
     isOpen: boolean;
@@ -34,14 +35,15 @@ const AVAILABLE_CATEGORIES = [
 ];
 
 export default function FeatureModal({ isOpen, onClose, onSuccess, editingItem }: FeatureModalProps) {
+    const { t } = useLanguage();
     const { createFeature, updateFeature } = useFeatures();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const [formData, setFormData] = useState({
         name: '',
-        icon: 'ac',
-        categoryCode: 'comfort',
+        icon: '',
+        categoryCode: '',
     });
 
     const isEditing = !!editingItem;
@@ -50,15 +52,15 @@ export default function FeatureModal({ isOpen, onClose, onSuccess, editingItem }
     useEffect(() => {
         if (editingItem) {
             setFormData({
-                name: editingItem.name || '',
-                icon: editingItem.icon || 'ac',
-                categoryCode: editingItem.categoryCode || 'comfort',
+                name: editingItem.name ?? '',
+                icon: editingItem.icon ?? '',
+                categoryCode: editingItem.categoryCode ?? '',
             });
         } else {
             setFormData({
                 name: '',
-                icon: 'ac',
-                categoryCode: 'comfort',
+                icon: '',
+                categoryCode: '',
             });
         }
         setError(null);
@@ -75,7 +77,12 @@ export default function FeatureModal({ isOpen, onClose, onSuccess, editingItem }
 
         // Валидация
         if (!formData.name.trim()) {
-            setError('Название обязательно');
+            setError(t('name_required'));
+            return;
+        }
+
+        if (!formData.categoryCode) {
+            setError(t('category_required'));
             return;
         }
 
@@ -84,7 +91,7 @@ export default function FeatureModal({ isOpen, onClose, onSuccess, editingItem }
 
             const payload = {
                 name: formData.name.trim(),
-                icon: formData.icon,
+                icon: formData.icon || null,
                 categoryCode: formData.categoryCode,
             };
 
@@ -96,7 +103,7 @@ export default function FeatureModal({ isOpen, onClose, onSuccess, editingItem }
 
             onSuccess();
         } catch (err: any) {
-            setError(err?.message || 'Ошибка при сохранении');
+            setError(err?.message || t('save_error'));
         } finally {
             setLoading(false);
         }
@@ -110,7 +117,7 @@ export default function FeatureModal({ isOpen, onClose, onSuccess, editingItem }
                 {/* Заголовок */}
                 <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
                     <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
-                        {isEditing ? 'Редактировать особенность' : 'Новая особенность'}
+                        {isEditing ? t('edit_feature') : t('new_feature')}
                     </h2>
                     <button
                         onClick={onClose}
@@ -133,7 +140,7 @@ export default function FeatureModal({ isOpen, onClose, onSuccess, editingItem }
                     {/* Название */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Название *
+                            {t('name')} *
                         </label>
                         <input
                             type="text"
@@ -141,7 +148,7 @@ export default function FeatureModal({ isOpen, onClose, onSuccess, editingItem }
                             value={formData.name}
                             onChange={handleChange}
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            placeholder="Например: Кондиционер"
+                            placeholder={t('enter_feature_name')}
                             required
                         />
                     </div>
@@ -149,7 +156,7 @@ export default function FeatureModal({ isOpen, onClose, onSuccess, editingItem }
                     {/* Иконка */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Иконка
+                            {t('icon')}
                         </label>
                         <select
                             name="icon"
@@ -157,6 +164,7 @@ export default function FeatureModal({ isOpen, onClose, onSuccess, editingItem }
                             onChange={handleChange}
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         >
+                            <option value="">{t('select_icon')}</option>
                             {AVAILABLE_ICONS.map((icon) => (
                                 <option key={icon.value} value={icon.value}>
                                     {icon.label}
@@ -168,7 +176,7 @@ export default function FeatureModal({ isOpen, onClose, onSuccess, editingItem }
                     {/* Категория */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Категория *
+                            {t('category')} *
                         </label>
                         <select
                             name="categoryCode"
@@ -177,6 +185,7 @@ export default function FeatureModal({ isOpen, onClose, onSuccess, editingItem }
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             required
                         >
+                            <option value="">{t('select_category')}</option>
                             {AVAILABLE_CATEGORIES.map((category) => (
                                 <option key={category.value} value={category.value}>
                                     {category.label}
@@ -192,14 +201,14 @@ export default function FeatureModal({ isOpen, onClose, onSuccess, editingItem }
                             onClick={onClose}
                             className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
-                            Отмена
+                            {t('cancel')}
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
                             className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {loading ? 'Сохранение...' : isEditing ? 'Сохранить' : 'Создать'}
+                            {loading ? t('saving') : isEditing ? t('save') : t('create')}
                         </button>
                     </div>
                 </form>

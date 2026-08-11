@@ -1,6 +1,7 @@
 // src/components/Reviews/ReviewFilters.tsx
 
 import React from 'react';
+import { useLanguage } from '../../i18n/LanguageProvider';
 
 interface ReviewFiltersProps {
     filters: {
@@ -19,6 +20,8 @@ export default function ReviewFilters({
                                           onRefresh,
                                           loading
                                       }: ReviewFiltersProps) {
+    const { t } = useLanguage();
+
     const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         onFilterChange({
             ...filters,
@@ -41,11 +44,11 @@ export default function ReviewFilters({
     };
 
     const sortOptions = [
-        { value: 'newest', label: 'Сначала новые' },
-        { value: 'oldest', label: 'Сначала старые' },
-        { value: 'rating_high', label: 'Сначала высокий рейтинг' },
-        { value: 'rating_low', label: 'Сначала низкий рейтинг' },
-        { value: 'helpful', label: 'Самые полезные' },
+        { value: 'newest', label: t('sort_newest') },
+        { value: 'oldest', label: t('sort_oldest') },
+        { value: 'rating_high', label: t('sort_rating_high') },
+        { value: 'rating_low', label: t('sort_rating_low') },
+        { value: 'helpful', label: t('sort_helpful') },
     ];
 
     return (
@@ -68,7 +71,7 @@ export default function ReviewFilters({
 
                 {/* Фильтр по рейтингу */}
                 <div className="flex items-center space-x-1">
-                    <span className="text-sm text-gray-600 dark:text-gray-400 mr-2">Рейтинг:</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400 mr-2">{t('rating')}:</span>
                     {[1, 2, 3, 4, 5].map(rating => (
                         <button
                             key={rating}
@@ -102,7 +105,7 @@ export default function ReviewFilters({
                         className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
                     <label htmlFor="verified" className="text-sm text-gray-600 dark:text-gray-400">
-                        Только подтвержденные
+                        {t('only_verified')}
                     </label>
                 </div>
 
@@ -120,7 +123,7 @@ export default function ReviewFilters({
                     >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
-                    <span>{loading ? 'Загрузка...' : 'Обновить'}</span>
+                    <span>{loading ? t('loading') : t('refresh')}</span>
                 </button>
             </div>
         </div>
